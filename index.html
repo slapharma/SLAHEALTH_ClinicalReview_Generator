@@ -1588,7 +1588,7 @@ function switchCategory(catId) {
 
   // Update headings
   const catLabel = CATEGORIES.find(c => c.id === catId)?.label || catId;
-  document.getElementById('archiveHeading').textContent  = catLabel + ' Archive';
+  document.getElementById('archiveHeading').textContent  = catLabel + ' Storage';
   document.getElementById('reportsHeading').textContent  = catLabel + ' Comparison Reports';
 
   // Update prompt: clinical-reviews gets default, others get blank if no saved prompt
@@ -1607,11 +1607,19 @@ function switchCategory(catId) {
   currentFile    = null;
   heroImageUrl   = null;
   heroImageType  = null;
+  // Reset multi-doc lists for op-eds and white-papers
+  if (catId === 'op-eds' || catId === 'white-papers') {
+    multiDocs[catId] = [];
+    renderMultiDocList(catId);
+  }
   document.getElementById('articleOutput').classList.remove('visible');
   document.getElementById('heroImagePanel').style.display = 'none';
   document.getElementById('emptyState').style.display = '';
-  document.getElementById('fileInfo').style.display = 'none';
-  document.getElementById('uploadZone').style.display = '';
+  // Only reset uploadZone/fileInfo for clinical-reviews (other categories have their own panels)
+  if (catId === 'clinical-reviews') {
+    document.getElementById('fileInfo').style.display = 'none';
+    document.getElementById('uploadZone').style.display = '';
+  }
   hideAlert('extractionStatus');
   hideAlert('generateAlert');
   document.getElementById('modelInUse').classList.remove('visible');
@@ -1771,10 +1779,15 @@ function handleFileSelect(event) { const f = event.target.files[0]; if (f) proce
 async function processFile(file) {
   if (!file.name.match(/\.(pdf|txt)$/i)) { showExtractionStatus('Only PDF and TXT files are supported.', 'error'); return; }
   currentFile = file;
-  document.getElementById('fileName').textContent = file.name;
-  document.getElementById('fileSize').textContent = formatFileSize(file.size);
-  document.getElementById('fileInfo').style.display = 'flex';
-  document.getElementById('uploadZone').style.display = 'none';
+  // Only update clinical-reviews upload UI elements (other categories manage their own UI)
+  const fileInfoEl = document.getElementById('fileInfo');
+  const uploadZoneEl = document.getElementById('uploadZone');
+  if (fileInfoEl && uploadZoneEl && currentCategory === 'clinical-reviews') {
+    document.getElementById('fileName').textContent = file.name;
+    document.getElementById('fileSize').textContent = formatFileSize(file.size);
+    fileInfoEl.style.display = 'flex';
+    uploadZoneEl.style.display = 'none';
+  }
   hideAlert('extractionStatus');
   showExtractionStatus('Extracting text from file...', 'info');
   try {
