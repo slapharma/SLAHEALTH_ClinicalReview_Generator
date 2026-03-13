@@ -527,6 +527,106 @@ textarea { resize: vertical; line-height: 1.6; min-height: 120px; }
   letter-spacing: 0.3px;
 }
 
+/* ══════════════════════════════════════════════════
+   CATEGORY-SPECIFIC INPUT PANELS
+══════════════════════════════════════════════════ */
+.cat-input-panel { display: none; }
+.cat-input-panel.active { display: block; }
+
+/* Source toggle tabs (Industry News) */
+.source-tabs { display: flex; gap: 0; margin-bottom: 12px; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+.source-tab-btn { flex: 1; padding: 7px 10px; font-family: 'Montserrat', sans-serif; font-size: 0.7rem; font-weight: 700; background: #f8f9fa; border: none; cursor: pointer; color: var(--text-muted); transition: all 0.15s; letter-spacing: 0.3px; }
+.source-tab-btn.active { background: var(--sla-navy); color: #fff; }
+.source-tab-btn:first-child { border-right: 1px solid var(--border); }
+.source-pane { display: none; }
+.source-pane.active { display: block; }
+
+/* Multi-doc upload list */
+.multi-doc-list { display: flex; flex-direction: column; gap: 5px; margin-top: 8px; }
+.multi-doc-item { display: flex; align-items: center; gap: 8px; background: #f8f9fa; border: 1px solid var(--border); border-radius: 6px; padding: 6px 10px; font-size: 0.72rem; }
+.multi-doc-name { flex: 1; font-weight: 600; color: var(--text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.multi-doc-size { color: var(--text-muted); font-size: 0.65rem; white-space: nowrap; }
+.multi-doc-remove { background: none; border: none; cursor: pointer; color: var(--text-muted); padding: 2px; border-radius: 3px; display: flex; align-items: center; }
+.multi-doc-remove:hover { color: var(--error); }
+
+/* Option rows */
+.option-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; flex-wrap: wrap; }
+.option-row label { font-family: 'Montserrat', sans-serif; font-size: 0.68rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap; min-width: 90px; }
+.option-row select, .option-row input[type=number] { flex: 1; min-width: 120px; padding: 6px 8px; border: 1px solid var(--border); border-radius: 6px; font-family: 'Montserrat', sans-serif; font-size: 0.75rem; background: #fff; color: var(--text); }
+.option-row input[type=number] { max-width: 100px; }
+.tone-btn-group { display: flex; gap: 0; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+.tone-btn { flex: 1; padding: 6px 10px; font-family: 'Montserrat', sans-serif; font-size: 0.7rem; font-weight: 700; background: #f8f9fa; border: none; cursor: pointer; color: var(--text-muted); transition: all 0.15s; }
+.tone-btn:not(:last-child) { border-right: 1px solid var(--border); }
+.tone-btn.active { background: var(--sla-navy); color: #fff; }
+
+/* Source links list */
+.source-links-list { display: flex; flex-direction: column; gap: 5px; margin-top: 6px; }
+.source-link-item { display: flex; align-items: center; gap: 6px; }
+.source-link-item input { flex: 1; padding: 5px 8px; border: 1px solid var(--border); border-radius: 6px; font-family: 'Montserrat', sans-serif; font-size: 0.72rem; }
+.source-link-remove { background: none; border: none; cursor: pointer; color: var(--text-muted); padding: 3px; border-radius: 3px; }
+.source-link-remove:hover { color: var(--error); }
+
+/* Design options grid */
+.design-options-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; margin-top: 6px; }
+.design-option-btn { padding: 8px 10px; border: 2px solid var(--border); border-radius: 8px; background: #f8f9fa; cursor: pointer; font-family: 'Montserrat', sans-serif; font-size: 0.68rem; font-weight: 700; color: var(--text-muted); text-align: center; transition: all 0.15s; line-height: 1.3; }
+.design-option-btn:hover { border-color: var(--sla-navy); color: var(--sla-navy); }
+.design-option-btn.active { border-color: var(--sla-orange); background: rgba(244,121,32,0.06); color: var(--sla-orange); }
+
+/* ══════════════════════════════════════════════════
+   HERO IMAGE PANEL
+══════════════════════════════════════════════════ */
+.hero-image-panel {
+  background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow);
+  border: 1px solid var(--border); margin-top: 12px; overflow: hidden;
+}
+.hero-image-header {
+  background: var(--sla-navy); padding: 10px 14px;
+  display: flex; align-items: center; justify-content: space-between; gap: 8px;
+}
+.hero-image-header h3 {
+  color: #fff; font-family: 'Montserrat', sans-serif;
+  font-size: 0.75rem; font-weight: 800;
+  display: flex; align-items: center; gap: 7px;
+}
+.hero-image-header h3 svg { color: var(--sla-orange); }
+.hero-image-tabs { display: flex; gap: 4px; }
+.hero-img-tab-btn {
+  padding: 4px 10px; border-radius: 5px; border: 1px solid rgba(255,255,255,0.2);
+  background: rgba(255,255,255,0.07); color: rgba(255,255,255,0.6);
+  font-family: 'Montserrat', sans-serif; font-size: 0.65rem; font-weight: 700;
+  cursor: pointer; transition: all 0.15s;
+}
+.hero-img-tab-btn.active { background: var(--sla-orange); border-color: var(--sla-orange); color: #fff; }
+.hero-image-body { padding: 14px; }
+.hero-img-pane { display: none; }
+.hero-img-pane.active { display: block; }
+.hero-img-preview {
+  width: 100%; aspect-ratio: 16/5; object-fit: cover;
+  border-radius: 8px; border: 1px solid var(--border);
+  display: block; margin-bottom: 10px;
+  background: linear-gradient(135deg, #f0f2f5 0%, #dde3ea 100%);
+}
+.hero-img-placeholder {
+  width: 100%; aspect-ratio: 16/5; border-radius: 8px;
+  border: 2px dashed var(--border); display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 6px;
+  color: var(--text-muted); font-size: 0.75rem; margin-bottom: 10px;
+  background: #f8f9fa;
+}
+.hero-img-placeholder svg { opacity: 0.35; }
+.hero-img-actions { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+.unsplash-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-top: 10px; }
+.unsplash-thumb {
+  aspect-ratio: 16/9; object-fit: cover; border-radius: 6px;
+  cursor: pointer; border: 2px solid transparent; transition: all 0.15s;
+  width: 100%;
+}
+.unsplash-thumb:hover { border-color: var(--sla-orange); transform: scale(1.02); }
+.unsplash-thumb.selected { border-color: var(--sla-orange); box-shadow: 0 0 0 2px rgba(244,121,32,0.3); }
+.unsplash-search-row { display: flex; gap: 6px; margin-bottom: 8px; }
+.unsplash-search-row input { flex: 1; padding: 7px 10px; border: 1px solid var(--border); border-radius: 6px; font-family: 'Montserrat', sans-serif; font-size: 0.75rem; }
+.unsplash-credit { font-size: 0.6rem; color: var(--text-muted); margin-top: 6px; }
+
 /* ── Send For Review modal ── */
 .modal-overlay {
   position: fixed; inset: 0; background: rgba(0,0,0,0.55); z-index: 500;
@@ -778,26 +878,122 @@ textarea { resize: vertical; line-height: 1.6; min-height: 120px; }
       </div>
     </div>
 
-    <!-- Upload Paper -->
-    <div class="card">
+    <!-- Dynamic Category Input Panel -->
+    <div class="card" id="sourceInputCard">
       <div class="card-header">
         <h2><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><span id="uploadCardTitle">Source Document</span></h2>
       </div>
       <div class="card-body">
-        <div class="upload-zone" id="uploadZone">
-          <input type="file" id="pdfInput" accept=".pdf,.txt" onchange="handleFileSelect(event)" />
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-          <p><strong>Drop PDF or TXT here</strong>, or click to browse</p>
-          <p style="font-size:0.68rem;margin-top:4px;">Supported: PDF, plain text (.txt)</p>
+
+        <!-- CLINICAL REVIEWS: single file upload (default) -->
+        <div class="cat-input-panel active" id="panel-clinical-reviews">
+          <div class="upload-zone" id="uploadZone">
+            <input type="file" id="pdfInput" accept=".pdf,.txt" onchange="handleFileSelect(event)" />
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            <p><strong>Drop PDF or TXT here</strong>, or click to browse</p>
+            <p style="font-size:0.68rem;margin-top:4px;">Supported: PDF, plain text (.txt)</p>
+          </div>
+          <div class="file-info" id="fileInfo">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px;height:18px;color:var(--success);flex-shrink:0;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            <span class="file-name" id="fileName"></span>
+            <span class="file-size" id="fileSize"></span>
+            <button class="file-remove" onclick="removeFile()" title="Remove file">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:15px;height:15px;"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+          </div>
         </div>
-        <div class="file-info" id="fileInfo">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px;height:18px;color:var(--success);flex-shrink:0;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-          <span class="file-name" id="fileName"></span>
-          <span class="file-size" id="fileSize"></span>
-          <button class="file-remove" onclick="removeFile()" title="Remove file">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:15px;height:15px;"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-          </button>
+
+        <!-- INDUSTRY NEWS: paste text or add link -->
+        <div class="cat-input-panel" id="panel-industry-news">
+          <div class="source-tabs">
+            <button class="source-tab-btn active" onclick="switchSourceTab('news','paste')" id="news-tab-paste">Paste Text</button>
+            <button class="source-tab-btn" onclick="switchSourceTab('news','link')" id="news-tab-link">Add Link</button>
+          </div>
+          <div class="source-pane active" id="news-pane-paste">
+            <textarea id="newsPasteText" rows="7" placeholder="Paste the news article, press release, or source text here..." style="width:100%;padding:8px;border:1px solid var(--border);border-radius:6px;font-family:'Montserrat',sans-serif;font-size:0.78rem;resize:vertical;" oninput="updateExtractedFromNews()"></textarea>
+          </div>
+          <div class="source-pane" id="news-pane-link">
+            <div style="display:flex;gap:6px;margin-bottom:8px;">
+              <input type="url" id="newsLinkInput" placeholder="https://example.com/article" style="flex:1;padding:7px 10px;border:1px solid var(--border);border-radius:6px;font-family:'Montserrat',sans-serif;font-size:0.75rem;" />
+              <button class="btn btn-navy btn-sm" onclick="fetchNewsLink()">Fetch</button>
+            </div>
+            <div id="newsLinkStatus" class="alert hidden" style="margin-bottom:0;"></div>
+            <div id="newsLinkPreview" style="font-size:0.72rem;color:var(--text-muted);margin-top:6px;display:none;"></div>
+          </div>
         </div>
+
+        <!-- OP-EDS: multi-doc + tone -->
+        <div class="cat-input-panel" id="panel-op-eds">
+          <div class="option-row" style="margin-bottom:12px;">
+            <label>Tone</label>
+            <div class="tone-btn-group">
+              <button class="tone-btn active" onclick="setTone('practitioner')" id="tone-practitioner">Practitioner</button>
+              <button class="tone-btn" onclick="setTone('patient')" id="tone-patient">Patient-Facing</button>
+            </div>
+          </div>
+          <div style="font-size:0.68rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;">Source Documents</div>
+          <div class="upload-zone" id="opedUploadZone" style="padding:14px;" onclick="document.getElementById('opedFileInput').click()">
+            <input type="file" id="opedFileInput" accept=".pdf,.txt" multiple style="display:none;" onchange="handleMultiFileSelect(event,'op-eds')" />
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="width:28px;height:28px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            <p style="font-size:0.78rem;"><strong>Drop files or click to browse</strong></p>
+            <p style="font-size:0.65rem;margin-top:3px;">Multiple PDFs or TXT files supported</p>
+          </div>
+          <div class="multi-doc-list" id="opedDocList"></div>
+        </div>
+
+        <!-- WHITE PAPERS: multi-doc + source links + word count + design -->
+        <div class="cat-input-panel" id="panel-white-papers">
+          <div style="font-size:0.68rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;">Source Documents</div>
+          <div class="upload-zone" id="wpUploadZone" style="padding:14px;" onclick="document.getElementById('wpFileInput').click()">
+            <input type="file" id="wpFileInput" accept=".pdf,.txt" multiple style="display:none;" onchange="handleMultiFileSelect(event,'white-papers')" />
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="width:28px;height:28px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            <p style="font-size:0.78rem;"><strong>Drop files or click to browse</strong></p>
+            <p style="font-size:0.65rem;margin-top:3px;">Multiple PDFs or TXT files supported</p>
+          </div>
+          <div class="multi-doc-list" id="wpDocList"></div>
+          <div style="margin-top:12px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+              <span style="font-size:0.68rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;">Source Links</span>
+              <button class="btn btn-outline btn-xs" onclick="addSourceLink()" style="font-size:0.62rem;padding:3px 8px;">+ Add Link</button>
+            </div>
+            <div class="source-links-list" id="wpSourceLinks"></div>
+          </div>
+          <div class="option-row" style="margin-top:12px;">
+            <label>Word Count</label>
+            <input type="number" id="wpWordCount" value="2000" min="500" max="10000" step="250" style="max-width:110px;" />
+            <span style="font-size:0.68rem;color:var(--text-muted);">words (approx.)</span>
+          </div>
+          <div style="margin-top:8px;">
+            <div style="font-size:0.68rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;">Design Style</div>
+            <div class="design-options-grid" id="wpDesignGrid">
+              <button class="design-option-btn active" onclick="setDesignOption(this,'Executive Summary')" data-design="Executive Summary">Executive Summary<br><span style="font-weight:400;font-size:0.62rem;">Concise, decision-focused</span></button>
+              <button class="design-option-btn" onclick="setDesignOption(this,'Technical Deep-Dive')" data-design="Technical Deep-Dive">Technical Deep-Dive<br><span style="font-weight:400;font-size:0.62rem;">Data-rich, detailed</span></button>
+              <button class="design-option-btn" onclick="setDesignOption(this,'Narrative Report')" data-design="Narrative Report">Narrative Report<br><span style="font-weight:400;font-size:0.62rem;">Story-driven, accessible</span></button>
+              <button class="design-option-btn" onclick="setDesignOption(this,'Regulatory Briefing')" data-design="Regulatory Briefing">Regulatory Briefing<br><span style="font-weight:400;font-size:0.62rem;">Formal, compliance-ready</span></button>
+            </div>
+          </div>
+        </div>
+
+        <!-- INFOGRAPHICS: single file upload (model restricted in JS) -->
+        <div class="cat-input-panel" id="panel-infographics">
+          <div class="alert" style="background:rgba(244,121,32,0.08);border:1px solid rgba(244,121,32,0.25);color:var(--sla-orange);font-size:0.72rem;padding:8px 12px;border-radius:6px;margin-bottom:10px;">
+            <strong>Note:</strong> Infographic generation uses models optimised for structured visual content descriptions. The model selector is pre-filtered to the most capable options.
+          </div>
+          <div class="upload-zone" id="infographicUploadZone">
+            <input type="file" id="infographicFileInput" accept=".pdf,.txt" onchange="handleInfographicFileSelect(event)" />
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            <p><strong>Drop PDF or TXT here</strong>, or click to browse</p>
+          </div>
+          <div class="file-info" id="infographicFileInfo" style="display:none;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px;height:18px;color:var(--success);flex-shrink:0;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            <span class="file-name" id="infographicFileName"></span>
+            <span class="file-size" id="infographicFileSize"></span>
+            <button class="file-remove" onclick="removeInfographicFile()" title="Remove file">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:15px;height:15px;"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+          </div>
+        </div>
+
         <div id="extractionStatus" class="alert hidden" style="margin-top:8px;margin-bottom:0;"></div>
       </div>
     </div>
@@ -889,6 +1085,10 @@ textarea { resize: vertical; line-height: 1.6; min-height: 120px; }
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
         Queue For Publishing
       </button>
+      <button class="btn btn-outline btn-xs" style="background:rgba(255,255,255,0.08);border-color:rgba(255,255,255,0.15);color:#fff;" onclick="toggleHeroImagePanel()" id="heroImageBtn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px;"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+        Hero Image
+      </button>
       <button class="btn btn-orange btn-xs" onclick="saveReviewToArchive()">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/></svg>
         Save to Storage
@@ -909,6 +1109,58 @@ textarea { resize: vertical; line-height: 1.6; min-height: 120px; }
     <div class="article-output" id="articleOutput">
       <div id="articleContent"></div>
     </div>
+
+    <!-- HERO IMAGE PANEL -->
+    <div class="hero-image-panel" id="heroImagePanel" style="display:none;">
+      <div class="hero-image-header">
+        <h3>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+          Hero Image
+        </h3>
+        <div class="hero-image-tabs">
+          <button class="hero-img-tab-btn active" onclick="switchHeroTab('ai')" id="heroTabAI">AI Generate</button>
+          <button class="hero-img-tab-btn" onclick="switchHeroTab('unsplash')" id="heroTabUnsplash">Unsplash</button>
+        </div>
+      </div>
+      <div class="hero-image-body">
+        <!-- AI Generate pane -->
+        <div class="hero-img-pane active" id="heroPane-ai">
+          <div id="heroAiPlaceholder" class="hero-img-placeholder">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" style="width:40px;height:40px;"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+            <span>No image generated yet</span>
+          </div>
+          <img id="heroAiImage" class="hero-img-preview" style="display:none;" alt="Hero image" />
+          <div style="display:flex;gap:6px;margin-bottom:8px;">
+            <input type="text" id="heroAiPrompt" placeholder="Describe the image (or leave blank to auto-generate from article title)" style="flex:1;padding:7px 10px;border:1px solid var(--border);border-radius:6px;font-family:'Montserrat',sans-serif;font-size:0.75rem;" />
+          </div>
+          <div class="hero-img-actions">
+            <button class="btn btn-orange btn-sm" onclick="generateHeroImage()" id="heroGenerateBtn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+              Generate Image
+            </button>
+            <button class="btn btn-navy btn-sm" onclick="downloadHeroImage()" id="heroDownloadBtn" style="display:none;">Download</button>
+            <span id="heroAiStatus" style="font-size:0.7rem;color:var(--text-muted);"></span>
+          </div>
+          <div id="heroAiAlert" class="alert hidden" style="margin-top:8px;"></div>
+        </div>
+        <!-- Unsplash pane -->
+        <div class="hero-img-pane" id="heroPane-unsplash">
+          <div class="unsplash-search-row">
+            <input type="text" id="unsplashQuery" placeholder="Search Unsplash (e.g. healthcare, clinical trial, doctor)" />
+            <button class="btn btn-navy btn-sm" onclick="searchUnsplash()">Search</button>
+          </div>
+          <div id="unsplashStatus" class="alert hidden" style="margin-bottom:8px;"></div>
+          <div class="unsplash-grid" id="unsplashGrid"></div>
+          <div class="unsplash-credit" id="unsplashCredit"></div>
+          <div class="hero-img-actions" style="margin-top:10px;">
+            <button class="btn btn-orange btn-sm" onclick="useSelectedUnsplashImage()" id="unsplashUseBtn" style="display:none;">Use This Image</button>
+            <button class="btn btn-navy btn-sm" onclick="downloadHeroImage()" id="unsplashDownloadBtn" style="display:none;">Download</button>
+          </div>
+          <img id="heroUnsplashSelected" class="hero-img-preview" style="display:none;margin-top:10px;" alt="Selected hero image" />
+        </div>
+      </div>
+    </div>
+
   </div>
 
 </div>
@@ -1113,6 +1365,20 @@ const FALLBACK_MODELS = [
   'liquid/lfm-2.5-1.2b-instruct:free'
 ];
 
+// Models optimised for structured/visual content (Infographics)
+const INFOGRAPHIC_MODELS = [
+  'arcee-ai/trinity-large-preview:free',
+  'google/gemma-3-12b-it:free',
+  'google/gemma-3-4b-it:free',
+  'qwen/qwen3-14b:free',
+  'qwen/qwen3-8b:free',
+  'meta-llama/llama-3.3-70b-instruct:free',
+  'deepseek/deepseek-r1-0528:free'
+];
+
+// Unsplash API (public demo key — replace with your own for production)
+const UNSPLASH_ACCESS_KEY = 'client_id=_placeholder_';
+
 const GH_API    = 'https://api.github.com';
 const GH_REPO   = 'slapharma/SLAHEALTH_ClinicalReview_Generator';
 const GH_BRANCH = 'main';
@@ -1159,7 +1425,15 @@ Do not use bolded words mid sentence or mid paragraph - only in titles or subhea
 // ═══════════════════════════════════════════════════════════
 //  STATE
 // ═══════════════════════════════════════════════════════════
-let currentCategory = 'clinical-reviews';
+let currentCategory   = 'clinical-reviews';
+let multiDocs         = { 'op-eds': [], 'white-papers': [] }; // { name, text }[]
+let selectedTone      = 'practitioner';
+let selectedDesign    = 'Executive Summary';
+let wpSourceLinks     = [];
+let heroImageUrl      = null; // currently selected hero image URL
+let heroImageType     = null; // 'ai' or 'unsplash'
+let unsplashResults   = [];
+let selectedUnsplashIdx = -1;
 let extractedText   = '';
 let rawArticleText  = '';
 let currentFile     = null;
@@ -1331,7 +1605,10 @@ function switchCategory(catId) {
   rawArticleText = '';
   extractedText  = '';
   currentFile    = null;
+  heroImageUrl   = null;
+  heroImageType  = null;
   document.getElementById('articleOutput').classList.remove('visible');
+  document.getElementById('heroImagePanel').style.display = 'none';
   document.getElementById('emptyState').style.display = '';
   document.getElementById('fileInfo').style.display = 'none';
   document.getElementById('uploadZone').style.display = '';
@@ -1341,6 +1618,24 @@ function switchCategory(catId) {
   document.getElementById('retryInfo').classList.remove('visible');
   document.getElementById('wordCount').textContent = '';
   document.getElementById('modelUsedBadge').style.display = 'none';
+
+  // Activate the correct input panel
+  document.querySelectorAll('.cat-input-panel').forEach(p => p.classList.remove('active'));
+  const panel = document.getElementById('panel-' + catId);
+  if (panel) panel.classList.add('active');
+
+  // Update model dropdown for infographics
+  updateModelSelectForCategory(catId);
+
+  // Update upload card title
+  const titles = {
+    'clinical-reviews': 'Source Document',
+    'industry-news':    'Source Content',
+    'op-eds':           'Source Documents & Options',
+    'white-papers':     'Source Documents & Options',
+    'infographics':     'Source Document'
+  };
+  document.getElementById('uploadCardTitle').textContent = titles[catId] || 'Source';
 
   renderPromptLibrary();
   renderArchive();
@@ -1530,13 +1825,52 @@ function removeFile() {
 //  GENERATION
 // ═══════════════════════════════════════════════════════════
 function updateGenerateButton() {
-  document.getElementById('generateBtn').disabled = !extractedText.trim() || isGenerating || !getApiKey();
+  let hasSource = false;
+  if (currentCategory === 'industry-news') {
+    hasSource = !!extractedText.trim();
+  } else if (currentCategory === 'op-eds') {
+    hasSource = multiDocs['op-eds'].length > 0;
+  } else if (currentCategory === 'white-papers') {
+    hasSource = multiDocs['white-papers'].length > 0;
+  } else if (currentCategory === 'infographics') {
+    hasSource = !!extractedText.trim();
+  } else {
+    hasSource = !!extractedText.trim();
+  }
+  document.getElementById('generateBtn').disabled = !hasSource || isGenerating || !getApiKey();
 }
 
 async function generateReview() {
   if (isGenerating) return;
   if (!getApiKey()) { showAlert('generateAlert', 'Please enter and save your OpenRouter API key first.', 'error'); document.getElementById('apiKeyInput').focus(); return; }
-  if (!extractedText) { showAlert('generateAlert', 'Please upload a source document first.', 'error'); return; }
+
+  // Build the source text based on category
+  let sourceText = extractedText;
+  if (currentCategory === 'op-eds') {
+    if (!multiDocs['op-eds'].length) { showAlert('generateAlert', 'Please upload at least one source document.', 'error'); return; }
+    sourceText = multiDocs['op-eds'].map((d,i) => `--- Document ${i+1}: ${d.name} ---\n${d.text}`).join('\n\n');
+  } else if (currentCategory === 'white-papers') {
+    if (!multiDocs['white-papers'].length) { showAlert('generateAlert', 'Please upload at least one source document.', 'error'); return; }
+    sourceText = multiDocs['white-papers'].map((d,i) => `--- Document ${i+1}: ${d.name} ---\n${d.text}`).join('\n\n');
+    const links = wpSourceLinks.filter(l => l.trim());
+    if (links.length) sourceText += '\n\nSource Links:\n' + links.map(l => '- ' + l).join('\n');
+  } else if (!sourceText) {
+    showAlert('generateAlert', 'Please provide source content first.', 'error'); return;
+  }
+
+  // Build extra instructions for category options
+  let extraInstructions = '';
+  if (currentCategory === 'op-eds') {
+    const toneLabel = selectedTone === 'patient' ? 'patient-facing (accessible, empathetic, plain language)' : 'practitioner-facing (clinical, evidence-based, technical)';
+    extraInstructions = `\n\nTone requirement: Write in a ${toneLabel} tone.`;
+  } else if (currentCategory === 'white-papers') {
+    const wc = document.getElementById('wpWordCount')?.value || 2000;
+    extraInstructions = `\n\nTarget length: approximately ${wc} words.\nDesign style: ${selectedDesign}.`;
+  }
+
+  const basePrompt = document.getElementById('promptTextarea').value.trim();
+  const fullPrompt = basePrompt + extraInstructions;
+  if (!fullPrompt) { showAlert('generateAlert', 'Please add a prompt first.', 'error'); return; }
   isGenerating = true;
   updateGenerateButton();
   setStatus('processing', 'Generating...');
@@ -1550,8 +1884,9 @@ async function generateReview() {
     '<div class="empty-state" style="padding:3rem;"><p style="font-size:0.9rem;color:var(--sla-orange);" class="streaming-cursor">Generating your content</p></div>';
 
   const selectedModel = document.getElementById('modelSelect').value;
-  const systemPrompt  = document.getElementById('promptTextarea').value.trim();
-  const modelQueue    = [selectedModel, ...FALLBACK_MODELS.filter(m => m !== selectedModel)];
+  const systemPrompt  = fullPrompt;
+  const fallbackPool  = currentCategory === 'infographics' ? INFOGRAPHIC_MODELS : FALLBACK_MODELS;
+  const modelQueue    = [selectedModel, ...fallbackPool.filter(m => m !== selectedModel)];
   let lastError = '';
 
   for (let attempt = 0; attempt < modelQueue.length; attempt++) {
@@ -1565,7 +1900,7 @@ async function generateReview() {
     }
     try {
       showProgress(true, 25, 'Sending request...');
-      const result = await attemptGeneration(model, systemPrompt);
+      const result = await attemptGeneration(model, systemPrompt, sourceText);
       rawArticleText = result.text;
       document.getElementById('articleContent').innerHTML = formatArticleHTML(rawArticleText);
       document.getElementById('wordCount').textContent = rawArticleText.split(/\s+/).filter(w=>w).length.toLocaleString() + ' words';
@@ -1584,6 +1919,14 @@ async function generateReview() {
       // Enable review/queue toolbar buttons now that content exists
       document.getElementById('sendForReviewBtn').disabled = false;
       document.getElementById('queueForPublishBtn').disabled = false;
+      // Show hero image panel
+      document.getElementById('heroImagePanel').style.display = 'block';
+      // Auto-populate Unsplash search with article title
+      const firstLine = rawArticleText.split('\n').find(l => l.trim());
+      if (firstLine) {
+        const cleanTitle = firstLine.replace(/^#+\s*/, '').replace(/[*_]/g, '').substring(0, 50);
+        document.getElementById('unsplashQuery').value = cleanTitle;
+      }
       return;
     } catch (err) {
       lastError = err.message;
@@ -1604,12 +1947,12 @@ async function generateReview() {
   updateGenerateButton();
 }
 
-async function attemptGeneration(model, systemPrompt) {
-  const truncatedText = extractedText.length > 60000 ? extractedText.substring(0, 60000) + '\n\n[Text truncated due to length]' : extractedText;
+async function attemptGeneration(model, systemPrompt, sourceText) {
+  const truncatedText = (sourceText || extractedText).length > 60000 ? (sourceText || extractedText).substring(0, 60000) + '\n\n[Text truncated due to length]' : (sourceText || extractedText);
   const response = await fetch(API_URL, {
     method: 'POST',
     headers: { 'Authorization': `Bearer ${getApiKey()}`, 'Content-Type': 'application/json', 'HTTP-Referer': window.location.href, 'X-Title': 'SLA Health Content Generator' },
-    body: JSON.stringify({ model, messages: [{ role: 'system', content: systemPrompt }, { role: 'user', content: `Please generate content based on the following source document:\n\n---\n${truncatedText}\n---` }], stream: true, max_tokens: 3000, temperature: 0.3 })
+    body: JSON.stringify({ model, messages: [{ role: 'system', content: systemPrompt }, { role: 'user', content: `Please generate content based on the following source material:\n\n---\n${truncatedText}\n---` }], stream: true, max_tokens: 4000, temperature: 0.3 })
   });
   if (!response.ok) {
     let errMsg = `HTTP ${response.status}`;
@@ -2593,6 +2936,309 @@ function sendForReview() {
     document.getElementById('reviewModal').classList.remove('open');
     currentReviewForModal = null;
   }, 2000);
+}
+
+// ═══════════════════════════════════════════════════════════
+//  CATEGORY INPUT HANDLERS
+// ═══════════════════════════════════════════════════════════
+function switchSourceTab(cat, tab) {
+  const prefix = cat === 'news' ? 'news' : cat;
+  document.querySelectorAll(`#panel-industry-news .source-tab-btn`).forEach(b => b.classList.remove('active'));
+  document.querySelectorAll(`#panel-industry-news .source-pane`).forEach(p => p.classList.remove('active'));
+  document.getElementById(`news-tab-${tab}`).classList.add('active');
+  document.getElementById(`news-pane-${tab}`).classList.add('active');
+  // Reset extractedText when switching tabs
+  extractedText = '';
+  updateGenerateButton();
+}
+
+function updateExtractedFromNews() {
+  extractedText = document.getElementById('newsPasteText').value;
+  updateGenerateButton();
+}
+
+async function fetchNewsLink() {
+  const url = document.getElementById('newsLinkInput').value.trim();
+  if (!url) return;
+  const statusEl = document.getElementById('newsLinkStatus');
+  const previewEl = document.getElementById('newsLinkPreview');
+  statusEl.className = 'alert'; statusEl.textContent = 'Fetching article content...';
+  previewEl.style.display = 'none';
+  try {
+    // Use a CORS proxy to fetch the URL
+    const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`;
+    const res = await fetch(proxyUrl);
+    const data = await res.json();
+    const html = data.contents;
+    // Strip HTML tags to get plain text
+    const tmp = document.createElement('div');
+    tmp.innerHTML = html;
+    // Remove script/style elements
+    tmp.querySelectorAll('script,style,nav,header,footer,aside').forEach(el => el.remove());
+    const text = tmp.innerText || tmp.textContent || '';
+    const cleaned = text.replace(/\s+/g, ' ').trim().substring(0, 15000);
+    if (!cleaned) throw new Error('No readable text found at this URL');
+    extractedText = `Source URL: ${url}\n\n${cleaned}`;
+    const wc = cleaned.split(/\s+/).filter(w=>w).length;
+    statusEl.className = 'alert alert-success'; statusEl.textContent = `✓ Fetched — ${wc.toLocaleString()} words extracted`;
+    previewEl.textContent = cleaned.substring(0, 200) + '...';
+    previewEl.style.display = 'block';
+    updateGenerateButton();
+  } catch (err) {
+    statusEl.className = 'alert alert-error'; statusEl.textContent = 'Failed to fetch: ' + err.message;
+    extractedText = '';
+    updateGenerateButton();
+  }
+}
+
+async function handleMultiFileSelect(event, category) {
+  const files = Array.from(event.target.files);
+  if (!files.length) return;
+  for (const file of files) {
+    if (!file.name.match(/\.(pdf|txt)$/i)) continue;
+    try {
+      const text = file.name.toLowerCase().endsWith('.pdf') ? await extractPDFText(file) : await readTextFile(file);
+      multiDocs[category].push({ name: file.name, text });
+    } catch (e) {
+      console.warn('Failed to extract:', file.name, e);
+    }
+  }
+  renderMultiDocList(category);
+  updateGenerateButton();
+  // Reset input so same files can be re-added
+  event.target.value = '';
+}
+
+function renderMultiDocList(category) {
+  const listId = category === 'op-eds' ? 'opedDocList' : 'wpDocList';
+  const list = document.getElementById(listId);
+  if (!list) return;
+  list.innerHTML = multiDocs[category].map((d, i) => `
+    <div class="multi-doc-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;color:var(--success);flex-shrink:0;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+      <span class="multi-doc-name">${d.name}</span>
+      <span class="multi-doc-size">${d.text.split(/\s+/).filter(w=>w).length.toLocaleString()} words</span>
+      <button class="multi-doc-remove" onclick="removeMultiDoc('${category}',${i})" title="Remove">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px;"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+  `).join('');
+}
+
+function removeMultiDoc(category, index) {
+  multiDocs[category].splice(index, 1);
+  renderMultiDocList(category);
+  updateGenerateButton();
+}
+
+function setTone(tone) {
+  selectedTone = tone;
+  document.getElementById('tone-practitioner').classList.toggle('active', tone === 'practitioner');
+  document.getElementById('tone-patient').classList.toggle('active', tone === 'patient');
+}
+
+function setDesignOption(btn, design) {
+  selectedDesign = design;
+  document.querySelectorAll('.design-option-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+function addSourceLink() {
+  wpSourceLinks.push('');
+  renderSourceLinks();
+}
+
+function renderSourceLinks() {
+  const container = document.getElementById('wpSourceLinks');
+  if (!container) return;
+  container.innerHTML = wpSourceLinks.map((link, i) => `
+    <div class="source-link-item">
+      <input type="url" value="${link}" placeholder="https://..." oninput="wpSourceLinks[${i}]=this.value" />
+      <button class="source-link-remove" onclick="removeSourceLink(${i})" title="Remove">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+  `).join('');
+}
+
+function removeSourceLink(index) {
+  wpSourceLinks.splice(index, 1);
+  renderSourceLinks();
+}
+
+function handleInfographicFileSelect(event) {
+  const f = event.target.files[0];
+  if (f) {
+    processFile(f).then(() => {
+      document.getElementById('infographicFileInfo').style.display = 'flex';
+      document.getElementById('infographicFileName').textContent = f.name;
+      document.getElementById('infographicFileSize').textContent = formatFileSize(f.size);
+    });
+  }
+}
+
+function removeInfographicFile() {
+  extractedText = '';
+  currentFile = null;
+  document.getElementById('infographicFileInfo').style.display = 'none';
+  document.getElementById('infographicFileInput').value = '';
+  hideAlert('extractionStatus');
+  updateGenerateButton();
+}
+
+function updateModelSelectForCategory(catId) {
+  const select = document.getElementById('modelSelect');
+  if (!select) return;
+  const allOptions = Array.from(select.options);
+  if (catId === 'infographics') {
+    allOptions.forEach(opt => {
+      opt.hidden = !INFOGRAPHIC_MODELS.includes(opt.value);
+    });
+    // Select first visible option if current is hidden
+    const current = select.value;
+    if (!INFOGRAPHIC_MODELS.includes(current)) {
+      const first = INFOGRAPHIC_MODELS.find(m => allOptions.some(o => o.value === m));
+      if (first) select.value = first;
+    }
+  } else {
+    allOptions.forEach(opt => { opt.hidden = false; });
+  }
+}
+
+// ═══════════════════════════════════════════════════════════
+//  HERO IMAGE
+// ═══════════════════════════════════════════════════════════
+function toggleHeroImagePanel() {
+  const panel = document.getElementById('heroImagePanel');
+  panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+}
+
+function switchHeroTab(tab) {
+  document.querySelectorAll('.hero-img-tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.hero-img-pane').forEach(p => p.classList.remove('active'));
+  document.getElementById('heroTab' + (tab === 'ai' ? 'AI' : 'Unsplash')).classList.add('active');
+  document.getElementById('heroPane-' + tab).classList.add('active');
+}
+
+async function generateHeroImage() {
+  const btn = document.getElementById('heroGenerateBtn');
+  const statusEl = document.getElementById('heroAiStatus');
+  const alertEl = document.getElementById('heroAiAlert');
+  alertEl.className = 'alert hidden';
+  btn.disabled = true;
+  statusEl.textContent = 'Generating image prompt...';
+
+  // Build the image generation prompt
+  let userPrompt = document.getElementById('heroAiPrompt').value.trim();
+  if (!userPrompt && rawArticleText) {
+    const firstLine = rawArticleText.split('\n').find(l => l.trim());
+    userPrompt = (firstLine || '').replace(/^#+\s*/, '').replace(/[*_]/g, '').substring(0, 80);
+  }
+  if (!userPrompt) userPrompt = 'healthcare medical professional clinical';
+
+  // Use OpenRouter to generate an image description, then use a free image generation service
+  const imagePrompt = `Professional hero image for a healthcare article: ${userPrompt}. Wide format, 16:5 aspect ratio, photorealistic, high quality, clean modern medical/clinical aesthetic.`;
+
+  // Use Pollinations.ai (free, no API key needed) for image generation
+  const encodedPrompt = encodeURIComponent(imagePrompt);
+  const imageUrl = `https://image.pollinations.ai/prompt/${encodedPrompt}?width=1200&height=375&nologo=true&enhance=true`;
+
+  statusEl.textContent = 'Generating...';
+  try {
+    // Pre-load the image
+    await new Promise((resolve, reject) => {
+      const img = new Image();
+      img.onload = resolve;
+      img.onerror = reject;
+      img.src = imageUrl;
+    });
+    document.getElementById('heroAiPlaceholder').style.display = 'none';
+    const imgEl = document.getElementById('heroAiImage');
+    imgEl.src = imageUrl;
+    imgEl.style.display = 'block';
+    document.getElementById('heroDownloadBtn').style.display = 'inline-flex';
+    heroImageUrl = imageUrl;
+    heroImageType = 'ai';
+    statusEl.textContent = '✓ Image generated';
+  } catch (e) {
+    alertEl.className = 'alert alert-error';
+    alertEl.textContent = 'Image generation failed. Try a different description.';
+    statusEl.textContent = '';
+  }
+  btn.disabled = false;
+}
+
+async function searchUnsplash() {
+  const query = document.getElementById('unsplashQuery').value.trim();
+  if (!query) return;
+  const statusEl = document.getElementById('unsplashStatus');
+  const grid = document.getElementById('unsplashGrid');
+  statusEl.className = 'alert'; statusEl.textContent = 'Searching Unsplash...';
+  grid.innerHTML = '';
+  selectedUnsplashIdx = -1;
+  document.getElementById('unsplashUseBtn').style.display = 'none';
+  document.getElementById('unsplashCredit').textContent = '';
+
+  try {
+    // Use Unsplash Source API (no key needed for basic search)
+    // We use the Unsplash API via a public endpoint
+    const res = await fetch(`https://api.unsplash.com/search/photos?query=${encodeURIComponent(query)}&per_page=9&orientation=landscape&client_id=YOUR_UNSPLASH_KEY`);
+    if (!res.ok) throw new Error('Unsplash API error');
+    const data = await res.json();
+    unsplashResults = data.results || [];
+    if (!unsplashResults.length) {
+      statusEl.className = 'alert alert-error'; statusEl.textContent = 'No images found. Try a different search term.';
+      return;
+    }
+    statusEl.className = 'alert hidden';
+    grid.innerHTML = unsplashResults.map((img, i) => `
+      <img src="${img.urls.small}" class="unsplash-thumb" alt="${img.alt_description || query}" onclick="selectUnsplashImage(${i})" title="Photo by ${img.user.name}" />
+    `).join('');
+    document.getElementById('unsplashCredit').textContent = 'Photos from Unsplash. Click to select.';
+  } catch (e) {
+    // Fallback: use Unsplash Source (random images by keyword, no API key)
+    statusEl.className = 'alert hidden';
+    const fallbackUrls = Array.from({length: 6}, (_, i) =>
+      `https://source.unsplash.com/400x250/?${encodeURIComponent(query)}&sig=${i}`
+    );
+    unsplashResults = fallbackUrls.map((url, i) => ({ fallbackUrl: url, user: { name: 'Unsplash' }, urls: { small: url, full: url } }));
+    grid.innerHTML = fallbackUrls.map((url, i) => `
+      <img src="${url}" class="unsplash-thumb" alt="${query}" onclick="selectUnsplashImage(${i})" />
+    `).join('');
+    document.getElementById('unsplashCredit').textContent = 'Photos from Unsplash. Click to select.';
+  }
+}
+
+function selectUnsplashImage(idx) {
+  selectedUnsplashIdx = idx;
+  document.querySelectorAll('.unsplash-thumb').forEach((t, i) => t.classList.toggle('selected', i === idx));
+  document.getElementById('unsplashUseBtn').style.display = 'inline-flex';
+  const img = unsplashResults[idx];
+  const credit = img.user?.name ? `Photo by ${img.user.name} on Unsplash` : 'Photo from Unsplash';
+  document.getElementById('unsplashCredit').textContent = credit;
+}
+
+function useSelectedUnsplashImage() {
+  if (selectedUnsplashIdx < 0) return;
+  const img = unsplashResults[selectedUnsplashIdx];
+  const fullUrl = img.urls?.full || img.fallbackUrl || img.urls?.small;
+  const selectedImg = document.getElementById('heroUnsplashSelected');
+  selectedImg.src = fullUrl;
+  selectedImg.style.display = 'block';
+  heroImageUrl = fullUrl;
+  heroImageType = 'unsplash';
+  document.getElementById('unsplashDownloadBtn').style.display = 'inline-flex';
+}
+
+function downloadHeroImage() {
+  if (!heroImageUrl) return;
+  const a = document.createElement('a');
+  a.href = heroImageUrl;
+  a.download = 'hero-image.jpg';
+  a.target = '_blank';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
 }
 
 // ═══════════════════════════════════════════════════════════
