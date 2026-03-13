@@ -1,0 +1,1618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SLA Health: Clinical Review Generator</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Open+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script src="https://unpkg.com/docx@8.5.0/build/index.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+  <style>
+    :root {
+      --sla-orange:       #F47920;
+      --sla-orange-dark:  #d4641a;
+      --sla-orange-light: #f9a05a;
+      --sla-navy:         #1e2d40;
+      --sla-navy-mid:     #263547;
+      --sla-navy-light:   #2f4460;
+      --sla-slate:        #4a6080;
+      --bg:               #f0f3f7;
+      --card-bg:          #ffffff;
+      --text:             #1a2332;
+      --text-muted:       #5a6a7e;
+      --border:           #d4dde8;
+      --border-light:     #e8edf3;
+      --success:          #27ae60;
+      --danger:           #e74c3c;
+      --warning:          #f39c12;
+      --radius:           8px;
+      --radius-lg:        12px;
+      --shadow:           0 2px 12px rgba(0,0,0,0.08);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Open Sans', system-ui, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+    /* ── Header ── */
+    header {
+      background: var(--sla-navy); color: #fff; padding: 0 2rem;
+      display: flex; align-items: center; justify-content: space-between;
+      height: 68px; box-shadow: 0 2px 12px rgba(0,0,0,0.3);
+      position: sticky; top: 0; z-index: 200; border-bottom: 3px solid var(--sla-orange);
+    }
+    .brand { display: flex; align-items: center; gap: 14px; }
+    .brand-logo { width: 44px; height: 44px; flex-shrink: 0; }
+    .brand-name { font-family: 'Montserrat', sans-serif; font-size: 1.15rem; font-weight: 800; letter-spacing: -0.3px; line-height: 1.2; }
+    .brand-name span { color: var(--sla-orange); }
+    .brand-sub { font-family: 'Montserrat', sans-serif; font-size: 0.7rem; font-weight: 500; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(255,255,255,0.55); margin-top: 2px; }
+    .header-right { display: flex; align-items: center; gap: 12px; }
+
+    /* Nav tabs in header */
+    .header-tabs { display: flex; gap: 4px; }
+    .header-tab {
+      padding: 6px 14px; border-radius: 6px; border: none; cursor: pointer;
+      font-family: 'Montserrat', sans-serif; font-size: 0.72rem; font-weight: 700;
+      letter-spacing: 0.5px; text-transform: uppercase; transition: all 0.18s;
+      background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.65);
+    }
+    .header-tab:hover { background: rgba(255,255,255,0.15); color: #fff; }
+    .header-tab.active { background: var(--sla-orange); color: #fff; }
+
+    .status-badge {
+      display: inline-flex; align-items: center; gap: 7px; padding: 5px 14px;
+      border-radius: 99px; font-family: 'Montserrat', sans-serif; font-size: 0.72rem;
+      font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase;
+    }
+    .status-badge.idle    { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.7); }
+    .status-badge.processing { background: rgba(244,121,32,0.2); color: var(--sla-orange-light); }
+    .status-badge.done    { background: rgba(39,174,96,0.2); color: #6ee09a; }
+    .status-badge.error   { background: rgba(231,76,60,0.2); color: #ffb3ae; }
+    .status-dot { width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+    .status-badge.processing .status-dot { animation: pulse 1.2s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+    /* ── Tab views ── */
+    .tab-view { display: none; }
+    .tab-view.active { display: block; }
+
+    /* ── App container ── */
+    .app-container {
+      max-width: 1440px; margin: 0 auto; padding: 1.75rem 1.5rem;
+      display: grid; grid-template-columns: 370px 1fr; gap: 1.5rem; align-items: start;
+    }
+
+    /* ── Card ── */
+    .card { background: var(--card-bg); border-radius: var(--radius-lg); box-shadow: var(--shadow); border: 1px solid var(--border); overflow: hidden; }
+    .card-header {
+      background: var(--sla-navy); color: #fff; padding: 0.9rem 1.25rem;
+      display: flex; align-items: center; justify-content: space-between;
+      border-bottom: 2px solid var(--sla-orange);
+    }
+    .card-header h2 {
+      font-family: 'Montserrat', sans-serif; font-size: 0.78rem; font-weight: 700;
+      letter-spacing: 1px; text-transform: uppercase; display: flex; align-items: center; gap: 8px;
+    }
+    .card-header h2 svg { width: 15px; height: 15px; opacity: 0.85; }
+    .card-body { padding: 1.25rem; }
+
+    /* ── Form elements ── */
+    label {
+      display: block; font-family: 'Montserrat', sans-serif; font-size: 0.7rem; font-weight: 700;
+      color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 6px;
+    }
+    select, input[type="text"], input[type="password"], textarea {
+      width: 100%; padding: 0.6rem 0.9rem; border: 1.5px solid var(--border); border-radius: var(--radius);
+      font-family: 'Open Sans', sans-serif; font-size: 0.88rem; color: var(--text); background: #fff;
+      transition: border-color 0.2s, box-shadow 0.2s; outline: none;
+    }
+    select:focus, input:focus, textarea:focus { border-color: var(--sla-orange); box-shadow: 0 0 0 3px rgba(244,121,32,0.12); }
+    .form-group { margin-bottom: 1rem; }
+    .form-group:last-child { margin-bottom: 0; }
+
+    .model-hint { font-size: 0.72rem; color: var(--text-muted); margin-top: 5px; line-height: 1.4; }
+    .model-in-use { font-size: 0.74rem; color: var(--success); background: rgba(39,174,96,0.08); border: 1px solid rgba(39,174,96,0.2); border-radius: 6px; padding: 5px 10px; margin-top: 6px; display: none; }
+    .model-in-use.visible { display: block; }
+
+    /* ── Upload ── */
+    .upload-zone {
+      border: 2px dashed var(--border); border-radius: var(--radius); padding: 1.75rem 1rem;
+      text-align: center; cursor: pointer; transition: all 0.2s; background: #fafcff; position: relative;
+    }
+    .upload-zone:hover, .upload-zone.drag-over { border-color: var(--sla-orange); background: rgba(244,121,32,0.03); }
+    .upload-zone input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
+    .upload-zone svg { width: 36px; height: 36px; color: var(--sla-orange); margin-bottom: 8px; }
+    .upload-zone .upload-text { font-size: 0.88rem; color: var(--text-muted); }
+    .upload-zone .upload-hint { font-size: 0.72rem; color: var(--text-muted); margin-top: 3px; opacity: 0.7; }
+    .file-selected { display: flex; align-items: center; gap: 10px; padding: 0.7rem 1rem; background: rgba(244,121,32,0.06); border: 1.5px solid rgba(244,121,32,0.25); border-radius: var(--radius); margin-top: 10px; }
+    .file-selected svg { width: 20px; height: 20px; color: var(--sla-orange); flex-shrink: 0; }
+    .file-name { font-size: 0.84rem; font-weight: 600; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .file-size { font-size: 0.72rem; color: var(--text-muted); }
+    .btn-remove { background: none; border: none; cursor: pointer; color: var(--danger); padding: 2px; display: flex; }
+    .btn-remove svg { width: 16px; height: 16px; }
+
+    /* ── Buttons ── */
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 7px;
+      padding: 0.65rem 1.25rem; border-radius: var(--radius); font-family: 'Montserrat', sans-serif;
+      font-size: 0.82rem; font-weight: 700; letter-spacing: 0.3px; cursor: pointer; border: none; transition: all 0.18s;
+    }
+    .btn svg { width: 15px; height: 15px; }
+    .btn-orange { background: var(--sla-orange); color: #fff; box-shadow: 0 2px 8px rgba(244,121,32,0.35); }
+    .btn-orange:hover:not(:disabled) { background: var(--sla-orange-dark); box-shadow: 0 4px 14px rgba(244,121,32,0.45); transform: translateY(-1px); }
+    .btn-orange:disabled { opacity: 0.45; cursor: not-allowed; transform: none; }
+    .btn-navy { background: var(--sla-navy); color: #fff; box-shadow: 0 2px 8px rgba(30,45,64,0.3); }
+    .btn-navy:hover:not(:disabled) { background: var(--sla-navy-light); transform: translateY(-1px); }
+    .btn-navy:disabled { opacity: 0.45; cursor: not-allowed; }
+    .btn-outline { background: transparent; border: 1.5px solid var(--border); color: var(--text); }
+    .btn-outline:hover { border-color: var(--sla-orange); color: var(--sla-orange); background: rgba(244,121,32,0.04); }
+    .btn-danger-outline { background: transparent; border: 1.5px solid rgba(231,76,60,0.3); color: var(--danger); }
+    .btn-danger-outline:hover { background: rgba(231,76,60,0.06); border-color: var(--danger); }
+    .btn-sm { padding: 0.38rem 0.8rem; font-size: 0.74rem; }
+    .btn-xs { padding: 0.28rem 0.65rem; font-size: 0.68rem; }
+    .btn-full { width: 100%; }
+    #generateBtn { font-size: 0.95rem; padding: 0.9rem 1.5rem; border-radius: 10px; letter-spacing: 0.5px; }
+
+    /* ── Progress ── */
+    .progress-wrap { display: none; margin-top: 1rem; }
+    .progress-wrap.visible { display: block; }
+    .progress-bar-bg { background: var(--border); border-radius: 99px; height: 5px; overflow: hidden; }
+    .progress-bar { height: 100%; border-radius: 99px; background: linear-gradient(90deg, var(--sla-navy) 0%, var(--sla-orange) 100%); transition: width 0.4s ease; width: 0%; }
+    .progress-label { font-size: 0.74rem; color: var(--text-muted); margin-top: 6px; text-align: center; font-family: 'Montserrat', sans-serif; }
+    .retry-info { font-size: 0.76rem; color: var(--warning); background: rgba(243,156,18,0.08); border: 1px solid rgba(243,156,18,0.25); border-radius: 6px; padding: 6px 10px; margin-top: 8px; display: none; }
+    .retry-info.visible { display: block; }
+
+    /* ── Right panel ── */
+    .right-panel { display: flex; flex-direction: column; gap: 1.5rem; }
+
+    /* ── Prompt library ── */
+    .prompt-textarea { min-height: 220px; resize: vertical; font-family: 'Open Sans', sans-serif; font-size: 0.83rem; line-height: 1.65; padding: 1rem; border-radius: var(--radius); }
+    .save-as-row { display: flex; gap: 8px; margin-top: 10px; align-items: center; }
+    .save-as-row input { flex: 1; padding: 0.5rem 0.85rem; font-size: 0.84rem; }
+    .prompt-actions { display: flex; gap: 7px; margin-top: 8px; flex-wrap: wrap; align-items: center; }
+    .prompt-saved-indicator { font-size: 0.73rem; color: var(--success); display: flex; align-items: center; gap: 4px; margin-left: auto; font-family: 'Montserrat', sans-serif; font-weight: 600; }
+    .prompt-saved-indicator svg { width: 13px; height: 13px; }
+    .prompt-saved-indicator.hidden { display: none; }
+    .prompt-library { margin-top: 14px; border: 1.5px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+    .prompt-library-header { background: var(--sla-navy-mid); color: #fff; padding: 0.6rem 1rem; display: flex; align-items: center; justify-content: space-between; font-family: 'Montserrat', sans-serif; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase; }
+    .prompt-library-body { background: #fafbfc; }
+    .prompt-library-empty { padding: 1.25rem; text-align: center; color: var(--text-muted); font-size: 0.8rem; }
+    .prompt-list { list-style: none; }
+    .prompt-list-item { display: flex; align-items: center; gap: 10px; padding: 0.65rem 1rem; border-bottom: 1px solid var(--border-light); transition: background 0.15s; }
+    .prompt-list-item:last-child { border-bottom: none; }
+    .prompt-list-item:hover { background: rgba(244,121,32,0.04); }
+    .prompt-list-item.active { background: rgba(244,121,32,0.08); border-left: 3px solid var(--sla-orange); }
+    .prompt-item-info { flex: 1; min-width: 0; }
+    .prompt-item-name { font-size: 0.84rem; font-weight: 600; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .prompt-item-meta { font-size: 0.7rem; color: var(--text-muted); margin-top: 1px; }
+    .prompt-item-actions { display: flex; gap: 5px; flex-shrink: 0; }
+    .active-prompt-badge { display: inline-flex; align-items: center; gap: 5px; font-size: 0.72rem; color: var(--sla-orange); background: rgba(244,121,32,0.1); border: 1px solid rgba(244,121,32,0.25); border-radius: 99px; padding: 3px 9px; font-family: 'Montserrat', sans-serif; font-weight: 600; margin-top: 6px; }
+    .active-prompt-badge svg { width: 11px; height: 11px; }
+
+    /* ── Collapsible ── */
+    .collapsible-toggle { background: none; border: none; cursor: pointer; display: flex; align-items: center; gap: 5px; color: rgba(255,255,255,0.75); font-family: 'Montserrat', sans-serif; font-size: 0.7rem; font-weight: 600; letter-spacing: 0.5px; padding: 3px 7px; border-radius: 4px; transition: background 0.2s; }
+    .collapsible-toggle:hover { background: rgba(255,255,255,0.12); }
+    .collapsible-toggle svg { width: 12px; height: 12px; transition: transform 0.25s; }
+    .collapsible-toggle.collapsed svg { transform: rotate(-90deg); }
+    .collapsible-body { overflow: hidden; transition: max-height 0.3s ease; }
+    .collapsible-body.collapsed { max-height: 0 !important; }
+
+    /* ── Article output ── */
+    #articleOutput { display: none; }
+    #articleOutput.visible { display: block; }
+    .article-toolbar { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; padding: 0.85rem 1.25rem; background: var(--sla-navy); border-bottom: 2px solid var(--sla-orange); }
+    .article-toolbar .spacer { flex: 1; }
+    .word-count { font-family: 'Montserrat', sans-serif; font-size: 0.7rem; font-weight: 600; color: rgba(255,255,255,0.6); background: rgba(255,255,255,0.08); padding: 3px 10px; border-radius: 99px; letter-spacing: 0.3px; }
+    .model-used-badge { font-family: 'Montserrat', sans-serif; font-size: 0.68rem; font-weight: 600; color: var(--sla-orange-light); background: rgba(244,121,32,0.15); border: 1px solid rgba(244,121,32,0.3); padding: 3px 8px; border-radius: 99px; }
+    .toolbar-label { font-family: 'Montserrat', sans-serif; font-size: 0.78rem; font-weight: 700; color: #fff; letter-spacing: 0.5px; }
+    #articleContent { padding: 2.5rem 3rem; font-family: 'Georgia', 'Times New Roman', serif; font-size: 0.97rem; line-height: 1.85; color: #1a2332; min-height: 300px; }
+    #articleContent h1 { font-family: 'Montserrat', sans-serif; font-size: 1.3rem; font-weight: 800; color: var(--sla-navy); margin-bottom: 0.5rem; line-height: 1.35; }
+    #articleContent .meta-block { font-family: 'Open Sans', sans-serif; font-size: 0.84rem; color: var(--text-muted); margin-bottom: 1.75rem; padding-bottom: 1.25rem; border-bottom: 3px solid var(--sla-orange); }
+    #articleContent h2 { font-family: 'Montserrat', sans-serif; font-size: 0.82rem; font-weight: 800; color: var(--sla-navy); margin-top: 1.75rem; margin-bottom: 0.6rem; text-transform: uppercase; letter-spacing: 1px; padding-left: 10px; border-left: 3px solid var(--sla-orange); }
+    #articleContent p { margin-bottom: 0.9rem; text-align: justify; }
+
+    /* ── Empty state ── */
+    .empty-state { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 4rem 2rem; color: var(--text-muted); text-align: center; }
+    .empty-state svg { width: 56px; height: 56px; opacity: 0.15; margin-bottom: 1rem; }
+    .empty-state h3 { font-family: 'Montserrat', sans-serif; font-size: 1rem; font-weight: 700; margin-bottom: 0.4rem; }
+    .empty-state p { font-size: 0.84rem; opacity: 0.75; }
+
+    /* ── Alerts ── */
+    .alert { padding: 0.75rem 1rem; border-radius: var(--radius); font-size: 0.82rem; display: flex; align-items: flex-start; gap: 9px; margin-top: 0.9rem; }
+    .alert svg { width: 16px; height: 16px; flex-shrink: 0; margin-top: 1px; }
+    .alert-error   { background: rgba(231,76,60,0.07);  border: 1px solid rgba(231,76,60,0.22);  color: #c0392b; }
+    .alert-success { background: rgba(39,174,96,0.07);  border: 1px solid rgba(39,174,96,0.22);  color: var(--success); }
+    .alert-warning { background: rgba(243,156,18,0.07); border: 1px solid rgba(243,156,18,0.22); color: #b7770d; }
+    .alert.hidden { display: none; }
+
+    /* ── Streaming cursor ── */
+    .streaming-cursor::after { content: '▋'; animation: blink 0.7s step-end infinite; color: var(--sla-orange); }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+    /* ══════════════════════════════════════════════════
+       REVIEW ARCHIVE (Tab 2)
+    ══════════════════════════════════════════════════ */
+    .archive-container { max-width: 1440px; margin: 0 auto; padding: 1.75rem 1.5rem; }
+    .archive-header-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 10px; }
+    .archive-header-row h1 { font-family: 'Montserrat', sans-serif; font-size: 1.1rem; font-weight: 800; color: var(--sla-navy); }
+    .archive-stats { font-size: 0.78rem; color: var(--text-muted); font-family: 'Montserrat', sans-serif; font-weight: 600; }
+    .archive-actions { display: flex; gap: 8px; align-items: center; }
+
+    /* Archive grid */
+    .archive-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 1rem; }
+    .archive-card {
+      background: var(--card-bg); border-radius: var(--radius-lg); border: 1.5px solid var(--border);
+      box-shadow: var(--shadow); overflow: hidden; transition: all 0.2s; position: relative;
+    }
+    .archive-card:hover { border-color: var(--sla-orange); box-shadow: 0 4px 20px rgba(244,121,32,0.12); transform: translateY(-2px); }
+    .archive-card.selected { border-color: var(--sla-orange); background: rgba(244,121,32,0.02); }
+    .archive-card.selected::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--sla-orange); }
+
+    .archive-card-header { padding: 0.85rem 1rem 0; display: flex; align-items: flex-start; gap: 10px; }
+    .archive-checkbox { width: 18px; height: 18px; accent-color: var(--sla-orange); cursor: pointer; flex-shrink: 0; margin-top: 2px; }
+    .archive-card-title { font-family: 'Montserrat', sans-serif; font-size: 0.84rem; font-weight: 700; color: var(--sla-navy); line-height: 1.35; flex: 1; }
+    .archive-card-body { padding: 0.5rem 1rem 0.85rem 1rem; }
+    .archive-card-preview { font-size: 0.78rem; color: var(--text-muted); line-height: 1.55; margin-top: 6px; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+    .archive-card-meta { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+    .archive-meta-tag { font-family: 'Montserrat', sans-serif; font-size: 0.65rem; font-weight: 600; letter-spacing: 0.3px; padding: 2px 7px; border-radius: 99px; }
+    .tag-date { background: rgba(30,45,64,0.07); color: var(--sla-navy); }
+    .tag-model { background: rgba(244,121,32,0.1); color: var(--sla-orange-dark); }
+    .tag-words { background: rgba(39,174,96,0.1); color: #1e8449; }
+    .archive-card-actions { display: flex; gap: 6px; padding: 0.6rem 1rem; border-top: 1px solid var(--border-light); background: #fafbfc; }
+
+    /* Compare bar */
+    .compare-bar {
+      position: fixed; bottom: 0; left: 0; right: 0; z-index: 300;
+      background: var(--sla-navy); border-top: 3px solid var(--sla-orange);
+      padding: 0.9rem 2rem; display: flex; align-items: center; gap: 14px;
+      box-shadow: 0 -4px 20px rgba(0,0,0,0.2); transform: translateY(100%);
+      transition: transform 0.3s ease;
+    }
+    .compare-bar.visible { transform: translateY(0); }
+    .compare-bar-label { font-family: 'Montserrat', sans-serif; font-size: 0.82rem; font-weight: 700; color: #fff; }
+    .compare-bar-count { background: var(--sla-orange); color: #fff; font-family: 'Montserrat', sans-serif; font-size: 0.78rem; font-weight: 800; padding: 3px 10px; border-radius: 99px; }
+    .compare-bar-selected { font-size: 0.76rem; color: rgba(255,255,255,0.65); flex: 1; }
+    .compare-model-select { padding: 0.45rem 0.85rem; border-radius: var(--radius); border: 1.5px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.08); color: #fff; font-family: 'Montserrat', sans-serif; font-size: 0.75rem; font-weight: 600; cursor: pointer; }
+    .compare-model-select option { background: var(--sla-navy); color: #fff; }
+
+    /* ══════════════════════════════════════════════════
+       COMPARISON VIEW (Tab 3)
+    ══════════════════════════════════════════════════ */
+    .comparison-container { max-width: 1440px; margin: 0 auto; padding: 1.75rem 1.5rem; }
+    .comparison-header { margin-bottom: 1.5rem; }
+    .comparison-header h1 { font-family: 'Montserrat', sans-serif; font-size: 1.1rem; font-weight: 800; color: var(--sla-navy); margin-bottom: 4px; }
+    .comparison-header p { font-size: 0.82rem; color: var(--text-muted); }
+
+    /* Side-by-side reviews */
+    .comparison-reviews { display: grid; grid-template-columns: repeat(auto-fit, minmax(380px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; }
+    .comparison-review-card { background: var(--card-bg); border-radius: var(--radius-lg); border: 1.5px solid var(--border); box-shadow: var(--shadow); overflow: hidden; }
+    .comparison-review-header { background: var(--sla-navy-mid); color: #fff; padding: 0.75rem 1rem; display: flex; align-items: center; justify-content: space-between; }
+    .comparison-review-title { font-family: 'Montserrat', sans-serif; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.5px; }
+    .comparison-review-body { padding: 1.25rem 1.5rem; font-family: 'Georgia', serif; font-size: 0.88rem; line-height: 1.75; color: var(--text); max-height: 500px; overflow-y: auto; }
+    .comparison-review-body h1 { font-family: 'Montserrat', sans-serif; font-size: 1rem; font-weight: 800; color: var(--sla-navy); margin-bottom: 0.4rem; }
+    .comparison-review-body h2 { font-family: 'Montserrat', sans-serif; font-size: 0.74rem; font-weight: 800; color: var(--sla-navy); text-transform: uppercase; letter-spacing: 0.8px; margin-top: 1.25rem; margin-bottom: 0.4rem; padding-left: 8px; border-left: 3px solid var(--sla-orange); }
+    .comparison-review-body p { margin-bottom: 0.7rem; text-align: justify; }
+    .comparison-review-body .meta-block { font-family: 'Open Sans', sans-serif; font-size: 0.78rem; color: var(--text-muted); margin-bottom: 1.25rem; padding-bottom: 1rem; border-bottom: 2px solid var(--sla-orange); }
+
+    /* AI Analysis panel */
+    .analysis-panel { background: var(--card-bg); border-radius: var(--radius-lg); border: 1.5px solid var(--border); box-shadow: var(--shadow); overflow: hidden; }
+    .analysis-panel-header { background: var(--sla-navy); color: #fff; padding: 0.9rem 1.25rem; display: flex; align-items: center; justify-content: space-between; border-bottom: 2px solid var(--sla-orange); }
+    .analysis-panel-header h2 { font-family: 'Montserrat', sans-serif; font-size: 0.78rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; display: flex; align-items: center; gap: 8px; }
+    .analysis-panel-header h2 svg { width: 15px; height: 15px; }
+    .analysis-controls { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; padding: 1rem 1.25rem; border-bottom: 1px solid var(--border-light); background: #fafbfc; }
+    .analysis-controls label { display: inline; font-size: 0.72rem; margin-bottom: 0; }
+    .analysis-controls select { width: auto; padding: 0.45rem 0.8rem; font-size: 0.82rem; }
+    .analysis-body { padding: 1.5rem 2rem; min-height: 200px; }
+    .analysis-body.empty { display: flex; align-items: center; justify-content: center; color: var(--text-muted); font-size: 0.85rem; text-align: center; }
+    .analysis-content { font-family: 'Open Sans', sans-serif; font-size: 0.9rem; line-height: 1.75; }
+    .analysis-content h3 { font-family: 'Montserrat', sans-serif; font-size: 0.8rem; font-weight: 800; color: var(--sla-navy); text-transform: uppercase; letter-spacing: 0.8px; margin-top: 1.25rem; margin-bottom: 0.5rem; padding-left: 8px; border-left: 3px solid var(--sla-orange); }
+    .analysis-content p { margin-bottom: 0.75rem; text-align: justify; }
+    .score-row { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 1.25rem; }
+    .score-card { flex: 1; min-width: 140px; background: var(--bg); border: 1.5px solid var(--border); border-radius: var(--radius); padding: 0.75rem 1rem; text-align: center; }
+    .score-card .score-label { font-family: 'Montserrat', sans-serif; font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); margin-bottom: 4px; }
+    .score-card .score-value { font-family: 'Montserrat', sans-serif; font-size: 1.5rem; font-weight: 800; color: var(--sla-navy); }
+    .score-card .score-sub { font-size: 0.7rem; color: var(--text-muted); margin-top: 2px; }
+    .score-card.highlight { background: rgba(244,121,32,0.06); border-color: rgba(244,121,32,0.3); }
+    .score-card.highlight .score-value { color: var(--sla-orange); }
+
+    /* ── Responsive ── */
+    @media (max-width: 960px) {
+      .app-container { grid-template-columns: 1fr; }
+      #articleContent { padding: 1.5rem; }
+      .comparison-reviews { grid-template-columns: 1fr; }
+    }
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 99px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--sla-slate); }
+  </style>
+</head>
+<body>
+
+<!-- ══════════════════════════════ HEADER ══════════════════════════════ -->
+<header>
+  <div class="brand">
+    <svg class="brand-logo" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="44" height="44" rx="8" fill="#F47920"/>
+      <text x="5" y="30" font-family="Montserrat, Arial, sans-serif" font-weight="800" font-size="18" fill="white" letter-spacing="-0.5">SLA</text>
+      <rect x="5" y="33" width="34" height="2.5" rx="1.25" fill="white" opacity="0.7"/>
+    </svg>
+    <div>
+      <div class="brand-name"><span>SLA Health</span></div>
+      <div class="brand-sub">Clinical Review Generator</div>
+    </div>
+  </div>
+  <div class="header-right">
+    <div class="header-tabs">
+      <button class="header-tab active" onclick="switchTab('generator')" id="tab-generator">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px;display:inline;margin-right:4px;"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+        Generator
+      </button>
+      <button class="header-tab" onclick="switchTab('archive')" id="tab-archive">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px;display:inline;margin-right:4px;"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+        Archive <span id="archiveTabCount" style="margin-left:4px;background:rgba(255,255,255,0.2);padding:1px 6px;border-radius:99px;font-size:0.65rem;"></span>
+      </button>
+      <button class="header-tab" onclick="switchTab('comparison')" id="tab-comparison">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px;display:inline;margin-right:4px;"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+        Compare
+      </button>
+    </div>
+    <div id="statusBadge" class="status-badge idle">
+      <div class="status-dot"></div>
+      <span id="statusText">Ready</span>
+    </div>
+  </div>
+</header>
+
+<!-- ══════════════════════════════ TAB 1: GENERATOR ══════════════════════════════ -->
+<div class="tab-view active" id="view-generator">
+<div class="app-container">
+
+  <!-- LEFT PANEL -->
+  <div style="display:flex;flex-direction:column;gap:1.25rem;">
+
+    <!-- Model Selection -->
+    <div class="card">
+      <div class="card-header">
+        <h2><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>Model Selection</h2>
+      </div>
+      <div class="card-body">
+        <div class="form-group">
+          <label>Free OpenRouter Model</label>
+          <select id="modelSelect">
+            <optgroup label="── Recommended ──">
+              <option value="arcee-ai/trinity-large-preview:free" selected>Arcee AI: Trinity Large Preview ★</option>
+              <option value="google/gemma-3-4b-it:free">Google: Gemma 3 4B ★</option>
+              <option value="google/gemma-3n-e4b-it:free">Google: Gemma 3n 4B ★</option>
+              <option value="google/gemma-3n-e2b-it:free">Google: Gemma 3n 2B ★</option>
+            </optgroup>
+            <optgroup label="── All Free Models ──">
+              <option value="arcee-ai/trinity-mini:free">Arcee AI: Trinity Mini</option>
+              <option value="google/gemma-3-12b-it:free">Google: Gemma 3 12B</option>
+              <option value="google/gemma-3-27b-it:free">Google: Gemma 3 27B</option>
+              <option value="liquid/lfm-2.5-1.2b-instruct:free">LiquidAI: LFM2.5-1.2B-Instruct</option>
+              <option value="liquid/lfm-2.5-1.2b-thinking:free">LiquidAI: LFM2.5-1.2B-Thinking</option>
+              <option value="meta-llama/llama-3.2-3b-instruct:free">Meta: Llama 3.2 3B Instruct</option>
+              <option value="meta-llama/llama-3.3-70b-instruct:free">Meta: Llama 3.3 70B Instruct</option>
+              <option value="mistralai/mistral-small-3.1-24b-instruct:free">Mistral: Mistral Small 3.1 24B</option>
+              <option value="nvidia/nemotron-3-nano-30b-a3b:free">NVIDIA: Nemotron 3 Nano 30B</option>
+              <option value="nvidia/nemotron-3-super-120b-a12b:free">NVIDIA: Nemotron 3 Super</option>
+              <option value="nvidia/nemotron-nano-12b-v2-vl:free">NVIDIA: Nemotron Nano 12B</option>
+              <option value="nvidia/nemotron-nano-9b-v2:free">NVIDIA: Nemotron Nano 9B</option>
+              <option value="nousresearch/hermes-3-llama-3.1-405b:free">Nous: Hermes 3 405B Instruct</option>
+              <option value="qwen/qwen3-4b:free">Qwen: Qwen3 4B</option>
+              <option value="qwen/qwen3-coder:free">Qwen: Qwen3 Coder 480B</option>
+              <option value="qwen/qwen3-next-80b-a3b-instruct:free">Qwen: Qwen3 Next 80B</option>
+              <option value="stepfun/step-3.5-flash:free">StepFun: Step 3.5 Flash</option>
+              <option value="cognitivecomputations/dolphin-mistral-24b-venice-edition:free">Venice: Uncensored</option>
+              <option value="z-ai/glm-4.5-air:free">Z.ai: GLM 4.5 Air</option>
+            </optgroup>
+          </select>
+          <div class="model-hint">★ Most reliable. Auto-retries with next model on failure.</div>
+          <div class="model-in-use" id="modelInUse"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Upload Paper -->
+    <div class="card">
+      <div class="card-header">
+        <h2><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Clinical Paper</h2>
+      </div>
+      <div class="card-body">
+        <div class="upload-zone" id="uploadZone">
+          <input type="file" id="pdfInput" accept=".pdf,.txt" onchange="handleFileSelect(event)" />
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          <div class="upload-text">Drop PDF or TXT here, or click to browse</div>
+          <div class="upload-hint">Supported: PDF, plain text (.txt)</div>
+        </div>
+        <div id="fileInfo" class="file-selected" style="display:none;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          <div style="flex:1;min-width:0;">
+            <div class="file-name" id="fileName"></div>
+            <div class="file-size" id="fileSize"></div>
+          </div>
+          <button class="btn-remove" onclick="removeFile()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+        </div>
+        <div id="extractionStatus" class="alert hidden" style="margin-top:8px;"></div>
+      </div>
+    </div>
+
+    <!-- Generate -->
+    <div class="card">
+      <div class="card-body">
+        <button class="btn btn-orange btn-full" id="generateBtn" onclick="generateReview()" disabled>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+          Generate Clinical Review
+        </button>
+        <div class="progress-wrap" id="progressWrap">
+          <div class="progress-bar-bg"><div class="progress-bar" id="progressBar"></div></div>
+          <div class="progress-label" id="progressLabel">Initialising...</div>
+        </div>
+        <div class="retry-info" id="retryInfo"></div>
+        <div id="generateAlert" class="alert hidden"></div>
+      </div>
+    </div>
+
+  </div><!-- /left panel -->
+
+  <!-- RIGHT PANEL -->
+  <div class="right-panel">
+
+    <!-- Prompt Editor -->
+    <div class="card">
+      <div class="card-header">
+        <h2><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>Prompt Editor</h2>
+        <button class="collapsible-toggle" id="promptToggle" onclick="togglePromptEditor()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+          Collapse
+        </button>
+      </div>
+      <div class="collapsible-body" id="promptBody">
+        <div class="card-body">
+          <div id="activePromptBadge" class="active-prompt-badge hidden">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+            <span id="activePromptName">Default Prompt</span>
+          </div>
+          <p style="font-size:0.76rem;color:var(--text-muted);margin-top:8px;margin-bottom:10px;line-height:1.5;">Edit the prompt below. Use <strong>Save As New</strong> to name and save a version to your library.</p>
+          <textarea class="prompt-textarea" id="promptTextarea" spellcheck="false"></textarea>
+          <div class="save-as-row">
+            <input type="text" id="promptNameInput" placeholder="Name this prompt version..." maxlength="60" />
+            <button class="btn btn-orange btn-sm" onclick="savePromptAs()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/></svg>
+              Save As New
+            </button>
+          </div>
+          <div class="prompt-actions">
+            <button class="btn btn-outline btn-sm" onclick="updateActivePrompt()" id="btnUpdateActive" style="display:none;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.5"/></svg>
+              Update Current
+            </button>
+            <button class="btn btn-outline btn-sm" onclick="resetToDefault()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.5"/></svg>
+              Reset to Default
+            </button>
+            <button class="btn btn-outline btn-sm" onclick="exportPrompt()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Export .txt
+            </button>
+            <button class="btn btn-outline btn-sm" onclick="importPromptClick()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+              Import .txt
+            </button>
+            <input type="file" id="importPromptFile" accept=".txt" style="display:none" onchange="importPrompt(event)" />
+            <div class="prompt-saved-indicator hidden" id="promptSavedIndicator">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+              Saved
+            </div>
+          </div>
+          <div class="prompt-library" id="promptLibrary">
+            <div class="prompt-library-header">
+              <span style="display:flex;align-items:center;gap:6px;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px;opacity:0.8;"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+                Saved Prompt Library
+              </span>
+              <span id="promptCount" style="opacity:0.6;font-size:0.68rem;">0 saved</span>
+            </div>
+            <div class="prompt-library-body">
+              <div class="prompt-library-empty" id="promptLibraryEmpty">No saved prompts yet. Edit the prompt above and click <strong>Save As New</strong>.</div>
+              <ul class="prompt-list" id="promptList"></ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Article Output -->
+    <div class="card" id="articleOutput">
+      <div class="article-toolbar">
+        <span class="toolbar-label">Generated Review</span>
+        <span class="word-count" id="wordCount">0 words</span>
+        <span class="model-used-badge" id="modelUsedBadge" style="display:none;"></span>
+        <div class="spacer"></div>
+        <button class="btn btn-outline btn-sm" style="color:#fff;border-color:rgba(255,255,255,0.25);" onclick="saveReviewToArchive()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/></svg>
+          Save to Archive
+        </button>
+        <button class="btn btn-outline btn-sm" style="color:#fff;border-color:rgba(255,255,255,0.25);" onclick="copyArticle()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copy
+        </button>
+        <button class="btn btn-navy btn-sm" onclick="downloadWord()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          Word
+        </button>
+        <button class="btn btn-orange btn-sm" onclick="downloadPDF()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          PDF
+        </button>
+      </div>
+      <div id="articleContent"></div>
+    </div>
+
+    <!-- Empty state -->
+    <div class="card" id="emptyState">
+      <div class="empty-state">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        <h3>No review generated yet</h3>
+        <p>Upload a clinical paper and click<br><strong>Generate Clinical Review</strong> to begin.</p>
+      </div>
+    </div>
+
+  </div><!-- /right panel -->
+</div>
+</div><!-- /tab-view generator -->
+
+<!-- ══════════════════════════════ TAB 2: ARCHIVE ══════════════════════════════ -->
+<div class="tab-view" id="view-archive">
+  <div class="archive-container">
+    <div class="archive-header-row">
+      <div>
+        <h1>Review Archive</h1>
+        <div class="archive-stats" id="archiveStats">0 saved reviews</div>
+      </div>
+      <div class="archive-actions">
+        <button class="btn btn-outline btn-sm" onclick="clearArchiveSelection()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/></svg>
+          Clear Selection
+        </button>
+        <button class="btn btn-navy btn-sm" onclick="selectAllArchive()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+          Select All
+        </button>
+      </div>
+    </div>
+    <div id="archiveEmpty" class="card" style="display:none;">
+      <div class="empty-state">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+        <h3>No saved reviews yet</h3>
+        <p>Generate a review and click <strong>Save to Archive</strong> to store it here.</p>
+      </div>
+    </div>
+    <div class="archive-grid" id="archiveGrid"></div>
+  </div>
+
+  <!-- Compare bar (sticky bottom) -->
+  <div class="compare-bar" id="compareBar">
+    <span class="compare-bar-label">Compare Reviews</span>
+    <span class="compare-bar-count" id="compareCount">0</span>
+    <span class="compare-bar-selected" id="compareSelectedNames"></span>
+    <label style="color:rgba(255,255,255,0.7);font-size:0.72rem;margin-bottom:0;white-space:nowrap;">AI Model:</label>
+    <select class="compare-model-select" id="compareModelSelect">
+      <option value="arcee-ai/trinity-large-preview:free">Arcee AI: Trinity Large ★</option>
+      <option value="google/gemma-3-4b-it:free">Google: Gemma 3 4B ★</option>
+      <option value="google/gemma-3n-e4b-it:free">Google: Gemma 3n 4B ★</option>
+      <option value="meta-llama/llama-3.3-70b-instruct:free">Meta: Llama 3.3 70B</option>
+      <option value="mistralai/mistral-small-3.1-24b-instruct:free">Mistral Small 3.1 24B</option>
+      <option value="nousresearch/hermes-3-llama-3.1-405b:free">Nous: Hermes 3 405B</option>
+      <option value="qwen/qwen3-next-80b-a3b-instruct:free">Qwen3 Next 80B</option>
+    </select>
+    <button class="btn btn-orange btn-sm" onclick="runComparison()" id="compareBtn" disabled>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+      Compare Selected
+    </button>
+  </div>
+</div><!-- /tab-view archive -->
+
+<!-- ══════════════════════════════ TAB 3: COMPARISON ══════════════════════════════ -->
+<div class="tab-view" id="view-comparison">
+  <div class="comparison-container">
+    <div class="comparison-header">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:6px;">
+        <button class="btn btn-outline btn-sm" onclick="switchTab('archive')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+          Back to Archive
+        </button>
+        <h1>AI Comparison Report</h1>
+      </div>
+      <p id="comparisonSubtitle">Select reviews from the Archive tab and click Compare.</p>
+    </div>
+
+    <!-- Side-by-side reviews -->
+    <div class="comparison-reviews" id="comparisonReviews"></div>
+
+    <!-- Analysis panel -->
+    <div class="analysis-panel">
+      <div class="analysis-panel-header">
+        <h2>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          AI Analysis
+        </h2>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <span id="analysisModelBadge" style="font-family:Montserrat,sans-serif;font-size:0.68rem;font-weight:600;color:var(--sla-orange-light);background:rgba(244,121,32,0.15);border:1px solid rgba(244,121,32,0.3);padding:3px 8px;border-radius:99px;display:none;"></span>
+          <button class="btn btn-orange btn-sm" id="downloadAnalysisBtn" onclick="downloadAnalysis()" style="display:none;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Download Report
+          </button>
+        </div>
+      </div>
+      <div class="analysis-controls" id="analysisControls" style="display:none;">
+        <label>Re-run with model:</label>
+        <select id="rerunModelSelect">
+          <option value="arcee-ai/trinity-large-preview:free">Arcee AI: Trinity Large ★</option>
+          <option value="google/gemma-3-4b-it:free">Google: Gemma 3 4B ★</option>
+          <option value="google/gemma-3n-e4b-it:free">Google: Gemma 3n 4B ★</option>
+          <option value="meta-llama/llama-3.3-70b-instruct:free">Meta: Llama 3.3 70B</option>
+          <option value="mistralai/mistral-small-3.1-24b-instruct:free">Mistral Small 3.1 24B</option>
+          <option value="nousresearch/hermes-3-llama-3.1-405b:free">Nous: Hermes 3 405B</option>
+          <option value="qwen/qwen3-next-80b-a3b-instruct:free">Qwen3 Next 80B</option>
+        </select>
+        <button class="btn btn-navy btn-sm" onclick="rerunAnalysis()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.5"/></svg>
+          Re-run Analysis
+        </button>
+      </div>
+      <div class="analysis-body" id="analysisBody">
+        <div class="empty-state" style="padding:2.5rem;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <h3>No analysis yet</h3>
+          <p>Select 2 or more reviews from the Archive and click <strong>Compare Selected</strong>.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div><!-- /tab-view comparison -->
+
+<!-- ══════════════════════════════ SCRIPTS ══════════════════════════════ -->
+<script>
+// ═══════════════════════════════════════════════════════════
+//  CONFIG
+// ═══════════════════════════════════════════════════════════
+const API_KEY = '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';
+const API_URL = 'https://openrouter.ai/api/v1/chat/completions';
+const FALLBACK_MODELS = [
+  'arcee-ai/trinity-large-preview:free','google/gemma-3-4b-it:free','google/gemma-3n-e4b-it:free',
+  'google/gemma-3n-e2b-it:free','google/gemma-3-12b-it:free','google/gemma-3-27b-it:free',
+  'meta-llama/llama-3.3-70b-instruct:free','mistralai/mistral-small-3.1-24b-instruct:free',
+  'nousresearch/hermes-3-llama-3.1-405b:free','qwen/qwen3-4b:free','qwen/qwen3-next-80b-a3b-instruct:free',
+];
+
+// ═══════════════════════════════════════════════════════════
+//  DEFAULT PROMPT
+// ═══════════════════════════════════════════════════════════
+const DEFAULT_PROMPT = `You are a medical writer creating a Curated Clinical Review on the attached clinical paper. A structured, objective summary of a single published clinical trial intended for a physician audience (specialist or general practitioner level). Your role is purely curatorial: you present what the paper reports, nothing more. You do not add clinical commentary, personal opinion, practice recommendations, or conclusions beyond those stated by the authors.
+
+TONE & STYLE
+Write in clear, precise clinical language appropriate for a practicing physician. Use correct medical and pharmacological terminology throughout. The tone is neutral, factual, and authoritative — like a well-written abstract expanded into a readable narrative. Avoid advocacy language, hedging phrases like "interestingly" or "remarkably," and any framing that implies editorial judgment. Do not use bullet points in the body of the article. Write in continuous prose with section headers. Active voice is preferred where natural.
+
+STRUCTURE
+Produce the article in the following sections, in this order:
+
+1. Title Block
+Article title formatted as: Curated Clinical Review: [Full title of the original paper]
+Authors, journal, year, volume, pages (as listed in the paper)
+DOI if available
+
+2. Background & Rationale (~100–150 words)
+Summarise the clinical problem or therapeutic question the study was designed to address. Include relevant disease context, the gap in evidence or unmet need identified by the authors, and the stated scientific rationale for the intervention being tested.
+
+3. Study Design (~100–150 words)
+Describe the trial design, setting, and timeline. State the study type (e.g., randomised, double-blind, placebo-controlled), the number of sites, duration of follow-up, and the treatment arms. Describe the patient population including key inclusion and exclusion criteria. State the primary and secondary endpoints exactly as the authors defined them. Note how randomisation and blinding were handled. Note the statistical approach used.
+
+4. Patient Population (~75–100 words)
+Summarise baseline demographics and key clinical characteristics of the enrolled population as reported. Note any relevant imbalances between groups if reported by the authors.
+
+5. Key Findings (~150–250 words)
+Report the results for primary and secondary endpoints with exact figures, confidence intervals, odds ratios, and p-values as presented in the paper. Report both the active and comparator arm results. Where the authors report a null result, state it clearly. Do not interpret results beyond what the paper states. If subgroup analyses or post-hoc analyses are reported, present them with that label.
+
+6. Safety & Tolerability (~75–100 words)
+Report adverse events and tolerability data as described. Include rates of discontinuation and reasons where given. Note whether serious adverse events were reported and their nature.
+
+7. Authors' Conclusions (~75–100 words)
+Reproduce the authors' own stated conclusions from the paper — do not paraphrase in a way that adds meaning. These should be clearly attributed to the authors of the study. Note any limitations the authors themselves acknowledged.
+
+8. Reference
+Full citation in Vancouver format.
+
+FORMATTING RULES
+Total article length: 800–1000 words depending on the complexity and volume of data in the source paper. Do not pad.
+UK British English.
+Use the section headers exactly as listed above.
+All numerical results must match the paper exactly — do not round or paraphrase statistics.
+If a section's content is not reported in the paper, write: Not reported in the source publication.
+Do not speculate about clinical implications. Do not compare the findings to other studies unless the authors themselves do so within the paper.
+Do not use hyphens as punctuation or to join phrases. Only use hyphens as part of a word or compound term (for example: well-established, double-blind, COX-2, Omega-3).
+Do not use bolded words mid sentence or mid paragraph — only in titles or subheadings.`;
+
+// ═══════════════════════════════════════════════════════════
+//  STATE
+// ═══════════════════════════════════════════════════════════
+let currentFile     = null;
+let extractedText   = '';
+let isGenerating    = false;
+let promptCollapsed = false;
+let rawArticleText  = '';
+let actualModelUsed = '';
+let activePromptId  = null;
+let selectedArchiveIds = new Set();
+let currentAnalysisText = '';
+let comparisonReviewIds = [];
+
+// ═══════════════════════════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════════════════════════
+window.addEventListener('DOMContentLoaded', () => {
+  if (typeof pdfjsLib !== 'undefined') {
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+  }
+  document.getElementById('promptTextarea').value = DEFAULT_PROMPT;
+  renderPromptLibrary();
+  renderArchive();
+  updateArchiveTabCount();
+
+  const zone = document.getElementById('uploadZone');
+  zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('drag-over'); });
+  zone.addEventListener('dragleave', () => zone.classList.remove('drag-over'));
+  zone.addEventListener('drop', e => {
+    e.preventDefault(); zone.classList.remove('drag-over');
+    const file = e.dataTransfer.files[0];
+    if (file) processFile(file);
+  });
+});
+
+// ═══════════════════════════════════════════════════════════
+//  TAB NAVIGATION
+// ═══════════════════════════════════════════════════════════
+function switchTab(tab) {
+  ['generator','archive','comparison'].forEach(t => {
+    document.getElementById('view-' + t).classList.toggle('active', t === tab);
+    document.getElementById('tab-' + t).classList.toggle('active', t === tab);
+  });
+  if (tab === 'archive') renderArchive();
+}
+
+// ═══════════════════════════════════════════════════════════
+//  FILE HANDLING
+// ═══════════════════════════════════════════════════════════
+function handleFileSelect(event) { const f = event.target.files[0]; if (f) processFile(f); }
+
+async function processFile(file) {
+  if (!file.name.match(/\.(pdf|txt)$/i)) { showExtractionStatus('Only PDF and TXT files are supported.', 'error'); return; }
+  currentFile = file;
+  document.getElementById('fileName').textContent = file.name;
+  document.getElementById('fileSize').textContent = formatFileSize(file.size);
+  document.getElementById('fileInfo').style.display = 'flex';
+  document.getElementById('uploadZone').style.display = 'none';
+  hideAlert('extractionStatus');
+  showExtractionStatus('Extracting text from file...', 'info');
+  try {
+    extractedText = file.name.toLowerCase().endsWith('.pdf') ? await extractPDFText(file) : await readTextFile(file);
+    const wc = extractedText.split(/\s+/).filter(w => w).length;
+    showExtractionStatus(`Text extracted — ${wc.toLocaleString()} words ready.`, 'success');
+    updateGenerateButton();
+  } catch (err) {
+    showExtractionStatus('Failed to extract text: ' + err.message, 'error');
+    extractedText = '';
+    updateGenerateButton();
+  }
+}
+
+async function extractPDFText(file) {
+  const arrayBuffer = await file.arrayBuffer();
+  const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+  let fullText = '';
+  for (let i = 1; i <= pdf.numPages; i++) {
+    const page = await pdf.getPage(i);
+    const content = await page.getTextContent();
+    fullText += content.items.map(item => item.str).join(' ') + '\n\n';
+  }
+  if (!fullText.trim()) throw new Error('No readable text found. The PDF may be scanned/image-based.');
+  return fullText;
+}
+
+function readTextFile(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = e => resolve(e.target.result);
+    reader.onerror = () => reject(new Error('Failed to read file.'));
+    reader.readAsText(file);
+  });
+}
+
+function removeFile() {
+  currentFile = null; extractedText = '';
+  document.getElementById('fileInfo').style.display = 'none';
+  document.getElementById('uploadZone').style.display = 'block';
+  document.getElementById('pdfInput').value = '';
+  hideAlert('extractionStatus');
+  updateGenerateButton();
+}
+
+// ═══════════════════════════════════════════════════════════
+//  PROMPT LIBRARY
+// ═══════════════════════════════════════════════════════════
+function getPromptLibrary() { try { return JSON.parse(localStorage.getItem('sla_prompt_library') || '[]'); } catch (_) { return []; } }
+function savePromptLibrary(lib) { localStorage.setItem('sla_prompt_library', JSON.stringify(lib)); }
+
+function savePromptAs() {
+  const name = document.getElementById('promptNameInput').value.trim();
+  if (!name) { alert('Please enter a name for this prompt version.'); document.getElementById('promptNameInput').focus(); return; }
+  const text = document.getElementById('promptTextarea').value.trim();
+  if (!text) { alert('Prompt cannot be empty.'); return; }
+  const lib = getPromptLibrary();
+  const id = 'p_' + Date.now();
+  lib.push({ id, name, text, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() });
+  savePromptLibrary(lib);
+  activePromptId = id;
+  document.getElementById('promptNameInput').value = '';
+  renderPromptLibrary();
+  showActiveBadge(name);
+  document.getElementById('btnUpdateActive').style.display = 'inline-flex';
+  flashSaved();
+}
+
+function updateActivePrompt() {
+  if (!activePromptId) return;
+  const lib = getPromptLibrary();
+  const idx = lib.findIndex(p => p.id === activePromptId);
+  if (idx === -1) return;
+  lib[idx].text = document.getElementById('promptTextarea').value.trim();
+  lib[idx].updatedAt = new Date().toISOString();
+  savePromptLibrary(lib);
+  renderPromptLibrary();
+  flashSaved();
+}
+
+function loadPrompt(id) {
+  const p = getPromptLibrary().find(x => x.id === id);
+  if (!p) return;
+  document.getElementById('promptTextarea').value = p.text;
+  activePromptId = id;
+  renderPromptLibrary();
+  showActiveBadge(p.name);
+  document.getElementById('btnUpdateActive').style.display = 'inline-flex';
+}
+
+function deletePrompt(id) {
+  if (!confirm('Delete this saved prompt? This cannot be undone.')) return;
+  savePromptLibrary(getPromptLibrary().filter(p => p.id !== id));
+  if (activePromptId === id) { activePromptId = null; document.getElementById('btnUpdateActive').style.display = 'none'; hideActiveBadge(); }
+  renderPromptLibrary();
+}
+
+function renderPromptLibrary() {
+  const lib = getPromptLibrary();
+  const list = document.getElementById('promptList');
+  const empty = document.getElementById('promptLibraryEmpty');
+  document.getElementById('promptCount').textContent = lib.length + ' saved';
+  list.innerHTML = '';
+  if (lib.length === 0) { empty.style.display = 'block'; return; }
+  empty.style.display = 'none';
+  lib.slice().reverse().forEach(p => {
+    const isActive = p.id === activePromptId;
+    const date = new Date(p.updatedAt).toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'numeric' });
+    const li = document.createElement('li');
+    li.className = 'prompt-list-item' + (isActive ? ' active' : '');
+    li.innerHTML = `
+      <div class="prompt-item-info">
+        <div class="prompt-item-name">${escapeHtml(p.name)}</div>
+        <div class="prompt-item-meta">Saved ${date} &middot; ${p.text.split(/\s+/).length.toLocaleString()} words</div>
+      </div>
+      <div class="prompt-item-actions">
+        <button class="btn btn-orange btn-xs" onclick="loadPrompt('${p.id}')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:11px;height:11px;"><polyline points="5 12 12 5 19 12"/><line x1="12" y1="5" x2="12" y2="19"/></svg>Load
+        </button>
+        <button class="btn btn-danger-outline btn-xs" onclick="deletePrompt('${p.id}')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:11px;height:11px;"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/></svg>
+        </button>
+      </div>`;
+    list.appendChild(li);
+  });
+}
+
+function resetToDefault() {
+  if (!confirm('Reset to the default prompt? Your current edits will be lost.')) return;
+  document.getElementById('promptTextarea').value = DEFAULT_PROMPT;
+  activePromptId = null;
+  document.getElementById('btnUpdateActive').style.display = 'none';
+  hideActiveBadge();
+  renderPromptLibrary();
+}
+
+function exportPrompt() {
+  const blob = new Blob([document.getElementById('promptTextarea').value], { type: 'text/plain' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href = url; a.download = 'sla_prompt.txt'; a.click();
+  URL.revokeObjectURL(url);
+}
+function importPromptClick() { document.getElementById('importPromptFile').click(); }
+function importPrompt(event) {
+  const file = event.target.files[0]; if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    document.getElementById('promptTextarea').value = e.target.result;
+    activePromptId = null; document.getElementById('btnUpdateActive').style.display = 'none'; hideActiveBadge();
+  };
+  reader.readAsText(file); event.target.value = '';
+}
+
+function showActiveBadge(name) { document.getElementById('activePromptName').textContent = name; document.getElementById('activePromptBadge').classList.remove('hidden'); }
+function hideActiveBadge() { document.getElementById('activePromptBadge').classList.add('hidden'); }
+function flashSaved() { const ind = document.getElementById('promptSavedIndicator'); ind.classList.remove('hidden'); setTimeout(() => ind.classList.add('hidden'), 2500); }
+
+function togglePromptEditor() {
+  promptCollapsed = !promptCollapsed;
+  const body = document.getElementById('promptBody');
+  const toggle = document.getElementById('promptToggle');
+  if (promptCollapsed) {
+    body.style.maxHeight = body.scrollHeight + 'px';
+    requestAnimationFrame(() => { body.style.maxHeight = '0'; body.classList.add('collapsed'); });
+    toggle.classList.add('collapsed');
+    toggle.childNodes[toggle.childNodes.length - 1].textContent = ' Expand';
+  } else {
+    body.classList.remove('collapsed');
+    body.style.maxHeight = body.scrollHeight + 'px';
+    setTimeout(() => { body.style.maxHeight = ''; }, 300);
+    toggle.classList.remove('collapsed');
+    toggle.childNodes[toggle.childNodes.length - 1].textContent = ' Collapse';
+  }
+}
+
+// ═══════════════════════════════════════════════════════════
+//  GENERATION
+// ═══════════════════════════════════════════════════════════
+function updateGenerateButton() {
+  document.getElementById('generateBtn').disabled = !extractedText.trim() || isGenerating;
+}
+
+async function generateReview() {
+  if (isGenerating) return;
+  if (!extractedText) { showAlert('generateAlert', 'Please upload a clinical paper first.', 'error'); return; }
+  isGenerating = true;
+  updateGenerateButton();
+  setStatus('processing', 'Generating...');
+  showProgress(true, 10, 'Connecting to OpenRouter...');
+  hideAlert('generateAlert');
+  document.getElementById('retryInfo').classList.remove('visible');
+  document.getElementById('modelInUse').classList.remove('visible');
+  document.getElementById('emptyState').style.display = 'none';
+  document.getElementById('articleOutput').classList.add('visible');
+  document.getElementById('articleContent').innerHTML =
+    '<div class="empty-state" style="padding:3rem;"><p style="font-size:0.9rem;color:var(--sla-orange);" class="streaming-cursor">Generating your Curated Clinical Review</p></div>';
+
+  const selectedModel = document.getElementById('modelSelect').value;
+  const systemPrompt  = document.getElementById('promptTextarea').value.trim();
+  const modelQueue    = [selectedModel, ...FALLBACK_MODELS.filter(m => m !== selectedModel)];
+  let lastError = '';
+
+  for (let attempt = 0; attempt < modelQueue.length; attempt++) {
+    const model = modelQueue[attempt];
+    if (attempt > 0) {
+      const retryEl = document.getElementById('retryInfo');
+      retryEl.textContent = `⚠ "${modelQueue[attempt-1].split('/').pop()}" unavailable — retrying with "${model.split('/').pop()}"...`;
+      retryEl.classList.add('visible');
+      showProgress(true, 20 + attempt * 8, `Trying ${model.split('/').pop()}...`);
+      await sleep(1200);
+    }
+    try {
+      const result = await attemptGeneration(model, systemPrompt);
+      rawArticleText  = result.text;
+      actualModelUsed = result.model || model;
+      document.getElementById('articleContent').innerHTML = formatArticleHTML(rawArticleText);
+      updateWordCount(rawArticleText);
+      const badge = document.getElementById('modelUsedBadge');
+      badge.textContent = 'Model: ' + actualModelUsed.split('/').pop().replace(':free','');
+      badge.style.display = 'inline-flex';
+      const inUse = document.getElementById('modelInUse');
+      inUse.textContent = '✓ Used: ' + actualModelUsed.split('/').pop().replace(':free','');
+      inUse.classList.add('visible');
+      document.getElementById('retryInfo').classList.remove('visible');
+      showProgress(true, 100, 'Complete!');
+      setTimeout(() => showProgress(false), 1500);
+      setStatus('done', 'Review ready');
+      showAlert('generateAlert', 'Review generated! Click <strong>Save to Archive</strong> to store it.', 'success');
+      setTimeout(() => hideAlert('generateAlert'), 6000);
+      isGenerating = false;
+      updateGenerateButton();
+      return;
+    } catch (err) {
+      lastError = err.message;
+      const isRetryable = /provider|rate.?limit|429|503|overload|unavailable|temporarily/i.test(err.message);
+      if (!isRetryable) break;
+    }
+  }
+
+  showProgress(false);
+  setStatus('error', 'Error');
+  document.getElementById('emptyState').style.display = 'flex';
+  document.getElementById('articleOutput').classList.remove('visible');
+  document.getElementById('retryInfo').classList.remove('visible');
+  showAlert('generateAlert', `All models are currently rate-limited. Please wait a minute and try again. Last error: ${lastError}`, 'error');
+  isGenerating = false;
+  updateGenerateButton();
+}
+
+async function attemptGeneration(model, systemPrompt) {
+  const truncatedText = extractedText.length > 60000 ? extractedText.substring(0, 60000) + '\n\n[Text truncated due to length]' : extractedText;
+  const response = await fetch(API_URL, {
+    method: 'POST',
+    headers: { 'Authorization': `Bearer ${API_KEY}`, 'Content-Type': 'application/json', 'HTTP-Referer': window.location.href, 'X-Title': 'SLA Health Clinical Review Generator' },
+    body: JSON.stringify({ model, messages: [{ role: 'system', content: systemPrompt }, { role: 'user', content: `Please write a Curated Clinical Review based on the following clinical paper text:\n\n---\n${truncatedText}\n---` }], stream: true, max_tokens: 3000, temperature: 0.3 })
+  });
+  if (!response.ok) {
+    let errMsg = `HTTP ${response.status}`;
+    try { const errData = await response.json(); errMsg = errData?.error?.metadata?.raw || errData?.error?.message || errMsg; } catch (_) {}
+    throw new Error(errMsg);
+  }
+  const reader = response.body.getReader();
+  const decoder = new TextDecoder();
+  let fullText = '', buffer = '', usedModel = model;
+  document.getElementById('articleContent').innerHTML = '';
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    buffer += decoder.decode(value, { stream: true });
+    const lines = buffer.split('\n'); buffer = lines.pop();
+    for (const line of lines) {
+      if (!line.startsWith('data: ')) continue;
+      const data = line.slice(6).trim();
+      if (data === '[DONE]') continue;
+      try {
+        const parsed = JSON.parse(data);
+        if (parsed.model) usedModel = parsed.model;
+        const delta = parsed.choices?.[0]?.delta?.content || '';
+        if (delta) { fullText += delta; document.getElementById('articleContent').innerHTML = formatArticleHTML(fullText) + '<span class="streaming-cursor"></span>'; }
+      } catch (_) {}
+    }
+    showProgress(true, Math.min(92, 30 + fullText.length / 40), 'Streaming response...');
+  }
+  if (!fullText.trim()) throw new Error('Provider returned empty response');
+  return { text: fullText, model: usedModel };
+}
+
+function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+// ═══════════════════════════════════════════════════════════
+//  REVIEW ARCHIVE — Storage
+// ═══════════════════════════════════════════════════════════
+function getArchive() { try { return JSON.parse(localStorage.getItem('sla_review_archive') || '[]'); } catch (_) { return []; } }
+function saveArchive(archive) { localStorage.setItem('sla_review_archive', JSON.stringify(archive)); }
+
+function saveReviewToArchive() {
+  if (!rawArticleText) { alert('No review to save. Generate a review first.'); return; }
+  const archive = getArchive();
+  const title = extractTitleFromReview(rawArticleText);
+  const id = 'r_' + Date.now();
+  const entry = {
+    id,
+    title,
+    text: rawArticleText,
+    model: actualModelUsed,
+    paperFile: currentFile ? currentFile.name : 'Unknown',
+    wordCount: rawArticleText.split(/\s+/).filter(w => w).length,
+    createdAt: new Date().toISOString()
+  };
+  archive.unshift(entry);
+  // Keep max 50 reviews
+  if (archive.length > 50) archive.splice(50);
+  saveArchive(archive);
+  updateArchiveTabCount();
+  showAlert('generateAlert', `Review saved to Archive as "<strong>${escapeHtml(title)}</strong>".`, 'success');
+  setTimeout(() => hideAlert('generateAlert'), 5000);
+}
+
+function extractTitleFromReview(text) {
+  const lines = text.split('\n');
+  for (const line of lines) {
+    const clean = line.replace(/^#+\s*/, '').replace(/\*\*/g, '').trim();
+    if (clean.length > 10 && clean.length < 200) return clean;
+  }
+  return 'Untitled Review — ' + new Date().toLocaleDateString('en-GB');
+}
+
+function deleteArchiveEntry(id) {
+  if (!confirm('Delete this saved review? This cannot be undone.')) return;
+  saveArchive(getArchive().filter(r => r.id !== id));
+  selectedArchiveIds.delete(id);
+  updateArchiveTabCount();
+  renderArchive();
+  updateCompareBar();
+}
+
+function updateArchiveTabCount() {
+  const count = getArchive().length;
+  const el = document.getElementById('archiveTabCount');
+  el.textContent = count > 0 ? count : '';
+}
+
+// ═══════════════════════════════════════════════════════════
+//  REVIEW ARCHIVE — Render
+// ═══════════════════════════════════════════════════════════
+function renderArchive() {
+  const archive = getArchive();
+  const grid = document.getElementById('archiveGrid');
+  const empty = document.getElementById('archiveEmpty');
+  document.getElementById('archiveStats').textContent = `${archive.length} saved review${archive.length !== 1 ? 's' : ''}`;
+  grid.innerHTML = '';
+  if (archive.length === 0) { empty.style.display = 'block'; return; }
+  empty.style.display = 'none';
+
+  archive.forEach(r => {
+    const isSelected = selectedArchiveIds.has(r.id);
+    const date = new Date(r.createdAt).toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'numeric' });
+    const preview = r.text.replace(/#+\s*/g, '').replace(/\*\*/g, '').replace(/\n+/g, ' ').slice(0, 180) + '...';
+    const modelShort = (r.model || 'Unknown').split('/').pop().replace(':free','');
+
+    const card = document.createElement('div');
+    card.className = 'archive-card' + (isSelected ? ' selected' : '');
+    card.id = 'archive-card-' + r.id;
+    card.innerHTML = `
+      <div class="archive-card-header">
+        <input type="checkbox" class="archive-checkbox" ${isSelected ? 'checked' : ''} onchange="toggleArchiveSelect('${r.id}', this.checked)" title="Select for comparison" />
+        <div class="archive-card-title">${escapeHtml(r.title)}</div>
+      </div>
+      <div class="archive-card-body">
+        <div class="archive-card-preview">${escapeHtml(preview)}</div>
+        <div class="archive-card-meta">
+          <span class="archive-meta-tag tag-date">${date}</span>
+          <span class="archive-meta-tag tag-model">${escapeHtml(modelShort)}</span>
+          <span class="archive-meta-tag tag-words">${r.wordCount.toLocaleString()} words</span>
+        </div>
+      </div>
+      <div class="archive-card-actions">
+        <button class="btn btn-orange btn-xs" onclick="loadReviewFromArchive('${r.id}')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:11px;height:11px;"><polyline points="5 12 12 5 19 12"/><line x1="12" y1="5" x2="12" y2="19"/></svg>
+          Load
+        </button>
+        <button class="btn btn-navy btn-xs" onclick="downloadArchiveWord('${r.id}')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:11px;height:11px;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          Word
+        </button>
+        <button class="btn btn-outline btn-xs" onclick="downloadArchivePDF('${r.id}')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:11px;height:11px;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          PDF
+        </button>
+        <div style="flex:1;"></div>
+        <button class="btn btn-danger-outline btn-xs" onclick="deleteArchiveEntry('${r.id}')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:11px;height:11px;"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/></svg>
+          Delete
+        </button>
+      </div>`;
+    grid.appendChild(card);
+  });
+}
+
+function loadReviewFromArchive(id) {
+  const r = getArchive().find(x => x.id === id);
+  if (!r) return;
+  rawArticleText  = r.text;
+  actualModelUsed = r.model || '';
+  document.getElementById('articleContent').innerHTML = formatArticleHTML(rawArticleText);
+  updateWordCount(rawArticleText);
+  const badge = document.getElementById('modelUsedBadge');
+  badge.textContent = 'Model: ' + (r.model || 'Unknown').split('/').pop().replace(':free','');
+  badge.style.display = 'inline-flex';
+  document.getElementById('emptyState').style.display = 'none';
+  document.getElementById('articleOutput').classList.add('visible');
+  switchTab('generator');
+  setStatus('done', 'Review loaded');
+}
+
+// ── Selection ──
+function toggleArchiveSelect(id, checked) {
+  if (checked) selectedArchiveIds.add(id);
+  else selectedArchiveIds.delete(id);
+  const card = document.getElementById('archive-card-' + id);
+  if (card) card.classList.toggle('selected', checked);
+  updateCompareBar();
+}
+
+function selectAllArchive() {
+  getArchive().forEach(r => { selectedArchiveIds.add(r.id); });
+  renderArchive();
+  updateCompareBar();
+}
+
+function clearArchiveSelection() {
+  selectedArchiveIds.clear();
+  renderArchive();
+  updateCompareBar();
+}
+
+function updateCompareBar() {
+  const bar = document.getElementById('compareBar');
+  const count = selectedArchiveIds.size;
+  document.getElementById('compareCount').textContent = count;
+  document.getElementById('compareBtn').disabled = count < 2;
+  if (count > 0) {
+    bar.classList.add('visible');
+    const archive = getArchive();
+    const names = [...selectedArchiveIds].map(id => {
+      const r = archive.find(x => x.id === id);
+      return r ? r.title.slice(0, 35) + (r.title.length > 35 ? '…' : '') : id;
+    });
+    document.getElementById('compareSelectedNames').textContent = names.join(' vs ');
+  } else {
+    bar.classList.remove('visible');
+  }
+}
+
+// ── Archive downloads ──
+function downloadArchiveWord(id) {
+  const r = getArchive().find(x => x.id === id);
+  if (!r) return;
+  const saved = rawArticleText;
+  rawArticleText = r.text;
+  downloadWord().then ? downloadWord() : downloadWord();
+  rawArticleText = saved;
+}
+
+function downloadArchivePDF(id) {
+  const r = getArchive().find(x => x.id === id);
+  if (!r) return;
+  const tmp = document.createElement('div');
+  tmp.style.cssText = 'font-family:Georgia,serif;font-size:11pt;line-height:1.75;color:#1a2332;padding:0;';
+  tmp.innerHTML = formatArticleHTML(r.text);
+  tmp.querySelectorAll('h1').forEach(h => { h.style.cssText = 'font-size:14pt;font-weight:800;color:#1e2d40;margin-bottom:6px;line-height:1.3;font-family:Arial,sans-serif;'; });
+  tmp.querySelectorAll('h2').forEach(h => { h.style.cssText = 'font-size:9.5pt;font-weight:800;color:#1e2d40;text-transform:uppercase;letter-spacing:0.8px;margin-top:18px;margin-bottom:6px;font-family:Arial,sans-serif;padding-left:8px;border-left:3px solid #F47920;'; });
+  tmp.querySelectorAll('p').forEach(p => { p.style.cssText = 'margin-bottom:8px;text-align:justify;'; });
+  tmp.querySelectorAll('.meta-block').forEach(m => { m.style.cssText = 'font-size:9pt;color:#5a6a7e;margin-bottom:16px;padding-bottom:12px;border-bottom:3px solid #F47920;font-family:Arial,sans-serif;'; });
+  document.body.appendChild(tmp);
+  html2pdf().set({ margin:[15,20,15,20], filename:'SLA_Health_Clinical_Review.pdf', image:{type:'jpeg',quality:0.98}, html2canvas:{scale:2,useCORS:true}, jsPDF:{unit:'mm',format:'a4',orientation:'portrait'} }).from(tmp).save().then(() => document.body.removeChild(tmp));
+}
+
+// ═══════════════════════════════════════════════════════════
+//  COMPARISON
+// ═══════════════════════════════════════════════════════════
+async function runComparison() {
+  if (selectedArchiveIds.size < 2) { alert('Please select at least 2 reviews to compare.'); return; }
+  const model = document.getElementById('compareModelSelect').value;
+  comparisonReviewIds = [...selectedArchiveIds];
+  switchTab('comparison');
+  await executeComparison(comparisonReviewIds, model);
+}
+
+async function rerunAnalysis() {
+  if (comparisonReviewIds.length < 2) { alert('No reviews loaded for comparison.'); return; }
+  const model = document.getElementById('rerunModelSelect').value;
+  await executeComparison(comparisonReviewIds, model);
+}
+
+async function executeComparison(ids, model) {
+  const archive = getArchive();
+  const reviews = ids.map(id => archive.find(r => r.id === id)).filter(Boolean);
+  if (reviews.length < 2) { alert('Could not find selected reviews.'); return; }
+
+  // Render side-by-side
+  const container = document.getElementById('comparisonReviews');
+  container.innerHTML = '';
+  reviews.forEach((r, i) => {
+    const card = document.createElement('div');
+    card.className = 'comparison-review-card';
+    const date = new Date(r.createdAt).toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'numeric' });
+    const modelShort = (r.model || 'Unknown').split('/').pop().replace(':free','');
+    card.innerHTML = `
+      <div class="comparison-review-header">
+        <span class="comparison-review-title">Review ${i+1}: ${escapeHtml(r.title.slice(0,50))}${r.title.length > 50 ? '…' : ''}</span>
+        <span style="font-size:0.65rem;opacity:0.65;">${date} · ${escapeHtml(modelShort)}</span>
+      </div>
+      <div class="comparison-review-body">${formatArticleHTML(r.text)}</div>`;
+    container.appendChild(card);
+  });
+
+  document.getElementById('comparisonSubtitle').textContent = `Comparing ${reviews.length} reviews using ${model.split('/').pop().replace(':free','')}`;
+  document.getElementById('analysisControls').style.display = 'flex';
+
+  // Show loading state
+  const body = document.getElementById('analysisBody');
+  body.innerHTML = `<div class="empty-state" style="padding:2.5rem;"><p style="font-size:0.9rem;color:var(--sla-orange);" class="streaming-cursor">Analysing ${reviews.length} reviews for accuracy and writing quality</p></div>`;
+  document.getElementById('analysisModelBadge').textContent = model.split('/').pop().replace(':free','');
+  document.getElementById('analysisModelBadge').style.display = 'inline-flex';
+  document.getElementById('downloadAnalysisBtn').style.display = 'none';
+
+  setStatus('processing', 'Comparing...');
+
+  // Build comparison prompt
+  const reviewsText = reviews.map((r, i) =>
+    `=== REVIEW ${i+1}: "${r.title}" (generated by ${r.model || 'Unknown'}) ===\n\n${r.text.slice(0, 8000)}`
+  ).join('\n\n---\n\n');
+
+  const comparisonPrompt = `You are a senior medical editor and clinical writing expert at SLA Health. You have been given ${reviews.length} Curated Clinical Reviews of clinical papers. Your task is to compare them rigorously across two dimensions: (1) clinical accuracy and completeness, and (2) writing style and quality.
+
+Provide a structured analysis with the following sections:
+
+OVERALL SUMMARY
+A brief 2–3 sentence overview of the comparison.
+
+ACCURACY & COMPLETENESS
+For each review, assess: completeness of key sections (background, design, findings, safety, conclusions), accuracy of statistical reporting (are figures, p-values, CIs correctly reported?), fidelity to the source paper (does the review stay within what the paper reports?), and any omissions or errors. Score each review out of 10 for accuracy.
+
+WRITING STYLE & QUALITY
+For each review, assess: clarity and precision of language, appropriate clinical tone, adherence to the structured format, readability for a physician audience, and any stylistic issues. Score each review out of 10 for writing quality.
+
+COMPARATIVE VERDICT
+Which review is stronger overall and why? What are the key differentiating factors?
+
+RECOMMENDATIONS
+Specific suggestions to improve the weaker review(s).
+
+Be objective, specific, and cite examples from the actual review text where possible. Use the review numbers (Review 1, Review 2, etc.) throughout.`;
+
+  try {
+    const modelQueue = [model, ...FALLBACK_MODELS.filter(m => m !== model)];
+    let analysisText = '';
+    let usedModel = model;
+    let lastErr = '';
+
+    for (let attempt = 0; attempt < Math.min(4, modelQueue.length); attempt++) {
+      const tryModel = modelQueue[attempt];
+      try {
+        const result = await attemptAnalysis(tryModel, comparisonPrompt, reviewsText);
+        analysisText = result.text;
+        usedModel = result.model || tryModel;
+        break;
+      } catch (err) {
+        lastErr = err.message;
+        const isRetryable = /provider|rate.?limit|429|503|overload|unavailable|temporarily/i.test(err.message);
+        if (!isRetryable) break;
+        await sleep(1200);
+      }
+    }
+
+    if (!analysisText) throw new Error(lastErr || 'All models failed');
+
+    currentAnalysisText = analysisText;
+    document.getElementById('analysisModelBadge').textContent = 'Analysed by: ' + usedModel.split('/').pop().replace(':free','');
+    document.getElementById('downloadAnalysisBtn').style.display = 'inline-flex';
+    body.innerHTML = `<div class="analysis-content">${formatAnalysisHTML(analysisText)}</div>`;
+    setStatus('done', 'Analysis complete');
+
+  } catch (err) {
+    body.innerHTML = `<div class="alert alert-error" style="margin:1rem;"><span>Analysis failed: ${escapeHtml(err.message)}</span></div>`;
+    setStatus('error', 'Error');
+  }
+}
+
+async function attemptAnalysis(model, systemPrompt, reviewsText) {
+  const response = await fetch(API_URL, {
+    method: 'POST',
+    headers: { 'Authorization': `Bearer ${API_KEY}`, 'Content-Type': 'application/json', 'HTTP-Referer': window.location.href, 'X-Title': 'SLA Health Review Comparison' },
+    body: JSON.stringify({ model, messages: [{ role: 'system', content: systemPrompt }, { role: 'user', content: `Please analyse and compare the following ${reviewsText.split('=== REVIEW').length - 1} Curated Clinical Reviews:\n\n${reviewsText}` }], stream: true, max_tokens: 2500, temperature: 0.2 })
+  });
+  if (!response.ok) {
+    let errMsg = `HTTP ${response.status}`;
+    try { const errData = await response.json(); errMsg = errData?.error?.metadata?.raw || errData?.error?.message || errMsg; } catch (_) {}
+    throw new Error(errMsg);
+  }
+  const reader = response.body.getReader();
+  const decoder = new TextDecoder();
+  let fullText = '', buffer = '', usedModel = model;
+  document.getElementById('analysisBody').innerHTML = '';
+
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    buffer += decoder.decode(value, { stream: true });
+    const lines = buffer.split('\n'); buffer = lines.pop();
+    for (const line of lines) {
+      if (!line.startsWith('data: ')) continue;
+      const data = line.slice(6).trim();
+      if (data === '[DONE]') continue;
+      try {
+        const parsed = JSON.parse(data);
+        if (parsed.model) usedModel = parsed.model;
+        const delta = parsed.choices?.[0]?.delta?.content || '';
+        if (delta) {
+          fullText += delta;
+          document.getElementById('analysisBody').innerHTML = `<div class="analysis-content">${formatAnalysisHTML(fullText)}</div><span class="streaming-cursor"></span>`;
+        }
+      } catch (_) {}
+    }
+  }
+  if (!fullText.trim()) throw new Error('Provider returned empty response');
+  return { text: fullText, model: usedModel };
+}
+
+function formatAnalysisHTML(text) {
+  if (!text) return '';
+  let html = '';
+  const lines = text.split('\n');
+  let inParagraph = false;
+  const sectionHeaders = ['OVERALL SUMMARY','ACCURACY','WRITING STYLE','COMPARATIVE VERDICT','RECOMMENDATIONS'];
+
+  for (const rawLine of lines) {
+    let line = rawLine.trim();
+    if (!line) { if (inParagraph) { html += '</p>'; inParagraph = false; } continue; }
+
+    if (line.startsWith('# ')) { if (inParagraph) { html += '</p>'; inParagraph = false; } html += `<h3>${escapeHtml(line.slice(2))}</h3>`; continue; }
+    if (line.startsWith('## ') || line.startsWith('### ')) { if (inParagraph) { html += '</p>'; inParagraph = false; } html += `<h3>${escapeHtml(line.replace(/^#{2,3}\s+/, ''))}</h3>`; continue; }
+
+    const isBoldHeader = line.startsWith('**') && line.endsWith('**') && !line.slice(2,-2).includes('**');
+    const isKnown = sectionHeaders.some(h => line.toUpperCase().startsWith(h));
+    if (isBoldHeader || isKnown) {
+      if (inParagraph) { html += '</p>'; inParagraph = false; }
+      html += `<h3>${escapeHtml(line.replace(/^\*\*|\*\*$/g,''))}</h3>`;
+      continue;
+    }
+
+    line = line.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+    if (!inParagraph) { html += '<p>'; inParagraph = true; } else { html += ' '; }
+    html += line;
+  }
+  if (inParagraph) html += '</p>';
+  return html;
+}
+
+function downloadAnalysis() {
+  if (!currentAnalysisText) return;
+  const archive = getArchive();
+  const titles = comparisonReviewIds.map(id => { const r = archive.find(x => x.id === id); return r ? r.title : id; });
+  const header = `SLA Health: Clinical Review Comparison Report\nGenerated: ${new Date().toLocaleString('en-GB')}\n\nReviews compared:\n${titles.map((t,i) => `  ${i+1}. ${t}`).join('\n')}\n\n${'─'.repeat(60)}\n\n`;
+  const blob = new Blob([header + currentAnalysisText], { type: 'text/plain' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href = url; a.download = 'SLA_Health_Comparison_Report.txt'; a.click();
+  URL.revokeObjectURL(url);
+}
+
+// ═══════════════════════════════════════════════════════════
+//  ARTICLE FORMATTING
+// ═══════════════════════════════════════════════════════════
+const SECTION_HEADERS = [
+  'Background & Rationale','Study Design','Patient Population','Key Findings',
+  'Safety & Tolerability',"Authors' Conclusions",'Authors\u2019 Conclusions',
+  'Reference','Title Block','BACKGROUND','STUDY DESIGN','PATIENT POPULATION',
+  'KEY FINDINGS','SAFETY','AUTHORS','REFERENCE'
+];
+
+function formatArticleHTML(text) {
+  if (!text) return '';
+  let html = '';
+  const lines = text.split('\n');
+  let inParagraph = false, titleProcessed = false;
+  for (const rawLine of lines) {
+    let line = rawLine.trim();
+    if (!line) { if (inParagraph) { html += '</p>'; inParagraph = false; } continue; }
+    if (line.startsWith('# ')) { if (inParagraph) { html += '</p>'; inParagraph = false; } html += `<h1>${escapeHtml(line.slice(2))}</h1>`; titleProcessed = true; continue; }
+    if (line.startsWith('## ') || line.startsWith('### ')) { if (inParagraph) { html += '</p>'; inParagraph = false; } html += `<h2>${escapeHtml(line.replace(/^#{2,3}\s+/, ''))}</h2>`; continue; }
+    const isBoldHeader = line.startsWith('**') && line.endsWith('**') && !line.slice(2,-2).includes('**');
+    const isNumbered   = /^\d+\.\s+[A-Z]/.test(line) && line.length < 100;
+    const isKnownHeader = SECTION_HEADERS.some(h => line.toLowerCase().startsWith(h.toLowerCase()) && line.length < 100);
+    if (isBoldHeader || isNumbered || isKnownHeader) {
+      if (inParagraph) { html += '</p>'; inParagraph = false; }
+      html += `<h2>${escapeHtml(line.replace(/^\*\*|\*\*$/g,'').replace(/^\d+\.\s+/,''))}</h2>`;
+      titleProcessed = true; continue;
+    }
+    if (titleProcessed && !inParagraph) {
+      const looksLikeMeta = line.length < 300 && (/\b(doi|vol\.?|pp\.|pages|journal|\d{4})/i.test(line) || /^(by |doi:|authors?:)/i.test(line));
+      if (looksLikeMeta && !SECTION_HEADERS.some(h => line.toLowerCase().startsWith(h.toLowerCase()))) {
+        html += `<div class="meta-block">${escapeHtml(line)}</div>`; continue;
+      }
+    }
+    line = line.replace(/\*\*([^*]+)\*\*/g, '$1');
+    const parts = line.split(/(\*[^*]+\*)/);
+    const lineHtml = parts.map(part => part.startsWith('*') && part.endsWith('*') && part.length > 2 ? '<em>' + escapeHtml(part.slice(1,-1)) + '</em>' : escapeHtml(part)).join('');
+    if (!inParagraph) { html += '<p>'; inParagraph = true; } else { html += ' '; }
+    html += lineHtml;
+  }
+  if (inParagraph) html += '</p>';
+  return html;
+}
+
+function escapeHtml(t) {
+  if (typeof t !== 'string') return '';
+  return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function updateWordCount(text) {
+  document.getElementById('wordCount').textContent = `${text.split(/\s+/).filter(w => w).length.toLocaleString()} words`;
+}
+
+// ═══════════════════════════════════════════════════════════
+//  DOWNLOADS
+// ═══════════════════════════════════════════════════════════
+async function downloadWord() {
+  if (!rawArticleText) { alert('No article to download.'); return; }
+  try {
+    const { Document, Packer, Paragraph, TextRun, HeadingLevel, AlignmentType } = docx;
+    const paragraphs = [];
+    for (const rawLine of rawArticleText.split('\n')) {
+      const line = rawLine.trim();
+      if (!line) { paragraphs.push(new Paragraph({ text: '' })); continue; }
+      if (line.startsWith('# ')) {
+        paragraphs.push(new Paragraph({ text: line.slice(2), heading: HeadingLevel.HEADING_1, spacing: { after: 200 } }));
+      } else if (line.startsWith('## ') || line.startsWith('### ')) {
+        paragraphs.push(new Paragraph({ text: line.replace(/^#{2,3}\s+/, ''), heading: HeadingLevel.HEADING_2, spacing: { before: 280, after: 100 } }));
+      } else {
+        const isBold  = line.startsWith('**') && line.endsWith('**');
+        const isNum   = /^\d+\.\s+[A-Z]/.test(line) && line.length < 100;
+        const isKnown = SECTION_HEADERS.some(h => line.toLowerCase().startsWith(h.toLowerCase()) && line.length < 100);
+        if (isBold || isNum || isKnown) {
+          paragraphs.push(new Paragraph({ children: [new TextRun({ text: line.replace(/^\*\*|\*\*$/g,'').replace(/^\d+\.\s+/,''), bold: true, size: 24, color: '1e2d40' })], spacing: { before: 280, after: 100 } }));
+        } else {
+          const clean = line.replace(/\*\*([^*]+)\*\*/g,'$1').replace(/\*([^*]+)\*/g,'$1');
+          paragraphs.push(new Paragraph({ children: [new TextRun({ text: clean, size: 22 })], alignment: AlignmentType.JUSTIFIED, spacing: { after: 160 } }));
+        }
+      }
+    }
+    const doc = new Document({ creator: 'SLA Health Clinical Review Generator', title: 'Curated Clinical Review', sections: [{ properties: { page: { margin: { top: 1440, right: 1440, bottom: 1440, left: 1440 } } }, children: paragraphs }] });
+    const blob = await Packer.toBlob(doc);
+    saveAs(blob, 'SLA_Health_Clinical_Review.docx');
+  } catch (err) { alert('Failed to generate Word document: ' + err.message); }
+}
+
+function downloadPDF() {
+  if (!rawArticleText) { alert('No article to download.'); return; }
+  const content = document.getElementById('articleContent');
+  const printDiv = document.createElement('div');
+  printDiv.style.cssText = 'font-family:Georgia,serif;font-size:11pt;line-height:1.75;color:#1a2332;padding:0;';
+  printDiv.innerHTML = content.innerHTML;
+  printDiv.querySelectorAll('h1').forEach(h => { h.style.cssText = 'font-size:14pt;font-weight:800;color:#1e2d40;margin-bottom:6px;line-height:1.3;font-family:Arial,sans-serif;'; });
+  printDiv.querySelectorAll('h2').forEach(h => { h.style.cssText = 'font-size:9.5pt;font-weight:800;color:#1e2d40;text-transform:uppercase;letter-spacing:0.8px;margin-top:18px;margin-bottom:6px;font-family:Arial,sans-serif;padding-left:8px;border-left:3px solid #F47920;'; });
+  printDiv.querySelectorAll('p').forEach(p => { p.style.cssText = 'margin-bottom:8px;text-align:justify;'; });
+  printDiv.querySelectorAll('.meta-block').forEach(m => { m.style.cssText = 'font-size:9pt;color:#5a6a7e;margin-bottom:16px;padding-bottom:12px;border-bottom:3px solid #F47920;font-family:Arial,sans-serif;'; });
+  document.body.appendChild(printDiv);
+  html2pdf().set({ margin:[15,20,15,20], filename:'SLA_Health_Clinical_Review.pdf', image:{type:'jpeg',quality:0.98}, html2canvas:{scale:2,useCORS:true}, jsPDF:{unit:'mm',format:'a4',orientation:'portrait'} }).from(printDiv).save().then(() => document.body.removeChild(printDiv));
+}
+
+function copyArticle() {
+  if (!rawArticleText) return;
+  navigator.clipboard.writeText(rawArticleText).then(() => {
+    showAlert('generateAlert', 'Article copied to clipboard!', 'success');
+    setTimeout(() => hideAlert('generateAlert'), 3000);
+  }).catch(() => {
+    const ta = document.createElement('textarea'); ta.value = rawArticleText;
+    document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
+  });
+}
+
+// ═══════════════════════════════════════════════════════════
+//  UI HELPERS
+// ═══════════════════════════════════════════════════════════
+function setStatus(state, text) {
+  document.getElementById('statusBadge').className = 'status-badge ' + state;
+  document.getElementById('statusText').textContent = text;
+}
+
+function showProgress(visible, pct = 0, label = '') {
+  const wrap = document.getElementById('progressWrap');
+  if (visible) { wrap.classList.add('visible'); document.getElementById('progressBar').style.width = pct + '%'; document.getElementById('progressLabel').textContent = label; } else { wrap.classList.remove('visible'); document.getElementById('progressBar').style.width = '0%'; } }
+
+function showAlert(id, message, type = 'error') {
+  const icons = { error:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>', success:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>', warning:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>' };
+  const el = document.getElementById(id);
+  el.className = `alert alert-${type}`;
+  el.innerHTML = (icons[type] || icons.error) + `<span>${message}</span>`;
+  el.classList.remove('hidden');
+}
+
+function hideAlert(id) { const el = document.getElementById(id); if (el) el.classList.add('hidden'); }
+
+function showExtractionStatus(message, type) {
+  const icons = { success:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>', error:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>', info:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>' };
+  const el = document.getElementById('extractionStatus');
+  el.className = `alert alert-${type === 'info' ? 'success' : type}`;
+  el.innerHTML = (icons[type] || icons.info) + `<span>${message}</span>`;
+  el.classList.remove('hidden');
+}
+
+function formatFileSize(bytes) {
+  if (bytes < 1024) return bytes + ' B';
+  if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
+  return (bytes / 1048576).toFixed(1) + ' MB';
+}
+</script>
+</body>
+</html>
