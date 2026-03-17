@@ -2067,7 +2067,7 @@ async function generateReview() {
       return;
     } catch (err) {
       lastError = err.message;
-      const isRetryable = /provider|rate.?limit|429|503|overload|unavailable|temporarily|user not found/i.test(err.message);
+      const isRetryable = /provider|rate.?limit|429|503|overload|unavailable|temporarily/i.test(err.message);
       if (!isRetryable) break;
       await sleep(800);
     }
@@ -2077,7 +2077,11 @@ async function generateReview() {
   document.getElementById('articleContent').innerHTML = '';
   document.getElementById('articleOutput').classList.remove('visible');
   document.getElementById('emptyState').style.display = '';
-  showAlert('generateAlert', `Generation failed: ${lastError}`, 'error');
+  const isAuthErr = /user not found|401|unauthorized|invalid.*key|api.?key/i.test(lastError);
+  const errDisplay = isAuthErr
+    ? 'Invalid or missing OpenRouter API key. Please update your key in the API Key field above and try again.'
+    : `Generation failed: ${lastError}`;
+  showAlert('generateAlert', errDisplay, 'error');
   showProgress(false);
   setStatus('error', 'Error');
   isGenerating = false;
