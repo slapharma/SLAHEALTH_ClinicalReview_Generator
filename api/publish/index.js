@@ -34,7 +34,8 @@ async function publishToWordPress(item) {
 
   if (!response.ok) {
     const err = await response.text();
-    throw new Error(`WordPress API ${response.status}: ${err}`);
+    // Include which username was attempted to aid debugging
+    throw new Error(`WordPress API ${response.status} (user: ${process.env.WP_USERNAME ?? 'not set'}, site: ${process.env.WP_SITE_URL ?? 'not set'}): ${err}`);
   }
   return response.json();
 }
