@@ -3511,20 +3511,26 @@ async function toggleQueueItem(id) {
 
 // Direct approve in pipeline — jump straight to approved, bypassing email
 async function approveDirect(contentId) {
-  const btn = event.target.closest('.btn');
+  const btn = event?.target?.closest('.btn');
   if (btn) { btn.disabled = true; btn.textContent = 'Approving…'; }
   try {
     const r = await fetch(`/api/content/${contentId}`, {
       method: 'PUT', headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ status: 'approved' })
     });
+    const data = await r.json();
     if (r.ok) {
-      const updated = await r.json();
       const idx = publishingQueue.findIndex(q => q.id === contentId);
-      if (idx >= 0) publishingQueue[idx] = { ...publishingQueue[idx], ...updated };
+      if (idx >= 0) publishingQueue[idx] = { ...publishingQueue[idx], ...data };
       loadPipeline();
+    } else {
+      alert('Approve failed: ' + (data.error || r.statusText));
+      if (btn) { btn.disabled = false; btn.textContent = 'Approve'; }
     }
-  } catch(e) { if (btn) { btn.disabled = false; btn.textContent = 'Approve'; } }
+  } catch(e) {
+    alert('Approve failed: ' + e.message);
+    if (btn) { btn.disabled = false; btn.textContent = 'Approve'; }
+  }
 }
 
 // Queue the currently generated (unsaved) article for publishing

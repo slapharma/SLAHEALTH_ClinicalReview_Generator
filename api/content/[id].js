@@ -1,10 +1,10 @@
 import { kv } from '@vercel/kv';
 
 const VALID_TRANSITIONS = {
-  draft:      ['in_review', 'draft'],
+  draft:      ['in_review', 'approved', 'draft'],   // approved = bypass review
   in_review:  ['approved', 'rejected', 'draft'],
   rejected:   ['draft'],
-  approved:   ['scheduled', 'published'],
+  approved:   ['scheduled', 'published', 'draft'],  // draft = unapprove
   scheduled:  ['published', 'approved'],
   published:  [],
 };
