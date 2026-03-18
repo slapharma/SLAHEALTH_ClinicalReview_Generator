@@ -5,7 +5,7 @@
       "name": "mockup",
       "runtimeExecutable": "npx",
       "runtimeArgs": ["serve", "."],
-      "port": 5050,
+      "port": 5051,
       "autoPort": false
     }
   ]
