@@ -1128,19 +1128,19 @@ textarea { resize: vertical; line-height: 1.6; min-height: 120px; }
    SETTINGS TAB
 ══════════════════════════════════════════════════════════ */
 .settings-container { display: flex; flex-direction: column; flex: 1; overflow-y: auto; padding: 1.25rem 1.5rem; gap: 1.25rem; max-width: 720px; }
-.settings-section { background: var(--card); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
+.settings-section { background: var(--card); border: 1px solid var(--border); border-radius: 0; overflow: hidden; }
 .settings-section-header { background: var(--sla-navy); padding: 10px 16px; }
 .settings-section-header h3 { color: #fff; font-size: 0.72rem; font-weight: 800; letter-spacing: 0.8px; text-transform: uppercase; margin: 0; }
 .settings-section-header p { color: rgba(255,255,255,0.55); font-size: 0.62rem; margin: 2px 0 0; }
 .settings-section-body { padding: 14px 16px; }
 .reviewer-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; }
-.reviewer-row { display: flex; align-items: center; gap: 10px; padding: 8px 10px; background: var(--bg); border-radius: 6px; border: 1px solid var(--border); }
+.reviewer-row { display: flex; align-items: center; gap: 10px; padding: 8px 10px; background: var(--bg); border-radius: 0; border: 1px solid var(--border); }
 .reviewer-avatar-sm { width: 28px; height: 28px; border-radius: 50%; background: var(--sla-navy); color: #fff; font-size: 0.62rem; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
 .reviewer-info { flex: 1; }
 .reviewer-info .rname { font-size: 0.72rem; font-weight: 700; color: var(--sla-navy); }
 .reviewer-info .remail { font-size: 0.62rem; color: var(--text-muted); }
 .reviewer-add-form { display: flex; gap: 8px; flex-wrap: wrap; }
-.reviewer-add-form input { flex: 1; min-width: 130px; padding: 7px 10px; border: 1px solid var(--border); border-radius: 6px; font-family: 'Montserrat', sans-serif; font-size: 0.72rem; color: var(--sla-navy); background: var(--card); }
+.reviewer-add-form input { flex: 1; min-width: 130px; padding: 7px 10px; border: 1px solid var(--border); border-radius: 0; font-family: 'Montserrat', sans-serif; font-size: 0.72rem; color: var(--sla-navy); background: var(--card); }
 .settings-toggle-row { display: flex; align-items: center; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--border); }
 .settings-toggle-row:last-child { border-bottom: none; }
 .settings-toggle-label { font-size: 0.72rem; font-weight: 700; color: var(--sla-navy); }
@@ -1148,6 +1148,38 @@ textarea { resize: vertical; line-height: 1.6; min-height: 120px; }
 .settings-gcal-status { display: flex; align-items: center; gap: 8px; font-size: 0.72rem; }
 .settings-gcal-status.connected { color: #27ae60; font-weight: 700; }
 .settings-gcal-status.disconnected { color: var(--text-muted); }
+.social-conn-list { display: flex; flex-direction: column; gap: 0; }
+.social-conn-row { display: flex; align-items: center; gap: 12px; padding: 11px 0; border-bottom: 1px solid var(--border); }
+.social-conn-row:last-child { border-bottom: none; }
+.social-conn-icon { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; background: var(--bg); border: 1px solid var(--border); }
+.social-conn-icon svg { width: 18px; height: 18px; }
+.social-conn-info { flex: 1; }
+.social-conn-name { font-size: 0.78rem; font-weight: 700; color: var(--sla-navy); }
+.social-conn-desc { font-size: 0.62rem; color: var(--text-muted); }
+.social-conn-status { font-size: 0.62rem; font-weight: 700; padding: 2px 8px; margin-right: 8px; white-space: nowrap; }
+.social-conn-status.connected { background: rgba(0,201,167,0.1); color: #009e85; }
+.social-conn-status.not-connected { background: rgba(30,45,64,0.07); color: var(--text-muted); }
+.social-conn-creds { background: var(--bg); border: 1px solid var(--border); padding: 12px; margin-top: 10px; display: none; }
+.social-conn-creds.open { display: block; }
+.social-conn-creds label { font-size: 0.6rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; color: var(--sla-navy); display: block; margin-bottom: 4px; margin-top: 8px; }
+.social-conn-creds label:first-child { margin-top: 0; }
+.social-conn-creds input { width: 100%; box-sizing: border-box; padding: 7px 10px; border: 1px solid var(--border); border-radius: 0; font-family: 'Montserrat', sans-serif; font-size: 0.72rem; background: var(--card); color: var(--sla-navy); }
+.social-conn-creds-actions { display: flex; gap: 8px; margin-top: 10px; }
+.prompts-view { padding: 1.5rem; max-width: 900px; margin: 0 auto; }
+.prompts-view-title { font-size: 1rem; font-weight: 800; color: var(--sla-navy); margin: 0 0 4px; }
+.prompts-view-sub { font-size: 0.72rem; color: var(--text-muted); margin-bottom: 1.5rem; }
+.prompt-cat-block { background: var(--card); border: 1px solid var(--border); margin-bottom: 1rem; }
+.prompt-cat-header { display: flex; align-items: center; gap: 10px; padding: 12px 16px; background: var(--sla-navy); }
+.prompt-cat-header-title { font-size: 0.72rem; font-weight: 800; color: #fff; letter-spacing: 0.5px; flex: 1; }
+.prompt-list { display: flex; flex-direction: column; gap: 0; }
+.prompt-item { display: flex; align-items: flex-start; gap: 10px; padding: 12px 16px; border-bottom: 1px solid var(--border); }
+.prompt-item:last-child { border-bottom: none; }
+.prompt-item-num { font-size: 0.6rem; font-weight: 800; color: var(--text-muted); min-width: 22px; padding-top: 3px; }
+.prompt-item-text { flex: 1; font-size: 0.72rem; line-height: 1.6; color: var(--text); white-space: pre-wrap; font-family: 'Montserrat', sans-serif; resize: vertical; border: none; background: transparent; width: 100%; outline: none; }
+.prompt-item-text:focus { background: var(--bg); padding: 4px 6px; }
+.prompt-item-actions { display: flex; gap: 6px; flex-shrink: 0; }
+.prompt-add-row { padding: 12px 16px; border-top: 1px solid var(--border); background: var(--bg); display: flex; gap: 8px; align-items: center; }
+.prompt-add-row textarea { flex: 1; padding: 7px 10px; border: 1px solid var(--border); font-family: 'Montserrat', sans-serif; font-size: 0.72rem; resize: vertical; min-height: 60px; border-radius: 0; color: var(--sla-navy); background: var(--card); }
 
 /* ══════════════════════════════════════════════════
    DASHBOARD TAB
@@ -1280,13 +1312,14 @@ textarea { resize: vertical; line-height: 1.6; min-height: 120px; }
   flex-shrink: 0;
 }
 .cat-bar-btn {
-  padding: 5px 13px; border-radius: 20px; border: 1px solid var(--border);
+  padding: 5px 13px; border-radius: 0; border: none;
+  border-bottom: 2px solid transparent;
   background: transparent; color: var(--text-muted); font-family: 'Montserrat', sans-serif;
   font-size: 0.7rem; font-weight: 700; cursor: pointer; transition: all 0.15s;
   white-space: nowrap;
 }
-.cat-bar-btn:hover { background: rgba(30,45,64,0.06); color: var(--text); border-color: var(--sla-navy-lt); }
-.cat-bar-btn.active { background: var(--sla-navy); color: #fff; border-color: var(--sla-navy); }
+.cat-bar-btn:hover { background: rgba(30,45,64,0.06); color: var(--text); border-bottom-color: var(--border); }
+.cat-bar-btn.active { background: transparent; color: var(--sla-navy); border-bottom: 2px solid var(--sla-navy); }
 
 /* ══════════════════════════════════════════════════
    MONITORING TAB
@@ -1562,6 +1595,10 @@ textarea { resize: vertical; line-height: 1.6; min-height: 120px; }
     <button class="nav-item" onclick="switchTab('archive')" id="tab-archive">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
       <span>Library</span>
+    </button>
+    <button class="nav-item" onclick="switchTab('prompts')" id="tab-prompts">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+      <span>Prompts</span>
     </button>
 
     <div class="nav-section-label">Workflow</div>
@@ -2382,6 +2419,17 @@ textarea { resize: vertical; line-height: 1.6; min-height: 120px; }
 </div><!-- /tab-view pipeline -->
 
 <!-- ═══════════════ SETTINGS TAB ═══════════════ -->
+<!-- PROMPTS TAB -->
+<div class="tab-view" id="view-prompts">
+  <div class="prompts-view">
+    <div class="prompts-view-title">Prompt Library</div>
+    <div class="prompts-view-sub">Manage generation prompts for each content category. The active prompt is used when generating content.</div>
+    <div id="promptCatBlocks">
+      <div style="color:var(--text-muted);font-size:0.82rem;padding:2rem;">Loading prompts…</div>
+    </div>
+  </div>
+</div><!-- /tab-view prompts -->
+
 <div class="tab-view" id="view-settings">
   <div class="settings-container">
 
@@ -2455,6 +2503,19 @@ textarea { resize: vertical; line-height: 1.6; min-height: 120px; }
           </div>
         </div>
         <p style="font-size:0.65rem;color:var(--text-muted);margin:10px 0 0;">Add <code style="font-size:0.65rem;background:var(--bg);padding:1px 5px;border-radius:3px;">WP_USERNAME</code>, <code style="font-size:0.65rem;background:var(--bg);padding:1px 5px;border-radius:3px;">WP_APP_PASSWORD</code>, and <code style="font-size:0.65rem;background:var(--bg);padding:1px 5px;border-radius:3px;">WP_SITE_URL</code> in your Vercel project environment variables.</p>
+      </div>
+    </div>
+
+    <!-- Social Platform Connections -->
+    <div class="settings-section">
+      <div class="settings-section-header">
+        <h3>Social Media Connections</h3>
+        <p>Configure credentials for direct posting of generated social content</p>
+      </div>
+      <div class="settings-section-body">
+        <div class="social-conn-list" id="socialConnList">
+          <!-- Rendered by loadSettings() -->
+        </div>
       </div>
     </div>
 
@@ -2867,13 +2928,9 @@ function switchCategory(catId) {
   document.getElementById('archiveHeading').textContent  = catLabel + ' Storage';
   document.getElementById('reportsHeading').textContent  = catLabel + ' Comparison Reports';
 
-  // Update prompt: clinical-reviews gets default, others get blank if no saved prompt
+  // Update prompt: use category-specific stored prompt or default
   const promptTA = document.getElementById('promptTextarea');
-  if (catId === 'clinical-reviews') {
-    promptTA.value = DEFAULT_PROMPT;
-  } else {
-    promptTA.value = '';
-  }
+  promptTA.value = getEffectivePrompt(catId);
   document.getElementById('btnUpdateActive').style.display = 'none';
   hideActiveBadge();
 
@@ -2998,6 +3055,7 @@ const TAB_TITLES = {
   calendar:     'Content Calendar',
   monitoring:   'Monitoring',
   settings:     'Settings',
+  prompts:      'Prompts',
 };
 
 function closeMobileNav() {
@@ -3016,7 +3074,7 @@ function toggleSidebar() {
 }
 
 function switchTab(tab) {
-  ['dashboard','generator','archive','comparison','reports','pipeline','distribution','calendar','monitoring','settings'].forEach(t => {
+  ['dashboard','generator','archive','comparison','reports','pipeline','distribution','calendar','monitoring','settings','prompts'].forEach(t => {
     const v = document.getElementById('view-' + t);
     const b = document.getElementById('tab-' + t);
     if (v) v.classList.toggle('active', t === tab);
@@ -3030,6 +3088,7 @@ function switchTab(tab) {
   if (tab === 'calendar')      loadCalendar();
   if (tab === 'monitoring')    loadMonitoring();
   if (tab === 'distribution')  loadDistribution && loadDistribution();
+  if (tab === 'prompts')       loadPromptsTab();
 
   // Update topbar title
   const tt = document.getElementById('topbarTitle');
@@ -3037,7 +3096,7 @@ function switchTab(tab) {
 
   // Hide category header on non-content tabs
   const catHdr = document.getElementById('categoryHeader');
-  const hideCat = ['dashboard','calendar','pipeline','monitoring','distribution','reports','settings'].includes(tab);
+  const hideCat = ['dashboard','calendar','pipeline','monitoring','distribution','reports','settings','prompts'].includes(tab);
   if (catHdr) catHdr.style.display = hideCat ? 'none' : '';
 }
 
@@ -5730,6 +5789,7 @@ let _reviewers = [];
 async function loadSettings() {
   await loadReviewers();
   checkGcalStatus();
+  renderSocialConnections();
 }
 
 async function loadReviewers() {
@@ -5785,6 +5845,166 @@ async function removeReviewer(id) {
   await fetch(`/api/reviewers?id=${id}`, { method: 'DELETE' });
   _reviewers = _reviewers.filter(r => r.id !== id);
   renderReviewerList();
+}
+
+// ─── Social Connections ───
+function renderSocialConnections() {
+  const el = document.getElementById('socialConnList');
+  if (!el) return;
+  const OAUTH_PLATFORMS = ['linkedin', 'facebook', 'instagram', 'tiktok'];
+  el.innerHTML = SOCIAL_PLATFORMS.map(function(plat) {
+    const stored = JSON.parse(localStorage.getItem('sla_social_conn_' + plat.id) || 'null');
+    const isConnected = !!(stored && stored.connected);
+    const isOAuth = OAUTH_PLATFORMS.includes(plat.id);
+    const svgSmall = (PLAT_SVG[plat.id] || '').replace(/width:20px;height:20px/g, 'width:18px;height:18px');
+    return '<div class="social-conn-row" id="sconn-row-' + plat.id + '">' +
+      '<div class="social-conn-icon">' + svgSmall + '</div>' +
+      '<div class="social-conn-info">' +
+        '<div class="social-conn-name">' + plat.label + '</div>' +
+        '<div class="social-conn-desc">' + (isOAuth ? 'OAuth 2.0 — requires API credentials' : 'API Key authentication') + '</div>' +
+      '</div>' +
+      '<span class="social-conn-status ' + (isConnected ? 'connected' : 'not-connected') + '" id="sconn-status-' + plat.id + '">' +
+        (isConnected ? '✓ Connected' : 'Not connected') +
+      '</span>' +
+      '<button class="btn btn-outline btn-sm" onclick="toggleSocialConnForm(\'' + plat.id + '\')">' +
+        (isConnected ? 'Manage' : 'Connect') +
+      '</button>' +
+    '</div>' +
+    '<div class="social-conn-creds" id="sconn-creds-' + plat.id + '">' +
+      renderSocialConnForm(plat, stored, isOAuth) +
+    '</div>';
+  }).join('');
+}
+
+function renderSocialConnForm(plat, stored, isOAuth) {
+  const val = function(k) { return stored && stored[k] ? stored[k] : ''; };
+  if (plat.id === 'twitter') {
+    return '<label>API Key (Consumer Key)</label>' +
+      '<input type="password" id="sconn-twitter-api_key" placeholder="Enter API Key" value="' + val('api_key') + '" />' +
+      '<label>API Secret (Consumer Secret)</label>' +
+      '<input type="password" id="sconn-twitter-api_secret" placeholder="Enter API Secret" value="' + val('api_secret') + '" />' +
+      '<label>Bearer Token</label>' +
+      '<input type="password" id="sconn-twitter-bearer_token" placeholder="Enter Bearer Token" value="' + val('bearer_token') + '" />' +
+      '<div class="social-conn-creds-actions">' +
+        '<button class="btn btn-orange btn-sm" onclick="saveSocialConn(\'twitter\', [\'api_key\',\'api_secret\',\'bearer_token\'])">Save &amp; Connect</button>' +
+        '<button class="btn btn-outline btn-sm" onclick="disconnectSocialConn(\'twitter\')">Disconnect</button>' +
+      '</div>';
+  }
+  if (plat.id === 'substack') {
+    return '<label>Substack Publication URL</label>' +
+      '<input type="text" id="sconn-substack-pub_url" placeholder="https://yourpublication.substack.com" value="' + val('pub_url') + '" />' +
+      '<label>API Key (from Substack settings)</label>' +
+      '<input type="password" id="sconn-substack-api_key" placeholder="Enter API Key" value="' + val('api_key') + '" />' +
+      '<div class="social-conn-creds-actions">' +
+        '<button class="btn btn-orange btn-sm" onclick="saveSocialConn(\'substack\', [\'pub_url\',\'api_key\'])">Save &amp; Connect</button>' +
+        '<button class="btn btn-outline btn-sm" onclick="disconnectSocialConn(\'substack\')">Disconnect</button>' +
+      '</div>';
+  }
+  // OAuth platforms (LinkedIn, Facebook, Instagram, TikTok)
+  return '<p style="font-size:0.68rem;color:var(--text-muted);margin:0 0 10px;">' +
+    plat.label + ' uses OAuth 2.0. You\'ll need to create an app in the ' + plat.label + ' developer portal and add your credentials below. ' +
+    'The redirect URI should be: <code style="background:var(--bg);padding:1px 5px;">' + window.location.origin + '/api/oauth/' + plat.id + '/callback</code>' +
+  '</p>' +
+  '<label>App ID / Client ID</label>' +
+  '<input type="text" id="sconn-' + plat.id + '-client_id" placeholder="Enter Client ID" value="' + val('client_id') + '" />' +
+  '<label>App Secret / Client Secret</label>' +
+  '<input type="password" id="sconn-' + plat.id + '-client_secret" placeholder="Enter Client Secret" value="' + val('client_secret') + '" />' +
+  '<div class="social-conn-creds-actions">' +
+    '<button class="btn btn-orange btn-sm" onclick="saveSocialConn(\'' + plat.id + '\', [\'client_id\',\'client_secret\'])">Save Credentials</button>' +
+    '<button class="btn btn-outline btn-sm" onclick="disconnectSocialConn(\'' + plat.id + '\')">Disconnect</button>' +
+  '</div>';
+}
+
+function toggleSocialConnForm(platId) {
+  const creds = document.getElementById('sconn-creds-' + platId);
+  if (creds) creds.classList.toggle('open');
+}
+
+function saveSocialConn(platId, fields) {
+  const data = { connected: true };
+  fields.forEach(function(f) {
+    const el = document.getElementById('sconn-' + platId + '-' + f);
+    data[f] = el ? el.value.trim() : '';
+  });
+  localStorage.setItem('sla_social_conn_' + platId, JSON.stringify(data));
+  const statusEl = document.getElementById('sconn-status-' + platId);
+  if (statusEl) { statusEl.textContent = '✓ Connected'; statusEl.className = 'social-conn-status connected'; }
+  const creds = document.getElementById('sconn-creds-' + platId);
+  if (creds) creds.classList.remove('open');
+}
+
+function disconnectSocialConn(platId) {
+  localStorage.removeItem('sla_social_conn_' + platId);
+  renderSocialConnections();
+}
+
+// ─── Prompts tab ───
+function getPromptsForCat(catId) {
+  try { return JSON.parse(localStorage.getItem('sla_prompts_' + catId) || 'null'); } catch(_) { return null; }
+}
+function savePromptsForCat(catId, arr) {
+  localStorage.setItem('sla_prompts_' + catId, JSON.stringify(arr));
+}
+function getEffectivePrompt(catId) {
+  const stored = getPromptsForCat(catId);
+  return (stored && stored.length) ? stored[0] : DEFAULT_PROMPT;
+}
+
+function loadPromptsTab() {
+  const el = document.getElementById('promptCatBlocks');
+  if (!el) return;
+  el.innerHTML = CATEGORIES.map(function(cat) {
+    const prompts = getPromptsForCat(cat.id) || [DEFAULT_PROMPT];
+    const promptItems = prompts.map(function(text, i) {
+      const safeId = cat.id + '-' + i;
+      return '<div class="prompt-item" id="prompt-item-' + safeId + '">' +
+        '<div class="prompt-item-num">#' + (i+1) + '</div>' +
+        '<textarea class="prompt-item-text" id="prompt-text-' + safeId + '" rows="4">' + escapeHtml(text) + '</textarea>' +
+        '<div class="prompt-item-actions">' +
+          '<button class="btn btn-orange btn-xs" onclick="savePromptItem(\'' + cat.id + '\',' + i + ')">Save</button>' +
+          (i > 0 ? '<button class="btn btn-outline btn-xs" onclick="deletePromptItem(\'' + cat.id + '\',' + i + ')">✕</button>' : '') +
+        '</div>' +
+      '</div>';
+    }).join('');
+    return '<div class="prompt-cat-block">' +
+      '<div class="prompt-cat-header">' +
+        '<div class="prompt-cat-header-title">' + cat.label + '</div>' +
+        '<span style="font-size:0.6rem;color:rgba(255,255,255,0.55);">' + prompts.length + ' prompt' + (prompts.length !== 1 ? 's' : '') + '</span>' +
+      '</div>' +
+      '<div class="prompt-list" id="prompt-list-' + cat.id + '">' + promptItems + '</div>' +
+      '<div class="prompt-add-row">' +
+        '<textarea placeholder="Add a new prompt for ' + cat.label + '…" id="prompt-new-' + cat.id + '" rows="2"></textarea>' +
+        '<button class="btn btn-orange btn-sm" onclick="addPromptToCat(\'' + cat.id + '\')">Add Prompt</button>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+}
+
+function savePromptItem(catId, idx) {
+  const el = document.getElementById('prompt-text-' + catId + '-' + idx);
+  if (!el) return;
+  const prompts = getPromptsForCat(catId) || [DEFAULT_PROMPT];
+  prompts[idx] = el.value;
+  savePromptsForCat(catId, prompts);
+  el.style.background = 'rgba(0,201,167,0.08)';
+  setTimeout(function() { el.style.background = ''; }, 800);
+}
+
+function deletePromptItem(catId, idx) {
+  const prompts = getPromptsForCat(catId) || [DEFAULT_PROMPT];
+  prompts.splice(idx, 1);
+  savePromptsForCat(catId, prompts);
+  loadPromptsTab();
+}
+
+function addPromptToCat(catId) {
+  const el = document.getElementById('prompt-new-' + catId);
+  if (!el || !el.value.trim()) return;
+  const prompts = getPromptsForCat(catId) || [DEFAULT_PROMPT];
+  prompts.push(el.value.trim());
+  savePromptsForCat(catId, prompts);
+  el.value = '';
+  loadPromptsTab();
 }
 
 function connectGoogleCalendar() {
