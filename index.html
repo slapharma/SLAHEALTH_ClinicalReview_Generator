@@ -822,6 +822,124 @@ textarea { resize: vertical; line-height: 1.6; min-height: 120px; }
   .article-toolbar .btn svg { display: inline !important; width: 13px; height: 13px; }
   .article-toolbar .btn { padding: 5px 7px; }
 }
+
+/* ═══════════════════════════════════════════════════════════
+   PIPELINE / KANBAN
+══════════════════════════════════════════════════════════ */
+.pipeline-container { display: flex; flex-direction: column; flex: 1; overflow: hidden; }
+.pipeline-header-row { display: flex; align-items: center; justify-content: space-between; padding: 1.1rem 1.5rem 0.75rem; }
+.pipeline-title { font-size: 1.15rem; font-weight: 800; color: var(--sla-navy); }
+.pipeline-title span { color: var(--sla-orange); }
+.pipeline-subtitle { font-size: 0.68rem; color: var(--text-muted); margin-top: 2px; }
+.pipeline-board {
+  display: flex; gap: 10px; padding: 0 1.25rem 1.25rem;
+  overflow-x: auto; flex: 1; align-items: flex-start;
+}
+.pipeline-col { flex: 0 0 252px; min-width: 252px; border-radius: 10px; overflow: hidden; border: 1px solid var(--border); background: var(--card); }
+.pipeline-col-header {
+  padding: 9px 12px; display: flex; align-items: center; justify-content: space-between;
+  background: var(--sla-navy);
+}
+.pipeline-col-header.col-draft    { background: #2c3e50; }
+.pipeline-col-header.col-review   { background: #1a5276; }
+.pipeline-col-header.col-approved { background: #1a7245; }
+.pipeline-col-header.col-scheduled{ background: #6c3483; }
+.pipeline-col-header.col-published{ background: var(--sla-navy); }
+.pipeline-col-label { font-size: 0.62rem; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; color: #fff; display: flex; align-items: center; gap: 6px; }
+.pipeline-col-label::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.5); display: inline-block; }
+.pipeline-col-count { background: rgba(255,255,255,0.18); color: rgba(255,255,255,0.9); font-size: 0.6rem; font-weight: 800; padding: 1px 7px; border-radius: 99px; }
+.pipeline-col-body { padding: 8px; min-height: 80px; display: flex; flex-direction: column; gap: 8px; }
+.pipeline-empty { text-align: center; padding: 20px 12px; color: var(--text-muted); font-size: 0.68rem; opacity: 0.6; }
+
+/* Kanban cards */
+.kcard { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; box-shadow: 0 1px 3px rgba(30,45,64,0.06); cursor: default; }
+.kcard-cat { font-size: 0.55rem; font-weight: 800; letter-spacing: 0.8px; text-transform: uppercase; background: var(--sla-orange); color: #fff; padding: 2px 7px; border-radius: 99px; display: inline-block; margin-bottom: 6px; }
+.kcard-title { font-size: 0.75rem; font-weight: 700; color: var(--sla-navy); line-height: 1.35; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; margin-bottom: 6px; }
+.kcard-meta { display: flex; gap: 10px; font-size: 0.62rem; color: var(--text-muted); margin-bottom: 8px; }
+.kcard-meta svg { width: 10px; height: 10px; vertical-align: middle; margin-right: 2px; }
+
+/* Status badges */
+.kbadge { font-size: 0.58rem; font-weight: 800; letter-spacing: 0.6px; text-transform: uppercase; padding: 2px 8px; border-radius: 99px; border: 1.5px solid; display: inline-flex; align-items: center; gap: 4px; margin-bottom: 6px; }
+.kbadge-approved  { color: #1a7245; border-color: #1a7245; background: rgba(26,114,69,0.08); }
+.kbadge-scheduled { color: #6c3483; border-color: #6c3483; background: rgba(108,52,131,0.08); }
+.kbadge-published { color: #fff; border-color: var(--sla-navy); background: var(--sla-navy); }
+.kbadge-review    { color: #1a5276; border-color: #1a5276; background: rgba(26,82,118,0.08); }
+
+/* Review progress */
+.review-prog-label { font-size: 0.6rem; font-weight: 700; color: #1a5276; margin-bottom: 3px; }
+.review-prog-track { height: 3px; background: var(--border); border-radius: 99px; overflow: hidden; margin-bottom: 7px; }
+.review-prog-fill  { height: 100%; background: #2980b9; border-radius: 99px; }
+.reviewer-avatars  { display: flex; gap: 4px; align-items: center; margin-bottom: 6px; flex-wrap: wrap; }
+.rev-avatar { width: 22px; height: 22px; border-radius: 50%; background: var(--sla-navy); color: #fff; font-size: 0.52rem; font-weight: 800; display: flex; align-items: center; justify-content: center; position: relative; }
+.rev-avatar.approved { background: #1a7245; }
+.rev-avatar.pending  { background: #6b7a8d; }
+.rev-avatar-check { position: absolute; bottom: -1px; right: -1px; width: 9px; height: 9px; background: #27ae60; border-radius: 50%; border: 1px solid #fff; display: flex; align-items: center; justify-content: center; }
+
+/* Card actions */
+.kcard-actions { display: flex; gap: 5px; flex-wrap: wrap; margin-top: 2px; }
+.kcard-actions .btn { font-size: 0.6rem; padding: 4px 9px; height: auto; }
+.kcard-actions .btn-orange { font-size: 0.6rem; padding: 4px 9px; }
+
+/* WP / GCal meta rows */
+.kcard-service-row { display: flex; align-items: center; gap: 5px; font-size: 0.62rem; color: var(--text-muted); margin-bottom: 5px; }
+.kcard-service-row svg { width: 11px; height: 11px; flex-shrink: 0; }
+
+/* Pipeline loading */
+.pipeline-loading { text-align: center; padding: 3rem; color: var(--text-muted); font-size: 0.78rem; }
+
+/* ═══════════════════════════════════════════════════════════
+   SCHEDULE MODAL
+══════════════════════════════════════════════════════════ */
+.sched-modal-overlay {
+  position: fixed; inset: 0; background: rgba(10,20,35,0.6); backdrop-filter: blur(3px);
+  z-index: 1000; display: none; align-items: center; justify-content: center;
+}
+.sched-modal-overlay.open { display: flex; }
+.sched-modal { background: var(--card); border-radius: 12px; width: 400px; max-width: 96vw; box-shadow: 0 8px 40px rgba(10,20,35,0.3); overflow: hidden; }
+.sched-modal-header { background: var(--sla-navy); padding: 14px 18px; display: flex; align-items: center; gap: 10px; }
+.sched-modal-header svg { color: var(--sla-orange); width: 16px; height: 16px; flex-shrink: 0; }
+.sched-modal-header h3 { color: #fff; font-size: 0.82rem; font-weight: 800; margin: 0; }
+.sched-modal-header p { color: rgba(255,255,255,0.55); font-size: 0.65rem; margin: 2px 0 0; }
+.sched-modal-body { padding: 16px 18px; display: flex; flex-direction: column; gap: 12px; }
+.sched-article-ref { background: var(--bg); border-radius: 6px; padding: 10px 12px; border-left: 3px solid var(--sla-orange); }
+.sched-article-ref .label { font-size: 0.58rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--text-muted); margin-bottom: 3px; }
+.sched-article-ref .title { font-size: 0.75rem; font-weight: 700; color: var(--sla-navy); line-height: 1.3; }
+.sched-field label { font-size: 0.65rem; font-weight: 700; color: var(--sla-navy); display: flex; align-items: center; gap: 5px; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.6px; }
+.sched-field label svg { width: 11px; height: 11px; color: var(--sla-orange); }
+.sched-field input[type="datetime-local"], .sched-field select { width: 100%; box-sizing: border-box; padding: 8px 10px; border: 1px solid var(--border); border-radius: 6px; font-family: 'Montserrat', sans-serif; font-size: 0.75rem; color: var(--sla-navy); background: var(--card); }
+.sched-gcal-row { display: flex; align-items: center; justify-content: space-between; background: var(--bg); border-radius: 6px; padding: 9px 12px; }
+.sched-gcal-info { display: flex; align-items: center; gap: 8px; font-size: 0.7rem; color: var(--sla-navy); font-weight: 600; }
+.sched-gcal-info svg { width: 14px; height: 14px; color: #4285f4; }
+.sched-gcal-toggle { width: 36px; height: 20px; background: var(--border); border-radius: 99px; position: relative; cursor: pointer; transition: background 0.2s; border: none; padding: 0; }
+.sched-gcal-toggle.on { background: #27ae60; }
+.sched-gcal-toggle::after { content: ''; position: absolute; top: 2px; left: 2px; width: 16px; height: 16px; border-radius: 50%; background: #fff; transition: left 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.2); }
+.sched-gcal-toggle.on::after { left: 18px; }
+.sched-modal-footer { padding: 12px 18px; display: flex; justify-content: flex-end; gap: 8px; border-top: 1px solid var(--border); }
+
+/* ═══════════════════════════════════════════════════════════
+   SETTINGS TAB
+══════════════════════════════════════════════════════════ */
+.settings-container { display: flex; flex-direction: column; flex: 1; overflow-y: auto; padding: 1.25rem 1.5rem; gap: 1.25rem; max-width: 720px; }
+.settings-section { background: var(--card); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
+.settings-section-header { background: var(--sla-navy); padding: 10px 16px; }
+.settings-section-header h3 { color: #fff; font-size: 0.72rem; font-weight: 800; letter-spacing: 0.8px; text-transform: uppercase; margin: 0; }
+.settings-section-header p { color: rgba(255,255,255,0.55); font-size: 0.62rem; margin: 2px 0 0; }
+.settings-section-body { padding: 14px 16px; }
+.reviewer-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; }
+.reviewer-row { display: flex; align-items: center; gap: 10px; padding: 8px 10px; background: var(--bg); border-radius: 6px; border: 1px solid var(--border); }
+.reviewer-avatar-sm { width: 28px; height: 28px; border-radius: 50%; background: var(--sla-navy); color: #fff; font-size: 0.62rem; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.reviewer-info { flex: 1; }
+.reviewer-info .rname { font-size: 0.72rem; font-weight: 700; color: var(--sla-navy); }
+.reviewer-info .remail { font-size: 0.62rem; color: var(--text-muted); }
+.reviewer-add-form { display: flex; gap: 8px; flex-wrap: wrap; }
+.reviewer-add-form input { flex: 1; min-width: 130px; padding: 7px 10px; border: 1px solid var(--border); border-radius: 6px; font-family: 'Montserrat', sans-serif; font-size: 0.72rem; color: var(--sla-navy); background: var(--card); }
+.settings-toggle-row { display: flex; align-items: center; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--border); }
+.settings-toggle-row:last-child { border-bottom: none; }
+.settings-toggle-label { font-size: 0.72rem; font-weight: 700; color: var(--sla-navy); }
+.settings-toggle-desc { font-size: 0.62rem; color: var(--text-muted); margin-top: 2px; }
+.settings-gcal-status { display: flex; align-items: center; gap: 8px; font-size: 0.72rem; }
+.settings-gcal-status.connected { color: #27ae60; font-weight: 700; }
+.settings-gcal-status.disconnected { color: var(--text-muted); }
 </style>
 </head>
 <body>
@@ -849,6 +967,14 @@ textarea { resize: vertical; line-height: 1.6; min-height: 120px; }
       <button class="header-tab" onclick="switchTab('reports')" id="tab-reports">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px;display:inline;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
         Reports <span id="reportsTabCount" style="margin-left:4px;background:rgba(255,255,255,0.2);padding:1px 6px;border-radius:99px;font-size:0.65rem;"></span>
+      </button>
+      <button class="header-tab" onclick="switchTab('pipeline')" id="tab-pipeline">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px;display:inline;"><rect x="3" y="3" width="5" height="18" rx="1"/><rect x="10" y="3" width="5" height="13" rx="1"/><rect x="17" y="3" width="5" height="8" rx="1"/></svg>
+        Pipeline <span id="pipelineTabCount" style="margin-left:4px;background:rgba(255,255,255,0.2);padding:1px 6px;border-radius:99px;font-size:0.65rem;"></span>
+      </button>
+      <button class="header-tab" onclick="switchTab('settings')" id="tab-settings">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px;display:inline;"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        Settings
       </button>
     </div>
     <button class="queue-btn-header" id="queueHeaderBtn" onclick="toggleQueuePanel()" title="Publishing Queue">
@@ -931,32 +1057,6 @@ textarea { resize: vertical; line-height: 1.6; min-height: 120px; }
 
   <!-- LEFT PANEL -->
   <div style="display:flex;flex-direction:column;gap:1.25rem;">
-
-    <!-- API Key -->
-    <div class="card" id="apiKeyCard">
-      <div class="card-header">
-        <h2><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>OpenRouter API Key</h2>
-        <div id="apiKeyStatus" style="font-size:0.7rem;font-family:Montserrat,sans-serif;font-weight:600;"></div>
-      </div>
-      <div class="card-body">
-        <div class="form-group" style="margin-bottom:0;">
-          <label>Your OpenRouter API Key</label>
-          <div style="display:flex;gap:8px;align-items:center;">
-            <div style="position:relative;flex:1;">
-              <input type="password" id="apiKeyInput" placeholder="sk-or-v1-..." oninput="onApiKeyInput()" style="padding-right:2.5rem;" />
-              <button onclick="toggleApiKeyVisibility()" style="position:absolute;right:8px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--text-muted);padding:2px;" title="Show/hide key">
-                <svg id="eyeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-              </button>
-            </div>
-            <button class="btn btn-orange btn-sm" onclick="saveApiKey()" id="saveKeyBtn" style="white-space:nowrap;">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px;"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
-              Save
-            </button>
-          </div>
-          <div style="font-size:0.7rem;color:var(--text-muted);margin-top:5px;line-height:1.5;">Get a free key at <a href="https://openrouter.ai/keys" target="_blank" style="color:var(--sla-orange);">openrouter.ai/keys</a>. Saved in your browser only.</div>
-        </div>
-      </div>
-    </div>
 
     <!-- Model Selection -->
     <div class="card">
@@ -1417,6 +1517,178 @@ textarea { resize: vertical; line-height: 1.6; min-height: 120px; }
     <div id="reportsGrid"></div>
   </div>
 </div><!-- /tab-view reports -->
+
+<!-- ═══════════════ PIPELINE TAB ═══════════════ -->
+<div class="tab-view" id="view-pipeline">
+  <div class="pipeline-container">
+    <div class="pipeline-header-row">
+      <div>
+        <div class="pipeline-title">Content <span>Pipeline</span></div>
+        <div class="pipeline-subtitle" id="pipelineSubtitle">Loading…</div>
+      </div>
+      <div style="display:flex;gap:8px;">
+        <button class="btn btn-outline btn-sm" onclick="loadPipeline()" title="Refresh">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:11px;height:11px;"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+          Refresh
+        </button>
+        <button class="btn btn-orange btn-sm" onclick="switchTab('generator')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:11px;height:11px;"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          New Article
+        </button>
+      </div>
+    </div>
+    <div class="pipeline-board" id="pipelineBoard">
+      <div class="pipeline-loading">Loading pipeline…</div>
+    </div>
+  </div>
+</div><!-- /tab-view pipeline -->
+
+<!-- ═══════════════ SETTINGS TAB ═══════════════ -->
+<div class="tab-view" id="view-settings">
+  <div class="settings-container">
+
+    <!-- Reviewers -->
+    <div class="settings-section">
+      <div class="settings-section-header">
+        <h3>Reviewers</h3>
+        <p>People who receive approval requests for content in review</p>
+      </div>
+      <div class="settings-section-body">
+        <div class="reviewer-list" id="reviewerList">
+          <div style="color:var(--text-muted);font-size:0.68rem;">Loading reviewers…</div>
+        </div>
+        <div style="margin-bottom:10px;">
+          <label style="font-size:0.62rem;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;color:var(--sla-navy);margin-bottom:6px;display:block;">Add Reviewer</label>
+          <div class="reviewer-add-form">
+            <input type="text" id="newReviewerName" placeholder="Name" />
+            <input type="email" id="newReviewerEmail" placeholder="Email address" />
+            <button class="btn btn-orange btn-sm" onclick="addReviewer()">Add</button>
+          </div>
+        </div>
+        <div class="settings-toggle-row">
+          <div>
+            <div class="settings-toggle-label">Require all reviewers to approve</div>
+            <div class="settings-toggle-desc">When off, any single approval advances content to Approved</div>
+          </div>
+          <label style="display:flex;align-items:center;gap:7px;cursor:pointer;">
+            <input type="checkbox" id="requireAllApprovals" style="width:14px;height:14px;" />
+            <span style="font-size:0.65rem;font-weight:700;color:var(--text-muted);">All must approve</span>
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <!-- Google Calendar -->
+    <div class="settings-section">
+      <div class="settings-section-header">
+        <h3>Google Calendar</h3>
+        <p>Sync scheduled posts as calendar events</p>
+      </div>
+      <div class="settings-section-body">
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;">
+          <div class="settings-gcal-status disconnected" id="gcalStatus">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px;"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            Not connected
+          </div>
+          <button class="btn btn-outline btn-sm" onclick="connectGoogleCalendar()" id="gcalConnectBtn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:11px;height:11px;"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            Connect Google Calendar
+          </button>
+        </div>
+        <p style="font-size:0.65rem;color:var(--text-muted);margin:10px 0 0;">When connected, scheduling a post automatically creates a calendar event in your Google Calendar.</p>
+      </div>
+    </div>
+
+    <!-- WordPress -->
+    <div class="settings-section">
+      <div class="settings-section-header">
+        <h3>WordPress Publishing</h3>
+        <p>Auto-publish approved content to slahealth.co.uk</p>
+      </div>
+      <div class="settings-section-body">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+          <div>
+            <label style="font-size:0.62rem;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;color:var(--sla-navy);margin-bottom:5px;display:block;">Site URL</label>
+            <input type="text" value="https://slahealth.co.uk" disabled style="width:100%;box-sizing:border-box;padding:7px 10px;border:1px solid var(--border);border-radius:6px;font-size:0.72rem;background:var(--bg);color:var(--text-muted);" />
+          </div>
+          <div>
+            <label style="font-size:0.62rem;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;color:var(--sla-navy);margin-bottom:5px;display:block;">Status</label>
+            <div style="padding:7px 10px;border:1px solid var(--border);border-radius:6px;font-size:0.72rem;background:var(--bg);color:var(--text-muted);">Configured via Vercel env vars</div>
+          </div>
+        </div>
+        <p style="font-size:0.65rem;color:var(--text-muted);margin:10px 0 0;">Add <code style="font-size:0.65rem;background:var(--bg);padding:1px 5px;border-radius:3px;">WP_USERNAME</code>, <code style="font-size:0.65rem;background:var(--bg);padding:1px 5px;border-radius:3px;">WP_APP_PASSWORD</code>, and <code style="font-size:0.65rem;background:var(--bg);padding:1px 5px;border-radius:3px;">WP_SITE_URL</code> in your Vercel project environment variables.</p>
+      </div>
+    </div>
+
+    <!-- API Key -->
+    <div class="settings-section" id="apiKeyCard">
+      <div class="settings-section-header">
+        <h3>OpenRouter API Key</h3>
+        <p>Override the built-in key with your own</p>
+      </div>
+      <div class="settings-section-body">
+        <div style="display:flex;gap:8px;align-items:flex-end;flex-wrap:wrap;">
+          <div style="flex:1;min-width:200px;">
+            <input type="password" id="apiKeyInput" placeholder="Using built-in key — enter to override" oninput="onApiKeyInput()" style="width:100%;box-sizing:border-box;padding:8px 10px;border:1px solid var(--border);border-radius:6px;font-family:'Montserrat',sans-serif;font-size:0.72rem;" />
+          </div>
+          <button class="btn btn-orange btn-sm" onclick="saveApiKey()" id="saveKeyBtn">Save Key</button>
+          <button class="btn btn-outline btn-sm" onclick="clearApiKey()">Reset</button>
+        </div>
+        <div id="apiKeyStatus" style="margin-top:7px;font-size:0.65rem;"></div>
+      </div>
+    </div>
+
+  </div>
+</div><!-- /tab-view settings -->
+
+<!-- SCHEDULE MODAL -->
+<div class="sched-modal-overlay" id="schedModal">
+  <div class="sched-modal">
+    <div class="sched-modal-header">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      <div><h3>Schedule for Publishing</h3><p>Set publication date and time</p></div>
+    </div>
+    <div class="sched-modal-body">
+      <div class="sched-article-ref">
+        <div class="label">Article</div>
+        <div class="title" id="schedModalTitle">—</div>
+      </div>
+      <div class="sched-field">
+        <label>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          Publish Date &amp; Time
+        </label>
+        <input type="datetime-local" id="schedDateTime" />
+      </div>
+      <div class="sched-field">
+        <label>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+          WordPress Category
+        </label>
+        <select id="schedCategory">
+          <option value="clinical-reviews">IBD Clinical Reviews</option>
+          <option value="industry-news">Gastroenterology Updates</option>
+          <option value="op-eds">Opinion &amp; Commentary</option>
+          <option value="white-papers">White Papers &amp; Guides</option>
+        </select>
+      </div>
+      <div class="sched-gcal-row">
+        <div class="sched-gcal-info">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#4285f4" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          Sync to Google Calendar
+        </div>
+        <button class="sched-gcal-toggle" id="schedGcalToggle" onclick="toggleSchedGcal()" title="Toggle calendar sync"></button>
+      </div>
+    </div>
+    <div class="sched-modal-footer">
+      <button class="btn btn-outline btn-sm" onclick="closeScheduleModal()">Cancel</button>
+      <button class="btn btn-orange btn-sm" onclick="confirmSchedule()">
+        Confirm Schedule
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:10px;height:10px;margin-left:4px;"><polyline points="20 6 9 17 4 12"/></svg>
+      </button>
+    </div>
+  </div>
+</div>
 
   </div><!-- /main-content -->
 </div><!-- /app-layout -->
@@ -1924,12 +2196,14 @@ function updateAllCounts() {
 //  TAB NAVIGATION
 // ═══════════════════════════════════════════════════════════
 function switchTab(tab) {
-  ['generator','archive','comparison','reports'].forEach(t => {
+  ['generator','archive','comparison','reports','pipeline','settings'].forEach(t => {
     document.getElementById('view-' + t).classList.toggle('active', t === tab);
     document.getElementById('tab-' + t).classList.toggle('active', t === tab);
   });
-  if (tab === 'archive') renderArchive();
-  if (tab === 'reports') renderReports();
+  if (tab === 'archive')   renderArchive();
+  if (tab === 'reports')   renderReports();
+  if (tab === 'pipeline')  loadPipeline();
+  if (tab === 'settings')  loadSettings();
 }
 
 // ═══════════════════════════════════════════════════════════
@@ -3508,6 +3782,328 @@ window.addEventListener('DOMContentLoaded', () => {
   renderQueuePanel();
   updateQueueHeaderBtn();
 });
+
+// ═══════════════════════════════════════════════════════════
+//  PIPELINE — KANBAN VIEW
+// ═══════════════════════════════════════════════════════════
+
+const STATUS_COLS = [
+  { id: 'draft',     label: 'Draft',     cls: 'col-draft' },
+  { id: 'in_review', label: 'In Review', cls: 'col-review' },
+  { id: 'approved',  label: 'Approved',  cls: 'col-approved' },
+  { id: 'scheduled', label: 'Scheduled', cls: 'col-scheduled' },
+  { id: 'published', label: 'Published', cls: 'col-published' },
+];
+
+const CATEGORY_LABELS = {
+  'clinical-reviews': 'Clinical Review',
+  'industry-news':    'Industry News',
+  'op-eds':           'Op-Ed',
+  'white-papers':     'White Paper',
+  'infographics':     'Infographic',
+};
+
+async function loadPipeline() {
+  const board = document.getElementById('pipelineBoard');
+  board.innerHTML = '<div class="pipeline-loading">Loading…</div>';
+
+  const items = await contentApi.getAll();
+  const cols = {};
+  STATUS_COLS.forEach(c => { cols[c.id] = []; });
+  items.forEach(item => {
+    if (cols[item.status] !== undefined) cols[item.status].push(item);
+  });
+
+  const total = items.length;
+  document.getElementById('pipelineSubtitle').textContent =
+    `${total} article${total !== 1 ? 's' : ''} across all stages`;
+  const badge = document.getElementById('pipelineTabCount');
+  if (badge) badge.textContent = total || '';
+
+  board.innerHTML = STATUS_COLS.map(col => `
+    <div class="pipeline-col">
+      <div class="pipeline-col-header ${col.cls}">
+        <span class="pipeline-col-label">${col.label}</span>
+        <span class="pipeline-col-count">${cols[col.id].length}</span>
+      </div>
+      <div class="pipeline-col-body">
+        ${cols[col.id].length
+          ? cols[col.id].map(item => renderKanbanCard(item)).join('')
+          : '<div class="pipeline-empty">No items</div>'}
+      </div>
+    </div>
+  `).join('');
+}
+
+function renderKanbanCard(item) {
+  const catLabel = CATEGORY_LABELS[item.category] || item.category;
+  const dateStr  = item.createdAt ? new Date(item.createdAt).toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'2-digit' }) : '';
+  const wordCount = item.body ? item.body.split(/\s+/).filter(Boolean).length : 0;
+
+  let badge = '';
+  let extra = '';
+  let actions = '';
+
+  if (item.status === 'in_review') {
+    const total    = (item.reviewers || []).length;
+    const approved = (item.approvals || []).length;
+    const pct      = total ? Math.round((approved / total) * 100) : 0;
+    badge  = `<div class="kbadge kbadge-review">In Review</div>`;
+    extra  = `
+      <div class="review-prog-label">${approved} / ${total || '?'} approved</div>
+      <div class="review-prog-track"><div class="review-prog-fill" style="width:${pct}%"></div></div>`;
+    actions = `
+      <button class="btn btn-outline btn-sm" onclick="sendForReview('${item.id}')">Resend Email</button>`;
+  } else if (item.status === 'approved') {
+    badge   = `<div class="kbadge kbadge-approved">✓ Approved</div>`;
+    actions = `
+      <button class="btn btn-orange btn-sm" onclick="openScheduleModal('${item.id}','${escapeHtml(item.title)}')">Schedule Post</button>
+      <button class="btn btn-outline btn-sm" onclick="publishNow('${item.id}')">Publish Now</button>`;
+  } else if (item.status === 'scheduled') {
+    const schedDate = item.scheduledAt ? new Date(item.scheduledAt).toLocaleString('en-GB', { day:'numeric', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit' }) : '';
+    badge = `<div class="kbadge kbadge-scheduled">Scheduled: ${schedDate}</div>`;
+    extra = item.gcalEventId
+      ? `<div class="kcard-service-row"><svg viewBox="0 0 24 24" fill="none" stroke="#4285f4" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg> Google Calendar synced ✓</div>`
+      : '';
+    actions = `
+      <button class="btn btn-outline btn-sm" onclick="openScheduleModal('${item.id}','${escapeHtml(item.title)}')">Edit Schedule</button>
+      <button class="btn btn-orange btn-sm" onclick="publishNow('${item.id}')">Publish Now</button>`;
+  } else if (item.status === 'published') {
+    const pubDate = item.publishedAt ? new Date(item.publishedAt).toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'numeric' }) : '';
+    badge = `<div class="kbadge kbadge-published">✓ Published</div>`;
+    extra = item.wpPostUrl
+      ? `<div class="kcard-service-row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg> WordPress — ${pubDate}</div>`
+      : '';
+    actions = item.wpPostUrl
+      ? `<button class="btn btn-outline btn-sm" onclick="window.open('${item.wpPostUrl}','_blank')">View on WordPress ↗</button>`
+      : '';
+  } else {
+    // draft
+    actions = `
+      <button class="btn btn-orange btn-sm" onclick="sendForReview('${item.id}')">Send for Review</button>
+      <button class="btn btn-outline btn-sm" style="color:#e74c3c;border-color:#e74c3c;" onclick="deletePipelineItem('${item.id}')">Delete</button>`;
+  }
+
+  return `
+    <div class="kcard">
+      <span class="kcard-cat">${escapeHtml(catLabel)}</span>
+      <div class="kcard-title">${escapeHtml(item.title || 'Untitled')}</div>
+      ${badge}
+      ${extra}
+      <div class="kcard-meta">
+        <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg>${wordCount} words</span>
+        <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>${dateStr}</span>
+      </div>
+      ${actions ? `<div class="kcard-actions">${actions}</div>` : ''}
+    </div>`;
+}
+
+async function sendForReview(contentId) {
+  const requireAll = document.getElementById('requireAllApprovals')?.checked ?? false;
+  const btn = event?.target;
+  if (btn) { btn.disabled = true; btn.textContent = 'Sending…'; }
+  try {
+    const r = await fetch('/api/review/send', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ contentId, requireAllApprovals: requireAll }),
+    });
+    const data = await r.json();
+    if (!r.ok) throw new Error(data.error || r.statusText);
+    showAlert('generateAlert', `✉ Review request sent to ${data.sent} reviewer${data.sent !== 1 ? 's' : ''}`, 'success');
+    setTimeout(() => loadPipeline(), 600);
+  } catch (err) {
+    alert('Failed to send review: ' + err.message);
+    if (btn) { btn.disabled = false; btn.textContent = 'Send for Review'; }
+  }
+}
+
+async function publishNow(contentId) {
+  if (!confirm('Publish this article to WordPress now?')) return;
+  try {
+    const r = await fetch('/api/publish', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ contentId }),
+    });
+    const data = await r.json();
+    if (!r.ok) throw new Error(data.error || r.statusText);
+    showAlert('generateAlert', `✓ Published! <a href="${data.wpPostUrl}" target="_blank" style="color:inherit;text-decoration:underline;">View on WordPress →</a>`, 'success');
+    setTimeout(() => loadPipeline(), 800);
+  } catch (err) {
+    alert('Publish failed: ' + err.message);
+  }
+}
+
+async function deletePipelineItem(contentId) {
+  if (!confirm('Delete this content item permanently?')) return;
+  await contentApi.remove(contentId);
+  loadPipeline();
+}
+
+// ═══════════════════════════════════════════════════════════
+//  SCHEDULE MODAL
+// ═══════════════════════════════════════════════════════════
+let _schedContentId = null;
+let _schedGcalOn    = true;
+
+function openScheduleModal(contentId, title) {
+  _schedContentId = contentId;
+  document.getElementById('schedModalTitle').textContent = title;
+  // Default to tomorrow 09:00
+  const d = new Date(); d.setDate(d.getDate() + 1); d.setHours(9, 0, 0, 0);
+  document.getElementById('schedDateTime').value =
+    d.toISOString().slice(0, 16);
+  updateSchedGcalToggle();
+  document.getElementById('schedModal').classList.add('open');
+}
+
+function closeScheduleModal() {
+  document.getElementById('schedModal').classList.remove('open');
+  _schedContentId = null;
+}
+
+function toggleSchedGcal() {
+  _schedGcalOn = !_schedGcalOn;
+  updateSchedGcalToggle();
+}
+
+function updateSchedGcalToggle() {
+  document.getElementById('schedGcalToggle').classList.toggle('on', _schedGcalOn);
+}
+
+async function confirmSchedule() {
+  if (!_schedContentId) return;
+  const scheduledAt = document.getElementById('schedDateTime').value;
+  if (!scheduledAt) { alert('Please pick a date and time.'); return; }
+
+  const confirmBtn = document.querySelector('#schedModal .btn-orange');
+  const orig = confirmBtn.innerHTML;
+  confirmBtn.disabled = true; confirmBtn.textContent = 'Scheduling…';
+
+  try {
+    const r = await fetch('/api/schedule', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ contentId: _schedContentId, scheduledAt: new Date(scheduledAt).toISOString() }),
+    });
+    const data = await r.json();
+    if (!r.ok) throw new Error(data.error || r.statusText);
+
+    // Sync to Google Calendar if toggled on
+    if (_schedGcalOn) {
+      await fetch('/api/calendar/sync', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ contentId: _schedContentId }),
+      }).catch(() => {}); // non-blocking — cal sync failure shouldn't block schedule
+    }
+
+    closeScheduleModal();
+    showAlert('generateAlert', '📅 Post scheduled successfully', 'success');
+    setTimeout(() => loadPipeline(), 600);
+  } catch (err) {
+    alert('Scheduling failed: ' + err.message);
+    confirmBtn.disabled = false; confirmBtn.innerHTML = orig;
+  }
+}
+
+// Close modal on backdrop click
+document.getElementById('schedModal')?.addEventListener('click', e => {
+  if (e.target === document.getElementById('schedModal')) closeScheduleModal();
+});
+
+// ═══════════════════════════════════════════════════════════
+//  SETTINGS
+// ═══════════════════════════════════════════════════════════
+let _reviewers = [];
+
+async function loadSettings() {
+  await loadReviewers();
+  checkGcalStatus();
+}
+
+async function loadReviewers() {
+  const list = document.getElementById('reviewerList');
+  list.innerHTML = '<div style="color:var(--text-muted);font-size:0.68rem;">Loading…</div>';
+  try {
+    const r = await fetch('/api/reviewers');
+    _reviewers = r.ok ? await r.json() : [];
+  } catch { _reviewers = []; }
+  renderReviewerList();
+}
+
+function renderReviewerList() {
+  const list = document.getElementById('reviewerList');
+  if (!_reviewers.length) {
+    list.innerHTML = '<div style="color:var(--text-muted);font-size:0.68rem;">No reviewers added yet.</div>';
+    return;
+  }
+  list.innerHTML = _reviewers.map(r => {
+    const initials = r.name.split(' ').map(w => w[0]).join('').slice(0,2).toUpperCase();
+    return `
+      <div class="reviewer-row">
+        <div class="reviewer-avatar-sm">${initials}</div>
+        <div class="reviewer-info">
+          <div class="rname">${escapeHtml(r.name)}</div>
+          <div class="remail">${escapeHtml(r.email)}</div>
+        </div>
+        <button class="btn btn-outline btn-sm" style="color:#e74c3c;border-color:#e74c3c;" onclick="removeReviewer('${r.id}')">Remove</button>
+      </div>`;
+  }).join('');
+}
+
+async function addReviewer() {
+  const name  = document.getElementById('newReviewerName').value.trim();
+  const email = document.getElementById('newReviewerEmail').value.trim();
+  if (!email) { alert('Email is required'); return; }
+  try {
+    const r = await fetch('/api/reviewers', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name: name || email, email }),
+    });
+    const data = await r.json();
+    if (!r.ok) throw new Error(data.error);
+    _reviewers.push(data);
+    document.getElementById('newReviewerName').value = '';
+    document.getElementById('newReviewerEmail').value = '';
+    renderReviewerList();
+  } catch (err) { alert('Failed to add reviewer: ' + err.message); }
+}
+
+async function removeReviewer(id) {
+  await fetch(`/api/reviewers?id=${id}`, { method: 'DELETE' });
+  _reviewers = _reviewers.filter(r => r.id !== id);
+  renderReviewerList();
+}
+
+function connectGoogleCalendar() {
+  const popup = window.open('/api/calendar/auth', 'gcal-auth', 'width=520,height=640,menubar=no,toolbar=no');
+  window.addEventListener('message', e => {
+    if (e.data === 'calendar-connected') {
+      popup?.close();
+      checkGcalStatus();
+      showAlert('generateAlert', '✓ Google Calendar connected!', 'success');
+    }
+  }, { once: true });
+}
+
+function checkGcalStatus() {
+  // Lightweight check — if /api/calendar/sync responds we assume tokens exist
+  const statusEl = document.getElementById('gcalStatus');
+  const btnEl    = document.getElementById('gcalConnectBtn');
+  if (!statusEl) return;
+  fetch('/api/calendar/sync', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({}) })
+    .then(r => {
+      if (r.status === 400) {
+        // 400 = missing contentId (not auth error) → tokens exist
+        statusEl.className = 'settings-gcal-status connected';
+        statusEl.innerHTML = '✓ Connected to Google Calendar';
+        if (btnEl) btnEl.textContent = 'Reconnect';
+      }
+    }).catch(() => {});
+}
 </script>
 </body>
 </html>
