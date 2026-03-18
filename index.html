@@ -59,7 +59,35 @@ h1, h2, h3, label, button, select, input, textarea, .brand-name, .brand-sub, .he
   top: 0;
   z-index: 300;
   overflow: hidden;
+  transition: width 0.2s ease;
 }
+
+/* ── Hamburger toggle button ── */
+.sidebar-toggle-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 6px 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--sla-navy);
+  border-radius: 0;
+  flex-shrink: 0;
+  opacity: 0.7;
+}
+.sidebar-toggle-btn:hover { background: var(--bg); opacity: 1; }
+
+/* ── Sidebar collapsed state ── */
+body.sidebar-collapsed .sidebar { width: 52px; }
+body.sidebar-collapsed .sidebar-logo-text { display: none; }
+body.sidebar-collapsed .sidebar-logo { padding: 12px; justify-content: center; }
+body.sidebar-collapsed .nav-item { padding: 10px; justify-content: center; }
+body.sidebar-collapsed .nav-item span { display: none; }
+body.sidebar-collapsed .nav-section-label { display: none; }
+body.sidebar-collapsed .sidebar-footer { padding: 8px; align-items: center; }
+body.sidebar-collapsed #syncStatus span { display: none; }
+body.sidebar-collapsed #syncStatus { width: auto; justify-content: center; }
 .sidebar-logo {
   display: flex;
   align-items: center;
@@ -875,12 +903,18 @@ textarea { resize: vertical; line-height: 1.6; min-height: 120px; }
 ══════════════════════════════════════════════════ */
 @media (max-width: 640px) {
   /* Sidebar collapses to bottom bar on mobile */
+  .sidebar-toggle-btn { display: none; }
+  .topbar { padding: 0 0.75rem; gap: 8px; }
+  .topbar-title { font-size: 0.78rem; }
   body { flex-direction: column; }
+  /* Override collapsed width on mobile — sidebar is full-width bottom bar */
+  body.sidebar-collapsed .sidebar { width: 100%; }
   .sidebar {
     width: 100%; height: auto; flex-direction: row;
     position: fixed; bottom: 0; left: 0; right: 0;
     border-right: none; border-top: 1px solid rgba(255,255,255,0.1);
     z-index: 500;
+    transition: none;
   }
   .sidebar-logo { display: none; }
   .sidebar-nav {
@@ -1507,6 +1541,9 @@ textarea { resize: vertical; line-height: 1.6; min-height: 120px; }
 
   <!-- TOP BAR -->
   <div class="topbar">
+    <button class="sidebar-toggle-btn" onclick="toggleSidebar()" title="Toggle sidebar">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:18px;height:18px;"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
     <div class="topbar-title" id="topbarTitle">Dashboard</div>
     <div id="statusBadge" class="status-badge idle">
       <div class="status-dot"></div>
@@ -2864,6 +2901,11 @@ const TAB_TITLES = {
   monitoring:   'Monitoring',
   settings:     'Settings',
 };
+
+function toggleSidebar() {
+  const collapsed = document.body.classList.toggle('sidebar-collapsed');
+  localStorage.setItem('sla_sidebar_collapsed', collapsed ? '1' : '0');
+}
 
 function switchTab(tab) {
   ['dashboard','generator','archive','comparison','reports','pipeline','distribution','calendar','monitoring','settings'].forEach(t => {
@@ -4378,6 +4420,10 @@ function downloadHeroImage() {
 window.addEventListener('DOMContentLoaded', () => {
   if (typeof pdfjsLib !== 'undefined') {
     pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+  }
+  // Restore sidebar collapsed state
+  if (localStorage.getItem('sla_sidebar_collapsed') === '1') {
+    document.body.classList.add('sidebar-collapsed');
   }
   document.getElementById('promptTextarea').value = DEFAULT_PROMPT;
   loadApiKeyUI();
