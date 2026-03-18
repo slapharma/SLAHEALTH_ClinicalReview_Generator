@@ -1295,10 +1295,56 @@ textarea { resize: vertical; line-height: 1.6; min-height: 120px; }
    SOCIAL TAB
 ══════════════════════════════════════════════════ */
 .social-view { padding: 1.5rem; max-width: 1200px; margin: 0 auto; }
-.social-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 1rem; gap: 12px; flex-wrap: wrap; }
 .social-empty { padding: 48px; text-align: center; color: var(--text-muted); font-size: 0.82rem; }
+
+/* ── Social Control Panel ── */
+.social-cp {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--sla-teal);
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+.social-cp-title { font-size: 1rem; font-weight: 800; color: var(--sla-navy); margin: 0 0 3px; }
+.social-cp-subtitle { font-size: 0.72rem; color: var(--text-muted); margin-bottom: 1.25rem; }
+.social-cp-select-wrap { position: relative; margin-bottom: 1rem; }
+.social-cp-select {
+  width: 100%; padding: 11px 38px 11px 14px;
+  font-size: 0.82rem; font-family: 'Montserrat', sans-serif; font-weight: 600;
+  color: var(--sla-navy); background: var(--bg);
+  border: 2px solid var(--border); border-radius: 0;
+  cursor: pointer; appearance: none; -webkit-appearance: none; outline: none;
+}
+.social-cp-select:focus { border-color: var(--sla-teal); }
+.social-cp-select-arrow { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); pointer-events: none; color: var(--text-muted); }
+.social-cp-meta {
+  display: flex; align-items: center; gap: 12px;
+  background: var(--bg); border: 1px solid var(--border);
+  padding: 10px 14px; margin-bottom: 1rem;
+}
+.social-cp-meta-info { flex: 1; min-width: 0; }
+.social-cp-meta-title { font-size: 0.78rem; font-weight: 700; color: var(--sla-navy); line-height: 1.4; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.social-cp-meta-cat { font-size: 0.65rem; color: var(--text-muted); margin-top: 2px; }
+.social-cp-meta-badge { font-size: 0.6rem; font-weight: 800; padding: 3px 9px; white-space: nowrap; flex-shrink: 0; }
+.social-cp-meta-badge.ready { background: rgba(0,201,167,0.12); color: #009e85; }
+.social-cp-meta-badge.pending { background: rgba(30,45,64,0.07); color: var(--sla-navy); }
+.social-cp-plat-label { font-size: 0.58rem; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 8px; }
+.social-cp-chips { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 1.25rem; }
+.social-cp-chip {
+  display: flex; align-items: center; gap: 5px;
+  padding: 5px 10px; background: var(--bg); border: 1px solid var(--border);
+  font-size: 0.68rem; font-weight: 700; color: var(--sla-navy);
+}
+.social-cp-chip svg { width: 14px; height: 14px; flex-shrink: 0; }
+.social-cp-chip-count { color: var(--sla-teal); margin-left: 1px; }
+.social-cp-gen-btn { width: 100%; padding: 12px; font-size: 0.85rem; font-weight: 800; letter-spacing: 0.3px; display: flex; align-items: center; justify-content: center; gap: 8px; }
+.social-cp-gen-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* ── Article library list ── */
+.social-library-label { font-size: 0.58rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 8px; padding: 0 2px; }
 .social-article-list { display: flex; flex-direction: column; gap: 1px; }
 .social-article-row { background: var(--card); border: 1px solid var(--border); margin-bottom: 1px; }
+.social-article-row.is-selected { border-left: 3px solid var(--sla-teal); }
 .social-article-head { display: flex; align-items: center; gap: 12px; padding: 12px 16px; cursor: pointer; transition: background 0.12s; user-select: none; }
 .social-article-head:hover { background: rgba(0,201,167,0.04); }
 .social-article-chevron { flex-shrink: 0; color: var(--text-muted); transition: transform 0.2s; }
@@ -2098,15 +2144,42 @@ textarea { resize: vertical; line-height: 1.6; min-height: 120px; }
 <!-- ══════════════════════════════ TAB: DISTRIBUTION ══════════════════════════════ -->
 <div class="tab-view" id="view-distribution">
 <div class="social-view">
-  <div class="social-header">
-    <div>
-      <h1 style="font-size:1.1rem;font-weight:800;color:var(--sla-navy);margin:0 0 3px;">Social Distribution</h1>
-      <p style="font-size:0.75rem;color:var(--text-muted);margin:0;">Generate platform-optimised posts for each article · X×5 · LinkedIn×2 · Facebook×2 · TikTok×5 · Instagram×2 · Substack×1</p>
+
+  <!-- ── Control Panel ── -->
+  <div class="social-cp">
+    <div class="social-cp-title">Social Post Generator</div>
+    <div class="social-cp-subtitle">Choose an article to generate platform-optimised posts across all channels</div>
+
+    <div class="social-cp-select-wrap">
+      <select class="social-cp-select" id="socialArticleSelect" onchange="selectSocialArticle(this.value)">
+        <option value="">— Choose an article —</option>
+      </select>
+      <svg class="social-cp-select-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:14px;height:14px;"><polyline points="6 9 12 15 18 9"/></svg>
     </div>
+
+    <div class="social-cp-meta" id="socialCpMeta" style="display:none;">
+      <div class="social-cp-meta-info">
+        <div class="social-cp-meta-title" id="socialCpMetaTitle">—</div>
+        <div class="social-cp-meta-cat" id="socialCpMetaCat">—</div>
+      </div>
+      <span class="social-cp-meta-badge pending" id="socialCpMetaBadge"></span>
+    </div>
+
+    <div class="social-cp-plat-label">Will generate posts for</div>
+    <div class="social-cp-chips" id="socialCpChips"></div>
+
+    <button class="btn btn-orange social-cp-gen-btn" id="socialCpGenBtn" onclick="generateSocialFromControl()" disabled>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:15px;height:15px;"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+      Generate All Posts
+    </button>
   </div>
+
+  <!-- ── Article Library ── -->
+  <div class="social-library-label">All Articles</div>
   <div class="social-article-list" id="socialArticleList">
     <div class="social-empty">Loading library…</div>
   </div>
+
 </div>
 </div><!-- /tab-view distribution -->
 
@@ -4714,11 +4787,99 @@ const PLAT_SVG = {
   instagram: '<svg viewBox="0 0 24 24" fill="none" stroke="var(--sla-navy)" stroke-width="1.5" style="width:20px;height:20px;"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/><circle cx="17.5" cy="6.5" r="1" fill="var(--sla-navy)" stroke="none"/></svg>',
 };
 
+function renderSocialCpChips() {
+  const el = document.getElementById('socialCpChips');
+  if (!el) return;
+  el.innerHTML = SOCIAL_PLATFORMS.map(function(p) {
+    const svg = (PLAT_SVG[p.id] || '').replace(/width:20px;height:20px/, 'width:14px;height:14px');
+    return '<div class="social-cp-chip">' + svg +
+      '<span>' + p.label + '</span>' +
+      '<span class="social-cp-chip-count">×' + p.postCount + '</span>' +
+    '</div>';
+  }).join('');
+}
+
+function selectSocialArticle(id) {
+  const meta    = document.getElementById('socialCpMeta');
+  const mTitle  = document.getElementById('socialCpMetaTitle');
+  const mCat    = document.getElementById('socialCpMetaCat');
+  const mBadge  = document.getElementById('socialCpMetaBadge');
+  const genBtn  = document.getElementById('socialCpGenBtn');
+
+  // Highlight selected row in list
+  document.querySelectorAll('.social-article-row').forEach(function(r) {
+    r.classList.toggle('is-selected', r.id === 'social-row-' + id);
+  });
+
+  if (!id) {
+    if (meta) meta.style.display = 'none';
+    if (genBtn) genBtn.disabled = true;
+    return;
+  }
+
+  const item = (publishingQueue || []).find(function(i) { return i.id === id; });
+  if (!item) return;
+
+  if (meta) meta.style.display = '';
+  if (mTitle) mTitle.textContent = (item.title || 'Untitled').slice(0, 90);
+  if (mCat)   mCat.textContent   = item.category || '—';
+  const hasPosts = !!(item.socialPosts || socialPostCache[id]);
+  if (mBadge) {
+    mBadge.textContent = hasPosts ? '✓ Posts ready' : (item.status || 'draft');
+    mBadge.className   = 'social-cp-meta-badge ' + (hasPosts ? 'ready' : 'pending');
+  }
+  if (genBtn) {
+    genBtn.disabled = false;
+    genBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:15px;height:15px;"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg> ' +
+      (hasPosts ? 'Regenerate Posts' : 'Generate All Posts');
+  }
+}
+
+async function generateSocialFromControl() {
+  const select = document.getElementById('socialArticleSelect');
+  const id = select && select.value;
+  if (!id) return;
+
+  // Scroll to + open the accordion row in the list below
+  const row = document.getElementById('social-row-' + id);
+  if (row) {
+    row.classList.add('open');
+    setTimeout(function() { row.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }, 80);
+  }
+
+  await generateSocialForArticle(id);
+
+  // Refresh control panel status after generation
+  selectSocialArticle(id);
+}
+
 function loadDistribution() {
   const listEl = document.getElementById('socialArticleList');
+  const select = document.getElementById('socialArticleSelect');
   if (!listEl) return;
 
+  // Render platform chips in control panel (once)
+  renderSocialCpChips();
+
   const items = publishingQueue || [];
+
+  // Populate select dropdown
+  if (select) {
+    const prevVal = select.value;
+    const sorted = [...items].sort(function(a, b) {
+      return new Date(b.updatedAt || 0) - new Date(a.updatedAt || 0);
+    });
+    select.innerHTML = '<option value="">— Choose an article —</option>' +
+      sorted.map(function(item) {
+        return '<option value="' + escapeHtml(item.id || '') + '">' +
+          escapeHtml((item.title || 'Untitled').slice(0, 80)) + '</option>';
+      }).join('');
+    if (prevVal && sorted.find(function(i) { return i.id === prevVal; })) {
+      select.value = prevVal;
+      selectSocialArticle(prevVal);
+    }
+  }
+
   if (!items.length) {
     listEl.innerHTML = '<div class="social-empty">No content in pipeline yet. Generate and queue an article first.</div>';
     return;
