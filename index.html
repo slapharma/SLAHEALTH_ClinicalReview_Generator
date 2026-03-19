@@ -1250,6 +1250,8 @@ textarea { resize: vertical; line-height: 1.6; min-height: 120px; }
 .prompt-saved-item-actions { display: flex; gap: 4px; flex-shrink: 0; }
 /* Add prompt form */
 .prompt-add-form { padding: 10px 12px; border-top: 1px solid var(--border); background: rgba(30,45,64,0.02); display: flex; flex-direction: column; gap: 7px; }
+.prompt-add-toggle { margin: 8px 12px; align-self: flex-start; font-size: 0.65rem; font-weight: 700; letter-spacing: 0.5px; padding: 5px 11px; background: none; border: 1.5px dashed var(--border); color: var(--text-muted); cursor: pointer; transition: all 0.15s; }
+.prompt-add-toggle:hover { border-color: var(--sla-teal); color: var(--sla-navy); background: rgba(0,201,167,0.05); }
 .prompt-add-form-title { font-size: 0.56rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.2px; color: var(--text-muted); }
 .prompt-add-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
 .prompt-add-field label { font-size: 0.55rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--sla-navy); display: block; margin-bottom: 3px; }
@@ -1478,12 +1480,14 @@ textarea { resize: vertical; line-height: 1.6; min-height: 120px; }
 .social-cp-chip {
   display: flex; flex-direction: column; align-items: center; justify-content: center;
   gap: 5px; width: 84px; min-height: 88px; padding: 10px 8px 8px;
-  background: var(--bg); border: 2px solid var(--border);
+  background: #fff; border: 2px solid var(--border);
   font-size: 0.65rem; font-weight: 700; color: var(--text-muted);
   cursor: pointer; transition: all 0.15s; user-select: none; text-align: center;
+  position: relative;
 }
 .social-cp-chip:hover { border-color: var(--sla-teal); color: var(--sla-navy); background: rgba(0,201,167,0.04); }
 .social-cp-chip.active { background: var(--sla-navy); border-color: var(--sla-navy); color: #fff; }
+.social-cp-chip.active::after { content: '✓'; position: absolute; top: 4px; right: 6px; font-size: 0.6rem; font-weight: 900; color: rgba(255,255,255,0.85); line-height: 1; }
 .social-cp-chip.active svg path, .social-cp-chip.active svg rect, .social-cp-chip.active svg circle { fill: #fff !important; stroke: #fff; }
 .social-cp-chip svg { width: 26px; height: 26px; flex-shrink: 0; }
 .social-cp-chip-label { font-size: 0.62rem; font-weight: 700; line-height: 1.2; }
@@ -5527,6 +5531,12 @@ function updateModelSelectForCategory(catId) {
   } else {
     allOptions.forEach(opt => { opt.hidden = false; });
   }
+  // Reflect per-category model saved on LLM page
+  var catModel = getCategoryModel(catId);
+  if (catModel && allOptions.some(o => o.value === catModel && !o.hidden)) {
+    select.value = catModel;
+    updateLLMStatus();
+  }
 }
 
 // ═══════════════════════════════════════════════════════════
@@ -7530,7 +7540,8 @@ function loadPromptsTab() {
       '</div>' +
       activeEditor +
       savedItems +
-      '<div class="prompt-add-form">' +
+      '<button class="prompt-add-toggle" onclick="var f=document.getElementById(\'prompt-add-form-' + cat.id + '\');var shown=f.style.display===\'flex\';f.style.display=shown?\'none\':\'flex\';this.textContent=shown?\'+ Add Prompt\':\'✕ Cancel\'">+ Add Prompt</button>' +
+      '<div class="prompt-add-form" id="prompt-add-form-' + cat.id + '" style="display:none;">' +
         '<div class="prompt-add-form-title">Add prompt</div>' +
         '<div class="prompt-add-fields">' +
           '<div class="prompt-add-field"><label>Name</label><input type="text" id="prompt-new-name-' + cat.id + '" placeholder="e.g. Concise Style" /></div>' +
@@ -7632,7 +7643,8 @@ function loadSocialPromptsTab() {
       '</div>' +
       activeEditor +
       savedItems +
-      '<div class="prompt-add-form">' +
+      '<button class="prompt-add-toggle" onclick="var f=document.getElementById(\'prompt-add-form-sp-' + plat.id + '\');var shown=f.style.display===\'flex\';f.style.display=shown?\'none\':\'flex\';this.textContent=shown?\'+ Add Prompt\':\'✕ Cancel\'">+ Add Prompt</button>' +
+      '<div class="prompt-add-form" id="prompt-add-form-sp-' + plat.id + '" style="display:none;">' +
         '<div class="prompt-add-form-title">Add prompt</div>' +
         '<div class="prompt-add-fields">' +
           '<div class="prompt-add-field"><label>Name</label><input type="text" id="prompt-new-name-sp-' + plat.id + '" placeholder="e.g. Engagement style" /></div>' +
