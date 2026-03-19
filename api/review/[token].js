@@ -53,11 +53,10 @@ ${body}
 
 // ── Feedback form page (shown for reject action) ─────────────────────────────
 function feedbackPage(token, item) {
-  const excerpt = (item.body || item.excerpt || '')
+  const fullBody = (item.body || item.excerpt || '')
     .replace(/<[^>]+>/g, '')
-    .replace(/#+\s*/g, '')
-    .trim()
-    .slice(0, 600);
+    .replace(/#{1,6}\s*/g, '')
+    .trim();
 
   return shell('Request Changes — ' + item.title, `
 <div class="card">
@@ -66,7 +65,19 @@ function feedbackPage(token, item) {
     ${item.category ? `<div class="cat">${escHtml(item.category)}</div>` : ''}
   </div>
   <div class="card-body">
-    ${excerpt ? `<div class="excerpt">${escHtml(excerpt)}${excerpt.length >= 600 ? '…' : ''}</div>` : ''}
+    ${fullBody ? `
+    <details open style="margin-bottom:20px;">
+      <summary style="font-size:0.8rem;font-weight:700;color:#1e2d40;cursor:pointer;padding:8px 0;
+                      list-style:none;display:flex;align-items:center;gap:6px;border-bottom:1px solid #dde3ea;padding-bottom:10px;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+             style="width:13px;height:13px;flex-shrink:0;"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+        Full Article — ${escHtml(item.title)}
+      </summary>
+      <div style="background:#f8f9fa;border:1px solid #dde3ea;border-top:none;border-radius:0 0 6px 6px;
+                  padding:16px 18px;font-family:Georgia,serif;font-size:0.875rem;
+                  line-height:1.8;color:#333;white-space:pre-wrap;
+                  max-height:480px;overflow-y:auto;margin-bottom:8px;">${escHtml(fullBody)}</div>
+    </details>` : ''}
     <form method="POST" action="/api/review/${escHtml(token)}">
       <label for="comment">Your feedback <span style="color:#9aa5b4;font-weight:400;">(required)</span></label>
       <textarea id="comment" name="comment" placeholder="Describe the changes needed — be as specific as possible…" required></textarea>
@@ -87,7 +98,7 @@ function confirmPage(emoji, title, message) {
     <div class="icon">${emoji}</div>
     <h2>${title}</h2>
     <p>${message}</p>
-    <a class="back" href="/">Return to app →</a>
+    <a class="back" href="/#pipeline">Return to app →</a>
   </div>
 </div>`);
 }

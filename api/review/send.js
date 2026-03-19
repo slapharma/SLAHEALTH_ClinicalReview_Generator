@@ -59,7 +59,20 @@ function buildApprovalEmail({ reviewer, content, approveUrl, rejectUrl }) {
               </td>
             </tr>
           </table>
-          ${content.excerpt ? `<p style="color:#555;font-size:14px;line-height:1.6;border-left:3px solid #dde3ea;padding-left:12px;margin:0 0 24px;">${content.excerpt.substring(0, 300)}…</p>` : ''}
+          ${(() => {
+            const plain = (content.body || content.excerpt || '')
+              .replace(/<[^>]+>/g, '').replace(/#{1,6}\s*/g, '').trim();
+            const preview = plain.slice(0, 4000) + (plain.length > 4000 ? '\n\n[…article continues]' : '');
+            const esc = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+            return preview ? `
+          <div style="margin:0 0 24px;">
+            <p style="font-size:11px;color:#6b7a8d;text-transform:uppercase;letter-spacing:1px;margin:0 0 8px;font-family:Arial,sans-serif;">Full Article</p>
+            <div style="background:#fafbfc;border:1px solid #dde3ea;border-radius:6px;padding:16px 18px;
+                        font-size:13px;color:#333;line-height:1.75;white-space:pre-wrap;font-family:Georgia,serif;">
+              ${esc(preview)}
+            </div>
+          </div>` : '';
+          })()}
           <table cellpadding="0" cellspacing="0" border="0" style="margin:0 0 16px;">
             <tr>
               <td style="padding-right:12px;">

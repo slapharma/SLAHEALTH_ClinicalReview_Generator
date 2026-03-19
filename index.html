@@ -483,6 +483,44 @@ textarea { resize: vertical; line-height: 1.6; min-height: 120px; }
    PROMPT EDITOR
 ══════════════════════════════════════════════════ */
 .prompt-editor-card { }
+/* Article edit mode */
+.article-edit-textarea {
+  width:100%; min-height:420px; padding:18px 22px;
+  border:2px solid var(--sla-orange); border-radius:var(--radius);
+  font-family:'Georgia',serif; font-size:0.9rem; line-height:1.8;
+  color:var(--text); background:var(--card); resize:vertical;
+  box-sizing:border-box; display:none;
+}
+.article-output.edit-mode .article-edit-textarea { display:block; }
+.article-output.edit-mode #articleContent { display:none; }
+.edit-mode-toolbar {
+  display:none; gap:8px; padding:8px 0 4px; flex-wrap:wrap; align-items:center;
+}
+.article-output.edit-mode .edit-mode-toolbar { display:flex; }
+.edit-hint { font-size:0.65rem; color:var(--text-muted); margin-left:auto; }
+/* Review requests card */
+.review-req-card { border-left:4px solid var(--sla-orange); }
+.review-req-status {
+  display:inline-flex; align-items:center; gap:5px;
+  font-size:0.62rem; font-weight:800; padding:3px 8px; border-radius:4px;
+  text-transform:uppercase; letter-spacing:0.5px; flex-shrink:0;
+}
+.review-req-status.s-in_review { background:rgba(26,82,118,0.1); color:#1a5276; }
+.review-req-status.s-approved  { background:rgba(26,114,69,0.12); color:#1a7245; }
+.review-req-status.s-rejected  { background:rgba(146,43,33,0.1); color:#922b21; }
+.review-req-status.s-draft     { background:rgba(100,100,100,0.09); color:#666; }
+.review-req-log { display:flex; flex-direction:column; gap:7px; margin:10px 0; }
+.review-req-log-item {
+  background:var(--bg); border:1px solid var(--border);
+  border-radius:6px; padding:9px 12px; font-size:0.72rem; line-height:1.55;
+}
+.review-req-log-item .rr-label { font-weight:700; color:var(--sla-navy); margin-bottom:3px; }
+.review-req-log-item .rr-comment {
+  color:var(--text); font-style:italic; margin-top:4px;
+  border-left:2px solid var(--sla-orange); padding-left:8px;
+}
+.review-req-log-item .rr-ts { font-size:0.6rem; color:var(--text-muted); margin-top:4px; }
+.review-req-actions { display:flex; gap:7px; flex-wrap:wrap; margin-top:10px; }
 .prompt-editor-body { padding: 14px; }
 .prompt-editor-body.collapsed { max-height: 0; overflow: hidden; padding: 0 14px; }
 .prompt-meta-row { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; flex-wrap: wrap; }
@@ -1966,7 +2004,17 @@ textarea { resize: vertical; line-height: 1.6; min-height: 120px; }
             <button class="source-tab-btn" onclick="switchSourceTab('news','link')" id="news-tab-link">Add Link</button>
           </div>
           <div class="source-pane active" id="news-pane-paste">
-            <textarea id="newsPasteText" rows="7" placeholder="Paste the news article, press release, or source text here..." style="width:100%;padding:8px;border:1px solid var(--border);border-radius:6px;font-family:'Montserrat',sans-serif;font-size:0.78rem;resize:vertical;" oninput="updateExtractedFromNews()"></textarea>
+            <textarea id="newsPasteText" rows="7" placeholder="Paste the news article, press release, or source text here..." style="width:100%;padding:8px;border:1px solid var(--border);border-radius:6px;font-family:'Montserrat',sans-serif;font-size:0.78rem;resize:vertical;box-sizing:border-box;" oninput="updateExtractedFromNews()" onpaste="setTimeout(updateExtractedFromNews,10)" onkeyup="updateExtractedFromNews()"></textarea>
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-top:6px;gap:8px;">
+              <span id="newsPasteWordCount" style="font-size:0.65rem;color:var(--text-muted);"></span>
+              <div style="display:flex;gap:6px;">
+                <button class="btn btn-outline btn-xs" id="newsPasteClearBtn" onclick="clearNewsPaste()" style="display:none;">Clear</button>
+                <button class="btn btn-navy btn-sm" id="newsPasteConfirmBtn" onclick="updateExtractedFromNews()" style="display:none;">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:11px;height:11px;"><polyline points="20 6 9 17 4 12"/></svg>
+                  Use this content
+                </button>
+              </div>
+            </div>
           </div>
           <div class="source-pane" id="news-pane-link">
             <div style="display:flex;gap:6px;margin-bottom:8px;">
@@ -2090,6 +2138,20 @@ textarea { resize: vertical; line-height: 1.6; min-height: 120px; }
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
       Generate Content
     </button>
+
+    <!-- Review Requests Card -->
+    <div class="card review-req-card" id="reviewRequestsCard" style="display:none;">
+      <div class="card-header">
+        <h2>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px;"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13.5 19.79 19.79 0 0 1 1.61 5a2 2 0 0 1 1.99-2.18h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 10.5a16 16 0 0 0 5.55 5.55l1.87-1.87a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+          Review Requests
+        </h2>
+        <span class="review-req-status s-draft" id="reviewReqStatusBadge">Draft</span>
+      </div>
+      <div class="card-body" id="reviewRequestsBody">
+        <p style="font-size:0.72rem;color:var(--text-muted);">Add article to pipeline to track review status.</p>
+      </div>
+    </div>
 
     <!-- Prompt Editor -->
     <div class="card prompt-editor-card">
@@ -2229,6 +2291,10 @@ textarea { resize: vertical; line-height: 1.6; min-height: 120px; }
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/></svg>
         Save to Library
       </button>
+      <button class="btn btn-outline btn-xs" id="editArticleBtn" onclick="enterEditMode()" disabled style="background:rgba(255,255,255,0.08);border-color:rgba(255,255,255,0.15);color:#fff;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:11px;height:11px;"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+        Edit
+      </button>
     </div>
     <div class="progress-wrap hidden" id="progressWrap">
       <div style="padding:8px 14px 0;">
@@ -2244,6 +2310,19 @@ textarea { resize: vertical; line-height: 1.6; min-height: 120px; }
     </div>
     <div class="article-output" id="articleOutput">
       <div id="articleContent"></div>
+      <textarea class="article-edit-textarea" id="articleEditTextarea" placeholder="Edit article text here…"></textarea>
+      <div class="edit-mode-toolbar">
+        <button class="btn btn-orange btn-sm" onclick="saveArticleEdits(true)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:11px;height:11px;"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/></svg>
+          Save Changes
+        </button>
+        <button class="btn btn-outline btn-sm" onclick="saveArticleEdits(false)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:11px;height:11px;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          Save as New
+        </button>
+        <button class="btn btn-outline btn-sm" onclick="exitEditMode()">Cancel</button>
+        <span class="edit-hint">Save Changes replaces the current version. Save as New adds to library.</span>
+      </div>
     </div>
 
     <!-- HERO IMAGE PANEL -->
@@ -3798,6 +3877,7 @@ let unsplashResults   = [];
 let selectedUnsplashIdx = -1;
 let extractedText   = '';
 let rawArticleText  = '';
+let currentContentId = null; // pipeline KV id of the currently loaded/generated article
 let currentFile     = null;
 let isGenerating    = false;
 let promptCollapsed = false;
@@ -4565,6 +4645,8 @@ async function generateReview() {
       if (sfrBtn) sfrBtn.disabled = false;
       const qpBtn = document.getElementById('queueForPublishBtn');
       if (qpBtn) qpBtn.disabled = false;
+      const editBtn = document.getElementById('editArticleBtn');
+      if (editBtn) editBtn.disabled = false;
       // Show hero image panel (right-side panel)
       document.getElementById('heroImagePanel').style.display = 'block';
       // Auto-populate Pexels search from article title
@@ -5568,11 +5650,13 @@ async function queueCurrentForPublishing() {
     category: currentCategory,
   });
   if (created) {
+    currentContentId = created.id;
     publishingQueue.push({ ...created, model, wordCount, queuedAt: created.createdAt });
+    loadReviewRequestCard();
   }
   renderQueuePanel();
   updateQueueHeaderBtn();
-  showAlert('generateAlert', '\u25b6 Added to Publishing Queue', 'success');
+  showAlert('generateAlert', '\u25b6 Added to Pipeline', 'success');
   setTimeout(() => hideAlert('generateAlert'), 3000);
 }
 
@@ -5594,19 +5678,39 @@ async function removeFromQueue(idx) {
 //  CATEGORY INPUT HANDLERS
 // ═══════════════════════════════════════════════════════════
 function switchSourceTab(cat, tab) {
-  const prefix = cat === 'news' ? 'news' : cat;
   document.querySelectorAll(`#panel-industry-news .source-tab-btn`).forEach(b => b.classList.remove('active'));
   document.querySelectorAll(`#panel-industry-news .source-pane`).forEach(p => p.classList.remove('active'));
   document.getElementById(`news-tab-${tab}`).classList.add('active');
   document.getElementById(`news-pane-${tab}`).classList.add('active');
-  // Reset extractedText when switching tabs
-  extractedText = '';
-  updateGenerateButton();
+  // When switching back to paste, restore from textarea (don't blank out work already done)
+  if (tab === 'paste') {
+    updateExtractedFromNews();
+  } else {
+    extractedText = '';
+    updateGenerateButton();
+  }
 }
 
 function updateExtractedFromNews() {
-  extractedText = document.getElementById('newsPasteText').value;
+  var ta  = document.getElementById('newsPasteText');
+  var wce = document.getElementById('newsPasteWordCount');
+  var cbtn = document.getElementById('newsPasteConfirmBtn');
+  var clrBtn = document.getElementById('newsPasteClearBtn');
+  var val = ta ? ta.value.trim() : '';
+  extractedText = val;
+  if (wce) {
+    var wc = val ? val.split(/\s+/).filter(Boolean).length : 0;
+    wce.textContent = wc > 0 ? wc.toLocaleString() + ' words ready' : '';
+  }
+  if (cbtn)  cbtn.style.display  = val ? '' : 'none';
+  if (clrBtn) clrBtn.style.display = val ? '' : 'none';
   updateGenerateButton();
+}
+
+function clearNewsPaste() {
+  var ta = document.getElementById('newsPasteText');
+  if (ta) ta.value = '';
+  updateExtractedFromNews();
 }
 
 async function fetchNewsLink() {
@@ -5614,32 +5718,64 @@ async function fetchNewsLink() {
   if (!url) return;
   const statusEl = document.getElementById('newsLinkStatus');
   const previewEl = document.getElementById('newsLinkPreview');
-  statusEl.className = 'alert'; statusEl.textContent = 'Fetching article content...';
+  const fetchBtn = document.querySelector('#news-pane-link .btn-navy');
+  if (fetchBtn) { fetchBtn.disabled = true; fetchBtn.textContent = 'Fetching…'; }
+  statusEl.className = 'alert'; statusEl.textContent = 'Fetching article content…';
+  if (statusEl.classList.contains('hidden')) statusEl.classList.remove('hidden');
   previewEl.style.display = 'none';
-  try {
-    // Use a CORS proxy to fetch the URL
-    const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`;
-    const res = await fetch(proxyUrl);
-    const data = await res.json();
-    const html = data.contents;
-    // Strip HTML tags to get plain text
+
+  async function extractTextFromHtml(html) {
     const tmp = document.createElement('div');
     tmp.innerHTML = html;
-    // Remove script/style elements
-    tmp.querySelectorAll('script,style,nav,header,footer,aside').forEach(el => el.remove());
+    tmp.querySelectorAll('script,style,nav,header,footer,aside,noscript,iframe').forEach(el => el.remove());
     const text = tmp.innerText || tmp.textContent || '';
-    const cleaned = text.replace(/\s+/g, ' ').trim().substring(0, 15000);
-    if (!cleaned) throw new Error('No readable text found at this URL');
+    return text.replace(/\s+/g, ' ').trim().substring(0, 15000);
+  }
+
+  try {
+    // Primary: server-side fetch (no CORS issues)
+    let html = null;
+    let fetchError = null;
+    try {
+      const res = await fetch(`/api/fetch-url?url=${encodeURIComponent(url)}`);
+      if (res.ok) {
+        const data = await res.json();
+        html = data.contents;
+      } else {
+        const data = await res.json().catch(() => ({}));
+        fetchError = data.error || `Server returned ${res.status}`;
+      }
+    } catch (e) {
+      fetchError = e.message;
+    }
+
+    // Fallback: public CORS proxy
+    if (!html) {
+      try {
+        const proxyRes = await fetch(`https://corsproxy.io/?${encodeURIComponent(url)}`);
+        if (proxyRes.ok) html = await proxyRes.text();
+      } catch (_) {}
+    }
+
+    if (!html) throw new Error(fetchError || 'Could not retrieve content from that URL. Try pasting the article text directly.');
+
+    const cleaned = await extractTextFromHtml(html);
+    if (!cleaned) throw new Error('No readable text found at this URL. The site may block automated access — try pasting the article text instead.');
+
     extractedText = `Source URL: ${url}\n\n${cleaned}`;
-    const wc = cleaned.split(/\s+/).filter(w=>w).length;
-    statusEl.className = 'alert alert-success'; statusEl.textContent = `✓ Fetched — ${wc.toLocaleString()} words extracted`;
-    previewEl.textContent = cleaned.substring(0, 200) + '...';
+    const wc = cleaned.split(/\s+/).filter(w => w).length;
+    statusEl.className = 'alert alert-success';
+    statusEl.textContent = `✓ Fetched — ${wc.toLocaleString()} words extracted`;
+    previewEl.textContent = cleaned.substring(0, 250) + '…';
     previewEl.style.display = 'block';
     updateGenerateButton();
   } catch (err) {
-    statusEl.className = 'alert alert-error'; statusEl.textContent = 'Failed to fetch: ' + err.message;
+    statusEl.className = 'alert alert-error';
+    statusEl.textContent = '✗ ' + err.message;
     extractedText = '';
     updateGenerateButton();
+  } finally {
+    if (fetchBtn) { fetchBtn.disabled = false; fetchBtn.textContent = 'Fetch'; }
   }
 }
 
@@ -5907,7 +6043,15 @@ window.addEventListener('DOMContentLoaded', () => {
   document.getElementById('promptTextarea').value = DEFAULT_PROMPT;
   loadApiKeyUI();
   updateCategoryHeader('clinical-reviews');
-  switchTab('dashboard');
+  // Hash deep-link: /#pipeline, /#generator, etc. (used by review confirmation pages)
+  var hashTab = window.location.hash.replace('#', '');
+  var validTabs = ['dashboard','generator','archive','pipeline','distribution','calendar','monitoring','settings','prompts','llm'];
+  if (hashTab && validTabs.includes(hashTab)) {
+    switchTab(hashTab);
+    history.replaceState(null, '', window.location.pathname); // clean URL
+  } else {
+    switchTab('dashboard');
+  }
 
   // Close mobile nav drawer when any nav item is tapped
   document.querySelectorAll('.nav-item').forEach(btn => {
@@ -7356,10 +7500,136 @@ async function sendForReview(contentId) {
     if (!r.ok) throw new Error(data.error || r.statusText);
     showAlert('generateAlert', `✉ Review request sent to ${data.sent} reviewer${data.sent !== 1 ? 's' : ''}`, 'success');
     setTimeout(() => loadPipeline(), 600);
+    setTimeout(() => loadReviewRequestCard(), 800);
   } catch (err) {
     alert('Failed to send review: ' + err.message);
     if (btn) { btn.disabled = false; btn.textContent = 'Send for Review'; }
   }
+}
+
+// ── Article inline editing ───────────────────────────────────────────────────
+
+function enterEditMode() {
+  const ta = document.getElementById('articleEditTextarea');
+  if (!ta || !rawArticleText) return;
+  ta.value = rawArticleText;
+  document.getElementById('articleOutput').classList.add('edit-mode');
+  const editBtn = document.getElementById('editArticleBtn');
+  if (editBtn) editBtn.style.display = 'none';
+  ta.focus();
+}
+
+function exitEditMode() {
+  document.getElementById('articleOutput').classList.remove('edit-mode');
+  const editBtn = document.getElementById('editArticleBtn');
+  if (editBtn) editBtn.style.display = '';
+}
+
+async function saveArticleEdits(replace) {
+  const ta = document.getElementById('articleEditTextarea');
+  if (!ta) return;
+  const newText = ta.value.trim();
+  if (!newText) return;
+  rawArticleText = newText;
+  document.getElementById('articleContent').innerHTML = formatArticleHTML(rawArticleText);
+  document.getElementById('wordCount').textContent =
+    rawArticleText.split(/\s+/).filter(function(w){return w;}).length.toLocaleString() + ' words';
+  exitEditMode();
+  if (replace && currentContentId) {
+    try {
+      const r = await fetch('/api/content/' + currentContentId, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          body: newText,
+          excerpt: newText.replace(/<[^>]+>/g,'').split(/\s+/).slice(0, 30).join(' ') + '…'
+        }),
+      });
+      if (!r.ok) throw new Error((await r.json()).error || r.statusText);
+      showAlert('generateAlert', '✓ Article updated in pipeline', 'success');
+    } catch(e) {
+      showAlert('generateAlert', 'Update failed: ' + e.message, 'error');
+    }
+  } else {
+    saveReviewToArchive();
+  }
+}
+
+// ── Review Requests card ─────────────────────────────────────────────────────
+
+async function loadReviewRequestCard() {
+  var card  = document.getElementById('reviewRequestsCard');
+  var body  = document.getElementById('reviewRequestsBody');
+  var badge = document.getElementById('reviewReqStatusBadge');
+  if (!card) return;
+  if (!currentContentId) { card.style.display = 'none'; return; }
+  card.style.display = '';
+  body.innerHTML = '<p style="font-size:0.72rem;color:var(--text-muted);">Loading…</p>';
+  try {
+    var r = await fetch('/api/content/' + currentContentId);
+    if (!r.ok) throw new Error(r.statusText);
+    var item = await r.json();
+    var ST = { draft:'Draft', in_review:'In Review', rejected:'Changes Requested',
+               approved:'Approved', scheduled:'Scheduled', published:'Published' };
+    var st = item.status || 'draft';
+    badge.textContent = ST[st] || st;
+    badge.className = 'review-req-status s-' + st;
+    var logHtml = (item.rejectionComments || []).map(function(c) {
+      return '<div class="review-req-log-item">' +
+        '<div class="rr-label">Changes Requested</div>' +
+        '<div class="rr-comment">' + escapeHtml(c.comment) + '</div>' +
+        '<div class="rr-ts">' + (c.at ? new Date(c.at).toLocaleString('en-GB') : '') + '</div>' +
+        '</div>';
+    }).join('');
+    if (item.approvals && item.approvals.length) {
+      logHtml += '<div class="review-req-log-item">' +
+        '<div class="rr-label" style="color:#1a7245;">✓ Approved</div>' +
+        '<div class="rr-ts">' + (item.approvedAt ? new Date(item.approvedAt).toLocaleString('en-GB') : '') + '</div>' +
+        '</div>';
+    }
+    var ts = item.updatedAt
+      ? '<p style="font-size:0.68rem;color:var(--text-muted);margin-bottom:8px;">Last updated: ' +
+        new Date(item.updatedAt).toLocaleString('en-GB') + '</p>'
+      : '';
+    var closeBtn = st !== 'draft'
+      ? '<button class="btn btn-outline btn-sm" onclick="closeReviewRequest()">Close &amp; Reset to Draft</button>'
+      : '';
+    body.innerHTML = ts +
+      (logHtml ? '<div class="review-req-log">' + logHtml + '</div>' : '') +
+      '<div class="review-req-actions">' +
+        '<button class="btn btn-orange btn-sm" onclick="resendReview()">' +
+          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:11px;height:11px;"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>' +
+          ' Resend for Review' +
+        '</button>' + closeBtn +
+      '</div>';
+  } catch(e) {
+    body.innerHTML = '<p style="font-size:0.72rem;color:var(--text-muted);">Could not load: ' + e.message + '</p>';
+  }
+}
+
+async function closeReviewRequest() {
+  if (!currentContentId) return;
+  var btn = event && event.target;
+  if (btn) { btn.disabled = true; btn.textContent = 'Resetting…'; }
+  try {
+    var r = await fetch('/api/content/' + currentContentId, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ status: 'draft', approvals: [], rejections: [], rejectionComments: [] }),
+    });
+    if (!r.ok) throw new Error((await r.json()).error || r.statusText);
+    showAlert('generateAlert', '✓ Review closed — article reset to Draft', 'success');
+    await loadReviewRequestCard();
+  } catch(e) {
+    showAlert('generateAlert', 'Reset failed: ' + e.message, 'error');
+    if (btn) { btn.disabled = false; btn.textContent = 'Close & Reset to Draft'; }
+  }
+}
+
+async function resendReview() {
+  if (!currentContentId) return;
+  await sendForReview(currentContentId);
+  setTimeout(loadReviewRequestCard, 1200);
 }
 
 async function publishNow(contentId) {
