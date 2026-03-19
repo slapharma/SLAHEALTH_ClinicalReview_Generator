@@ -1476,6 +1476,33 @@ textarea { resize: vertical; line-height: 1.6; min-height: 120px; }
 .social-post-actions { display: flex; gap: 6px; flex-wrap: wrap; }
 .social-post-sched { font-size: 0.6rem; color: var(--sla-teal); font-weight: 700; margin-top: 2px; }
 
+/* ══════════════════════════════════════════════════
+   LLM MANAGEMENT PAGE
+══════════════════════════════════════════════════ */
+.llm-page { max-width: 1200px; margin: 0 auto; padding: 1.5rem; display: flex; flex-direction: column; gap: 1.5rem; }
+.llm-section { background: var(--card); border: 1px solid var(--border); }
+.llm-section-header { padding: 14px 18px 12px; background: var(--header-green); color: #fff; display: flex; align-items: center; gap: 10px; }
+.llm-section-title { font-weight: 800; font-size: 0.9rem; color: #fff; flex: 1; }
+.llm-section-desc { font-size: 0.7rem; color: rgba(255,255,255,0.7); }
+.llm-section-body { padding: 16px 18px; display: flex; flex-direction: column; gap: 14px; }
+.llm-provider-row { display: flex; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--border); }
+.llm-provider-row:last-child { border-bottom: none; }
+.llm-provider-badge { padding: 3px 8px; font-size: 0.6rem; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; }
+.llm-provider-name { font-weight: 700; font-size: 0.8rem; color: var(--sla-navy); flex: 1; }
+.llm-provider-key-input { flex: 2; min-width: 0; padding: 7px 10px; border: 1px solid var(--border); font-size: 0.72rem; border-radius: 0; font-family: 'Montserrat', sans-serif; }
+.llm-cat-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; }
+.llm-cat-card { background: var(--bg); border: 1px solid var(--border); padding: 12px; }
+.llm-social-card { background: var(--bg); border: 1px solid var(--border); padding: 12px; }
+.llm-cat-name { font-size: 0.68rem; font-weight: 800; color: var(--sla-navy); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+.llm-status-widget { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.llm-status-label { font-size: 0.68rem; color: var(--text-muted); font-weight: 700; }
+.llm-status-model { font-size: 0.72rem; font-weight: 700; color: var(--sla-navy); flex: 1; }
+.llm-quick-select { font-size: 0.68rem; padding: 5px 8px; border: 1px solid var(--border); border-radius: 0; max-width: 220px; font-family: 'Montserrat', sans-serif; width: 100%; }
+.priority-check-row { display: flex; align-items: center; gap: 6px; font-size: 0.65rem; color: var(--text-muted); margin-top: 4px; }
+.llm-god-prompt { width: 100%; box-sizing: border-box; padding: 10px 12px; border: 1px solid var(--border); border-radius: 0; font-family: 'Montserrat', sans-serif; font-size: 0.78rem; resize: vertical; min-height: 110px; }
+.llm-save-row { display: flex; justify-content: flex-end; gap: 8px; margin-top: 4px; }
+.llm-tip { font-size: 0.65rem; color: var(--text-muted); margin-top: 4px; }
+
 /* ── Monitoring Table ── */
 .mon-table-wrap { overflow-x: auto; }
 .mon-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
@@ -1702,6 +1729,10 @@ textarea { resize: vertical; line-height: 1.6; min-height: 120px; }
     </button>
 
     <div class="nav-section-label">System</div>
+    <button class="nav-item" onclick="switchTab('llm')" id="tab-llm">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><line x1="9" y1="1" x2="9" y2="4"/><line x1="15" y1="1" x2="15" y2="4"/><line x1="9" y1="20" x2="9" y2="23"/><line x1="15" y1="20" x2="15" y2="23"/><line x1="20" y1="9" x2="23" y2="9"/><line x1="20" y1="14" x2="23" y2="14"/><line x1="1" y1="9" x2="4" y2="9"/><line x1="1" y1="14" x2="4" y2="14"/></svg>
+      <span>LLM</span>
+    </button>
     <button class="nav-item" onclick="switchTab('settings')" id="tab-settings">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
       <span>Settings</span>
@@ -1778,15 +1809,20 @@ textarea { resize: vertical; line-height: 1.6; min-height: 120px; }
   <!-- LEFT PANEL -->
   <div style="display:flex;flex-direction:column;gap:1.25rem;">
 
-    <!-- Model Selection -->
+    <!-- AI Model Status Widget -->
     <div class="card">
-      <div class="card-header">
-        <h2><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>Model Selection</h2>
+      <div class="card-header" style="display:flex;align-items:center;justify-content:space-between;">
+        <h2><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><line x1="9" y1="1" x2="9" y2="4"/><line x1="15" y1="1" x2="15" y2="4"/><line x1="9" y1="20" x2="9" y2="23"/><line x1="15" y1="20" x2="15" y2="23"/><line x1="20" y1="9" x2="23" y2="9"/><line x1="20" y1="14" x2="23" y2="14"/><line x1="1" y1="9" x2="4" y2="9"/><line x1="1" y1="14" x2="4" y2="14"/></svg>AI Model</h2>
+        <button class="btn btn-outline btn-xs" onclick="switchTab('llm')" style="font-size:0.62rem;padding:3px 8px;">Manage →</button>
       </div>
       <div class="card-body">
-        <div class="form-group">
-          <label>Free OpenRouter Model</label>
-          <select id="modelSelect">
+        <div class="llm-status-widget">
+          <span class="llm-status-label">Default:</span>
+          <span class="llm-status-model" id="llmStatusName">Arcee AI: Trinity Large ★</span>
+        </div>
+        <div style="margin-top:8px;">
+          <label style="font-size:0.62rem;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;color:var(--sla-navy);margin-bottom:5px;display:block;">Change LLM</label>
+          <select id="modelSelect" class="llm-quick-select" onchange="updateLLMStatus()" style="width:100%;max-width:100%;">
             <optgroup label="── Recommended ──">
               <option value="arcee-ai/trinity-large-preview:free" selected>Arcee AI: Trinity Large Preview ★</option>
               <option value="google/gemma-3-4b-it:free">Google: Gemma 3 4B ★</option>
@@ -1814,11 +1850,19 @@ textarea { resize: vertical; line-height: 1.6; min-height: 120px; }
               <option value="cognitivecomputations/dolphin-mistral-24b-venice-edition:free">Venice: Uncensored</option>
               <option value="z-ai/glm-4.5-air:free">Z.ai: GLM 4.5 Air</option>
             </optgroup>
+            <optgroup label="── Premium (key required) ──">
+              <option value="claude-opus-4-5">Claude Opus (Anthropic)</option>
+              <option value="claude-sonnet-4-5">Claude Sonnet (Anthropic)</option>
+              <option value="gpt-4o">GPT-4o (OpenAI)</option>
+              <option value="gpt-4o-mini">GPT-4o Mini (OpenAI)</option>
+              <option value="gemini-2.0-flash">Gemini 2.0 Flash (Google)</option>
+              <option value="gemini-1.5-pro">Gemini 1.5 Pro (Google)</option>
+            </optgroup>
           </select>
-          <div class="model-hint">★ Most reliable. Auto-retries with next model on failure.</div>
-          <div class="model-in-use" id="modelInUse"></div>
-          <div class="retry-info" id="retryInfo"></div>
         </div>
+        <div class="model-hint" style="margin-top:4px;">★ Most reliable. Auto-retries with next model on failure.</div>
+        <div class="model-in-use" id="modelInUse"></div>
+        <div class="retry-info" id="retryInfo"></div>
       </div>
     </div>
 
@@ -2548,6 +2592,471 @@ textarea { resize: vertical; line-height: 1.6; min-height: 120px; }
   </div>
 </div><!-- /tab-view prompts -->
 
+<!-- ══════════════════════════════ LLM MANAGEMENT ══════════════════════════════ -->
+<div class="tab-view" id="view-llm">
+  <div class="llm-page">
+
+    <!-- Section A: God-Prompt -->
+    <div class="llm-section">
+      <div class="llm-section-header">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;flex-shrink:0;"><path d="M12 2a10 10 0 1 0 0 20A10 10 0 0 0 12 2z"/><path d="M12 8v4l3 3"/></svg>
+        <div style="flex:1;">
+          <div class="llm-section-title">God-Prompt — Global Context</div>
+          <div class="llm-section-desc">This context is prepended to every AI generation prompt across the platform</div>
+        </div>
+      </div>
+      <div class="llm-section-body">
+        <textarea id="godPromptTextarea" class="llm-god-prompt" rows="6" placeholder="e.g. Company: SLA Health | Industry: Medical / IBD | Author: Dr. Jane Smith | Writing style: Clinical, peer-reviewed | Country: United Kingdom | Language: British English | Target audience: Specialist physicians and GPs"></textarea>
+        <div class="llm-save-row">
+          <button class="btn btn-orange btn-sm" onclick="saveGodPrompt()">Save God-Prompt</button>
+        </div>
+        <div class="llm-tip">Tip: Include company name, author, writing style, country, language, target audience</div>
+      </div>
+    </div>
+
+    <!-- Section B: API Keys -->
+    <div class="llm-section">
+      <div class="llm-section-header">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;flex-shrink:0;"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>
+        <div style="flex:1;">
+          <div class="llm-section-title">API Keys</div>
+          <div class="llm-section-desc">Configure your AI provider credentials</div>
+        </div>
+      </div>
+      <div class="llm-section-body">
+        <!-- OpenRouter -->
+        <div id="apiKeyCard" style="margin-bottom:4px;">
+          <div style="font-size:0.75rem;font-weight:800;color:var(--sla-navy);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.5px;">OpenRouter</div>
+          <p style="font-size:0.68rem;color:var(--text-muted);margin-bottom:10px;">OpenRouter provides access to all free models. Enter your own key to increase rate limits.</p>
+          <div style="display:flex;gap:8px;align-items:flex-end;flex-wrap:wrap;">
+            <div style="flex:1;min-width:200px;">
+              <input type="password" id="apiKeyInput" placeholder="Using built-in key — enter to override" oninput="onApiKeyInput()" style="width:100%;box-sizing:border-box;padding:8px 10px;border:1px solid var(--border);border-radius:0;font-family:'Montserrat',sans-serif;font-size:0.72rem;" />
+            </div>
+            <button class="btn btn-orange btn-sm" onclick="saveApiKey()" id="saveKeyBtn">Save Key</button>
+            <button class="btn btn-outline btn-sm" onclick="clearApiKey()">Reset</button>
+          </div>
+          <div id="apiKeyStatus" style="margin-top:7px;font-size:0.65rem;"></div>
+        </div>
+
+        <hr style="border:none;border-top:1px solid var(--border);margin:8px 0;" />
+
+        <!-- Premium Providers -->
+        <div style="font-size:0.75rem;font-weight:800;color:var(--sla-navy);margin-bottom:4px;text-transform:uppercase;letter-spacing:0.5px;">Premium Providers</div>
+        <p style="font-size:0.68rem;color:var(--text-muted);margin-bottom:10px;">Add a direct API key to unlock premium models. Check "Prioritize" to route all generations through that provider.</p>
+
+        <!-- Claude -->
+        <div class="llm-provider-row">
+          <span class="llm-provider-badge" style="background:#d97757;color:#fff;">Anthropic</span>
+          <div class="llm-provider-name">Claude</div>
+          <input type="password" id="claudeKeyInput" class="llm-provider-key-input" placeholder="sk-ant-..." />
+          <button class="btn btn-outline btn-sm" onclick="savePremiumKey('claude')">Save</button>
+          <div class="priority-check-row">
+            <input type="checkbox" id="priority-claude" onchange="onPriorityChange('claude', this.checked)" />
+            <label for="priority-claude">Prioritize</label>
+          </div>
+        </div>
+
+        <!-- OpenAI -->
+        <div class="llm-provider-row">
+          <span class="llm-provider-badge" style="background:#10a37f;color:#fff;">OpenAI</span>
+          <div class="llm-provider-name">ChatGPT</div>
+          <input type="password" id="openaiKeyInput" class="llm-provider-key-input" placeholder="sk-..." />
+          <button class="btn btn-outline btn-sm" onclick="savePremiumKey('openai')">Save</button>
+          <div class="priority-check-row">
+            <input type="checkbox" id="priority-openai" onchange="onPriorityChange('openai', this.checked)" />
+            <label for="priority-openai">Prioritize</label>
+          </div>
+        </div>
+
+        <!-- Gemini -->
+        <div class="llm-provider-row">
+          <span class="llm-provider-badge" style="background:#4285f4;color:#fff;">Google</span>
+          <div class="llm-provider-name">Gemini</div>
+          <input type="password" id="geminiKeyInput" class="llm-provider-key-input" placeholder="AIza..." />
+          <button class="btn btn-outline btn-sm" onclick="savePremiumKey('gemini')">Save</button>
+          <div class="priority-check-row">
+            <input type="checkbox" id="priority-gemini" onchange="onPriorityChange('gemini', this.checked)" />
+            <label for="priority-gemini">Prioritize</label>
+          </div>
+        </div>
+
+        <!-- Meta -->
+        <div class="llm-provider-row">
+          <span class="llm-provider-badge" style="background:#0866ff;color:#fff;">Meta AI</span>
+          <div class="llm-provider-name">Llama</div>
+          <input type="password" id="metaKeyInput" class="llm-provider-key-input" placeholder="API key..." />
+          <button class="btn btn-outline btn-sm" onclick="savePremiumKey('meta')">Save</button>
+          <div class="priority-check-row">
+            <input type="checkbox" id="priority-meta" onchange="onPriorityChange('meta', this.checked)" />
+            <label for="priority-meta">Prioritize</label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section C: Default LLM per Article Category -->
+    <div class="llm-section">
+      <div class="llm-section-header">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;flex-shrink:0;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        <div style="flex:1;">
+          <div class="llm-section-title">Default LLM per Article Category</div>
+          <div class="llm-section-desc">Override the global model for specific content types</div>
+        </div>
+      </div>
+      <div class="llm-section-body">
+        <div class="llm-cat-grid">
+          <!-- Clinical Reviews -->
+          <div class="llm-cat-card">
+            <div class="llm-cat-name">Clinical Reviews</div>
+            <select id="llm-cat-clinical-reviews" class="llm-quick-select">
+              <option value="">— Use global default —</option>
+              <optgroup label="── Recommended (Free) ──">
+                <option value="arcee-ai/trinity-large-preview:free">Arcee AI: Trinity Large ★</option>
+                <option value="google/gemma-3-4b-it:free">Google: Gemma 3 4B ★</option>
+                <option value="google/gemma-3n-e4b-it:free">Google: Gemma 3n 4B ★</option>
+              </optgroup>
+              <optgroup label="── Free Models ──">
+                <option value="meta-llama/llama-3.3-70b-instruct:free">Meta: Llama 3.3 70B</option>
+                <option value="mistralai/mistral-small-3.1-24b-instruct:free">Mistral Small 3.1 24B</option>
+                <option value="qwen/qwen3-4b:free">Qwen: Qwen3 4B</option>
+                <option value="google/gemma-3-12b-it:free">Google: Gemma 3 12B</option>
+                <option value="nousresearch/hermes-3-llama-3.1-405b:free">Nous: Hermes 3 405B</option>
+              </optgroup>
+              <optgroup label="── Premium (key required) ──">
+                <option value="claude-opus-4-5">Claude Opus (Anthropic)</option>
+                <option value="claude-sonnet-4-5">Claude Sonnet (Anthropic)</option>
+                <option value="gpt-4o">GPT-4o (OpenAI)</option>
+                <option value="gpt-4o-mini">GPT-4o Mini (OpenAI)</option>
+                <option value="gemini-2.0-flash">Gemini 2.0 Flash (Google)</option>
+                <option value="gemini-1.5-pro">Gemini 1.5 Pro (Google)</option>
+              </optgroup>
+            </select>
+            <div class="llm-save-row" style="margin-top:8px;">
+              <button class="btn btn-outline btn-sm" onclick="saveCategoryModel('clinical-reviews', this.closest('.llm-cat-card').querySelector('select').value)">Save</button>
+            </div>
+          </div>
+          <!-- Industry News -->
+          <div class="llm-cat-card">
+            <div class="llm-cat-name">Industry News</div>
+            <select id="llm-cat-industry-news" class="llm-quick-select">
+              <option value="">— Use global default —</option>
+              <optgroup label="── Recommended (Free) ──">
+                <option value="arcee-ai/trinity-large-preview:free">Arcee AI: Trinity Large ★</option>
+                <option value="google/gemma-3-4b-it:free">Google: Gemma 3 4B ★</option>
+                <option value="google/gemma-3n-e4b-it:free">Google: Gemma 3n 4B ★</option>
+              </optgroup>
+              <optgroup label="── Free Models ──">
+                <option value="meta-llama/llama-3.3-70b-instruct:free">Meta: Llama 3.3 70B</option>
+                <option value="mistralai/mistral-small-3.1-24b-instruct:free">Mistral Small 3.1 24B</option>
+                <option value="qwen/qwen3-4b:free">Qwen: Qwen3 4B</option>
+                <option value="google/gemma-3-12b-it:free">Google: Gemma 3 12B</option>
+                <option value="nousresearch/hermes-3-llama-3.1-405b:free">Nous: Hermes 3 405B</option>
+              </optgroup>
+              <optgroup label="── Premium (key required) ──">
+                <option value="claude-opus-4-5">Claude Opus (Anthropic)</option>
+                <option value="claude-sonnet-4-5">Claude Sonnet (Anthropic)</option>
+                <option value="gpt-4o">GPT-4o (OpenAI)</option>
+                <option value="gpt-4o-mini">GPT-4o Mini (OpenAI)</option>
+                <option value="gemini-2.0-flash">Gemini 2.0 Flash (Google)</option>
+                <option value="gemini-1.5-pro">Gemini 1.5 Pro (Google)</option>
+              </optgroup>
+            </select>
+            <div class="llm-save-row" style="margin-top:8px;">
+              <button class="btn btn-outline btn-sm" onclick="saveCategoryModel('industry-news', this.closest('.llm-cat-card').querySelector('select').value)">Save</button>
+            </div>
+          </div>
+          <!-- Op-Eds -->
+          <div class="llm-cat-card">
+            <div class="llm-cat-name">Op-Eds</div>
+            <select id="llm-cat-op-eds" class="llm-quick-select">
+              <option value="">— Use global default —</option>
+              <optgroup label="── Recommended (Free) ──">
+                <option value="arcee-ai/trinity-large-preview:free">Arcee AI: Trinity Large ★</option>
+                <option value="google/gemma-3-4b-it:free">Google: Gemma 3 4B ★</option>
+                <option value="google/gemma-3n-e4b-it:free">Google: Gemma 3n 4B ★</option>
+              </optgroup>
+              <optgroup label="── Free Models ──">
+                <option value="meta-llama/llama-3.3-70b-instruct:free">Meta: Llama 3.3 70B</option>
+                <option value="mistralai/mistral-small-3.1-24b-instruct:free">Mistral Small 3.1 24B</option>
+                <option value="qwen/qwen3-4b:free">Qwen: Qwen3 4B</option>
+                <option value="google/gemma-3-12b-it:free">Google: Gemma 3 12B</option>
+                <option value="nousresearch/hermes-3-llama-3.1-405b:free">Nous: Hermes 3 405B</option>
+              </optgroup>
+              <optgroup label="── Premium (key required) ──">
+                <option value="claude-opus-4-5">Claude Opus (Anthropic)</option>
+                <option value="claude-sonnet-4-5">Claude Sonnet (Anthropic)</option>
+                <option value="gpt-4o">GPT-4o (OpenAI)</option>
+                <option value="gpt-4o-mini">GPT-4o Mini (OpenAI)</option>
+                <option value="gemini-2.0-flash">Gemini 2.0 Flash (Google)</option>
+                <option value="gemini-1.5-pro">Gemini 1.5 Pro (Google)</option>
+              </optgroup>
+            </select>
+            <div class="llm-save-row" style="margin-top:8px;">
+              <button class="btn btn-outline btn-sm" onclick="saveCategoryModel('op-eds', this.closest('.llm-cat-card').querySelector('select').value)">Save</button>
+            </div>
+          </div>
+          <!-- White Papers -->
+          <div class="llm-cat-card">
+            <div class="llm-cat-name">White Papers</div>
+            <select id="llm-cat-white-papers" class="llm-quick-select">
+              <option value="">— Use global default —</option>
+              <optgroup label="── Recommended (Free) ──">
+                <option value="arcee-ai/trinity-large-preview:free">Arcee AI: Trinity Large ★</option>
+                <option value="google/gemma-3-4b-it:free">Google: Gemma 3 4B ★</option>
+                <option value="google/gemma-3n-e4b-it:free">Google: Gemma 3n 4B ★</option>
+              </optgroup>
+              <optgroup label="── Free Models ──">
+                <option value="meta-llama/llama-3.3-70b-instruct:free">Meta: Llama 3.3 70B</option>
+                <option value="mistralai/mistral-small-3.1-24b-instruct:free">Mistral Small 3.1 24B</option>
+                <option value="qwen/qwen3-4b:free">Qwen: Qwen3 4B</option>
+                <option value="google/gemma-3-12b-it:free">Google: Gemma 3 12B</option>
+                <option value="nousresearch/hermes-3-llama-3.1-405b:free">Nous: Hermes 3 405B</option>
+              </optgroup>
+              <optgroup label="── Premium (key required) ──">
+                <option value="claude-opus-4-5">Claude Opus (Anthropic)</option>
+                <option value="claude-sonnet-4-5">Claude Sonnet (Anthropic)</option>
+                <option value="gpt-4o">GPT-4o (OpenAI)</option>
+                <option value="gpt-4o-mini">GPT-4o Mini (OpenAI)</option>
+                <option value="gemini-2.0-flash">Gemini 2.0 Flash (Google)</option>
+                <option value="gemini-1.5-pro">Gemini 1.5 Pro (Google)</option>
+              </optgroup>
+            </select>
+            <div class="llm-save-row" style="margin-top:8px;">
+              <button class="btn btn-outline btn-sm" onclick="saveCategoryModel('white-papers', this.closest('.llm-cat-card').querySelector('select').value)">Save</button>
+            </div>
+          </div>
+          <!-- Infographics -->
+          <div class="llm-cat-card">
+            <div class="llm-cat-name">Infographics</div>
+            <select id="llm-cat-infographics" class="llm-quick-select">
+              <option value="">— Use global default —</option>
+              <optgroup label="── Recommended (Free) ──">
+                <option value="arcee-ai/trinity-large-preview:free">Arcee AI: Trinity Large ★</option>
+                <option value="google/gemma-3-4b-it:free">Google: Gemma 3 4B ★</option>
+                <option value="google/gemma-3n-e4b-it:free">Google: Gemma 3n 4B ★</option>
+              </optgroup>
+              <optgroup label="── Free Models ──">
+                <option value="meta-llama/llama-3.3-70b-instruct:free">Meta: Llama 3.3 70B</option>
+                <option value="mistralai/mistral-small-3.1-24b-instruct:free">Mistral Small 3.1 24B</option>
+                <option value="qwen/qwen3-4b:free">Qwen: Qwen3 4B</option>
+                <option value="google/gemma-3-12b-it:free">Google: Gemma 3 12B</option>
+                <option value="nousresearch/hermes-3-llama-3.1-405b:free">Nous: Hermes 3 405B</option>
+              </optgroup>
+              <optgroup label="── Premium (key required) ──">
+                <option value="claude-opus-4-5">Claude Opus (Anthropic)</option>
+                <option value="claude-sonnet-4-5">Claude Sonnet (Anthropic)</option>
+                <option value="gpt-4o">GPT-4o (OpenAI)</option>
+                <option value="gpt-4o-mini">GPT-4o Mini (OpenAI)</option>
+                <option value="gemini-2.0-flash">Gemini 2.0 Flash (Google)</option>
+                <option value="gemini-1.5-pro">Gemini 1.5 Pro (Google)</option>
+              </optgroup>
+            </select>
+            <div class="llm-save-row" style="margin-top:8px;">
+              <button class="btn btn-outline btn-sm" onclick="saveCategoryModel('infographics', this.closest('.llm-cat-card').querySelector('select').value)">Save</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section D: Default LLM per Social Network -->
+    <div class="llm-section">
+      <div class="llm-section-header">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;flex-shrink:0;"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+        <div style="flex:1;">
+          <div class="llm-section-title">Default LLM per Social Network</div>
+          <div class="llm-section-desc">Override the global model for specific social platforms</div>
+        </div>
+      </div>
+      <div class="llm-section-body">
+        <div class="llm-cat-grid">
+          <!-- Twitter/X -->
+          <div class="llm-social-card">
+            <div class="llm-cat-name">Twitter / X</div>
+            <select id="llm-social-twitter" class="llm-quick-select">
+              <option value="">— Use global default —</option>
+              <optgroup label="── Recommended (Free) ──">
+                <option value="arcee-ai/trinity-large-preview:free">Arcee AI: Trinity Large ★</option>
+                <option value="google/gemma-3-4b-it:free">Google: Gemma 3 4B ★</option>
+                <option value="google/gemma-3n-e4b-it:free">Google: Gemma 3n 4B ★</option>
+              </optgroup>
+              <optgroup label="── Free Models ──">
+                <option value="meta-llama/llama-3.3-70b-instruct:free">Meta: Llama 3.3 70B</option>
+                <option value="mistralai/mistral-small-3.1-24b-instruct:free">Mistral Small 3.1 24B</option>
+                <option value="qwen/qwen3-4b:free">Qwen: Qwen3 4B</option>
+                <option value="google/gemma-3-12b-it:free">Google: Gemma 3 12B</option>
+                <option value="nousresearch/hermes-3-llama-3.1-405b:free">Nous: Hermes 3 405B</option>
+              </optgroup>
+              <optgroup label="── Premium (key required) ──">
+                <option value="claude-opus-4-5">Claude Opus (Anthropic)</option>
+                <option value="claude-sonnet-4-5">Claude Sonnet (Anthropic)</option>
+                <option value="gpt-4o">GPT-4o (OpenAI)</option>
+                <option value="gpt-4o-mini">GPT-4o Mini (OpenAI)</option>
+                <option value="gemini-2.0-flash">Gemini 2.0 Flash (Google)</option>
+                <option value="gemini-1.5-pro">Gemini 1.5 Pro (Google)</option>
+              </optgroup>
+            </select>
+            <div class="llm-save-row" style="margin-top:8px;">
+              <button class="btn btn-outline btn-sm" onclick="saveSocialModel('twitter', this.closest('.llm-social-card').querySelector('select').value)">Save</button>
+            </div>
+          </div>
+          <!-- LinkedIn -->
+          <div class="llm-social-card">
+            <div class="llm-cat-name">LinkedIn</div>
+            <select id="llm-social-linkedin" class="llm-quick-select">
+              <option value="">— Use global default —</option>
+              <optgroup label="── Recommended (Free) ──">
+                <option value="arcee-ai/trinity-large-preview:free">Arcee AI: Trinity Large ★</option>
+                <option value="google/gemma-3-4b-it:free">Google: Gemma 3 4B ★</option>
+                <option value="google/gemma-3n-e4b-it:free">Google: Gemma 3n 4B ★</option>
+              </optgroup>
+              <optgroup label="── Free Models ──">
+                <option value="meta-llama/llama-3.3-70b-instruct:free">Meta: Llama 3.3 70B</option>
+                <option value="mistralai/mistral-small-3.1-24b-instruct:free">Mistral Small 3.1 24B</option>
+                <option value="qwen/qwen3-4b:free">Qwen: Qwen3 4B</option>
+                <option value="google/gemma-3-12b-it:free">Google: Gemma 3 12B</option>
+                <option value="nousresearch/hermes-3-llama-3.1-405b:free">Nous: Hermes 3 405B</option>
+              </optgroup>
+              <optgroup label="── Premium (key required) ──">
+                <option value="claude-opus-4-5">Claude Opus (Anthropic)</option>
+                <option value="claude-sonnet-4-5">Claude Sonnet (Anthropic)</option>
+                <option value="gpt-4o">GPT-4o (OpenAI)</option>
+                <option value="gpt-4o-mini">GPT-4o Mini (OpenAI)</option>
+                <option value="gemini-2.0-flash">Gemini 2.0 Flash (Google)</option>
+                <option value="gemini-1.5-pro">Gemini 1.5 Pro (Google)</option>
+              </optgroup>
+            </select>
+            <div class="llm-save-row" style="margin-top:8px;">
+              <button class="btn btn-outline btn-sm" onclick="saveSocialModel('linkedin', this.closest('.llm-social-card').querySelector('select').value)">Save</button>
+            </div>
+          </div>
+          <!-- Facebook -->
+          <div class="llm-social-card">
+            <div class="llm-cat-name">Facebook</div>
+            <select id="llm-social-facebook" class="llm-quick-select">
+              <option value="">— Use global default —</option>
+              <optgroup label="── Recommended (Free) ──">
+                <option value="arcee-ai/trinity-large-preview:free">Arcee AI: Trinity Large ★</option>
+                <option value="google/gemma-3-4b-it:free">Google: Gemma 3 4B ★</option>
+                <option value="google/gemma-3n-e4b-it:free">Google: Gemma 3n 4B ★</option>
+              </optgroup>
+              <optgroup label="── Free Models ──">
+                <option value="meta-llama/llama-3.3-70b-instruct:free">Meta: Llama 3.3 70B</option>
+                <option value="mistralai/mistral-small-3.1-24b-instruct:free">Mistral Small 3.1 24B</option>
+                <option value="qwen/qwen3-4b:free">Qwen: Qwen3 4B</option>
+                <option value="google/gemma-3-12b-it:free">Google: Gemma 3 12B</option>
+                <option value="nousresearch/hermes-3-llama-3.1-405b:free">Nous: Hermes 3 405B</option>
+              </optgroup>
+              <optgroup label="── Premium (key required) ──">
+                <option value="claude-opus-4-5">Claude Opus (Anthropic)</option>
+                <option value="claude-sonnet-4-5">Claude Sonnet (Anthropic)</option>
+                <option value="gpt-4o">GPT-4o (OpenAI)</option>
+                <option value="gpt-4o-mini">GPT-4o Mini (OpenAI)</option>
+                <option value="gemini-2.0-flash">Gemini 2.0 Flash (Google)</option>
+                <option value="gemini-1.5-pro">Gemini 1.5 Pro (Google)</option>
+              </optgroup>
+            </select>
+            <div class="llm-save-row" style="margin-top:8px;">
+              <button class="btn btn-outline btn-sm" onclick="saveSocialModel('facebook', this.closest('.llm-social-card').querySelector('select').value)">Save</button>
+            </div>
+          </div>
+          <!-- Substack -->
+          <div class="llm-social-card">
+            <div class="llm-cat-name">Substack</div>
+            <select id="llm-social-substack" class="llm-quick-select">
+              <option value="">— Use global default —</option>
+              <optgroup label="── Recommended (Free) ──">
+                <option value="arcee-ai/trinity-large-preview:free">Arcee AI: Trinity Large ★</option>
+                <option value="google/gemma-3-4b-it:free">Google: Gemma 3 4B ★</option>
+                <option value="google/gemma-3n-e4b-it:free">Google: Gemma 3n 4B ★</option>
+              </optgroup>
+              <optgroup label="── Free Models ──">
+                <option value="meta-llama/llama-3.3-70b-instruct:free">Meta: Llama 3.3 70B</option>
+                <option value="mistralai/mistral-small-3.1-24b-instruct:free">Mistral Small 3.1 24B</option>
+                <option value="qwen/qwen3-4b:free">Qwen: Qwen3 4B</option>
+                <option value="google/gemma-3-12b-it:free">Google: Gemma 3 12B</option>
+                <option value="nousresearch/hermes-3-llama-3.1-405b:free">Nous: Hermes 3 405B</option>
+              </optgroup>
+              <optgroup label="── Premium (key required) ──">
+                <option value="claude-opus-4-5">Claude Opus (Anthropic)</option>
+                <option value="claude-sonnet-4-5">Claude Sonnet (Anthropic)</option>
+                <option value="gpt-4o">GPT-4o (OpenAI)</option>
+                <option value="gpt-4o-mini">GPT-4o Mini (OpenAI)</option>
+                <option value="gemini-2.0-flash">Gemini 2.0 Flash (Google)</option>
+                <option value="gemini-1.5-pro">Gemini 1.5 Pro (Google)</option>
+              </optgroup>
+            </select>
+            <div class="llm-save-row" style="margin-top:8px;">
+              <button class="btn btn-outline btn-sm" onclick="saveSocialModel('substack', this.closest('.llm-social-card').querySelector('select').value)">Save</button>
+            </div>
+          </div>
+          <!-- TikTok -->
+          <div class="llm-social-card">
+            <div class="llm-cat-name">TikTok</div>
+            <select id="llm-social-tiktok" class="llm-quick-select">
+              <option value="">— Use global default —</option>
+              <optgroup label="── Recommended (Free) ──">
+                <option value="arcee-ai/trinity-large-preview:free">Arcee AI: Trinity Large ★</option>
+                <option value="google/gemma-3-4b-it:free">Google: Gemma 3 4B ★</option>
+                <option value="google/gemma-3n-e4b-it:free">Google: Gemma 3n 4B ★</option>
+              </optgroup>
+              <optgroup label="── Free Models ──">
+                <option value="meta-llama/llama-3.3-70b-instruct:free">Meta: Llama 3.3 70B</option>
+                <option value="mistralai/mistral-small-3.1-24b-instruct:free">Mistral Small 3.1 24B</option>
+                <option value="qwen/qwen3-4b:free">Qwen: Qwen3 4B</option>
+                <option value="google/gemma-3-12b-it:free">Google: Gemma 3 12B</option>
+                <option value="nousresearch/hermes-3-llama-3.1-405b:free">Nous: Hermes 3 405B</option>
+              </optgroup>
+              <optgroup label="── Premium (key required) ──">
+                <option value="claude-opus-4-5">Claude Opus (Anthropic)</option>
+                <option value="claude-sonnet-4-5">Claude Sonnet (Anthropic)</option>
+                <option value="gpt-4o">GPT-4o (OpenAI)</option>
+                <option value="gpt-4o-mini">GPT-4o Mini (OpenAI)</option>
+                <option value="gemini-2.0-flash">Gemini 2.0 Flash (Google)</option>
+                <option value="gemini-1.5-pro">Gemini 1.5 Pro (Google)</option>
+              </optgroup>
+            </select>
+            <div class="llm-save-row" style="margin-top:8px;">
+              <button class="btn btn-outline btn-sm" onclick="saveSocialModel('tiktok', this.closest('.llm-social-card').querySelector('select').value)">Save</button>
+            </div>
+          </div>
+          <!-- Instagram -->
+          <div class="llm-social-card">
+            <div class="llm-cat-name">Instagram</div>
+            <select id="llm-social-instagram" class="llm-quick-select">
+              <option value="">— Use global default —</option>
+              <optgroup label="── Recommended (Free) ──">
+                <option value="arcee-ai/trinity-large-preview:free">Arcee AI: Trinity Large ★</option>
+                <option value="google/gemma-3-4b-it:free">Google: Gemma 3 4B ★</option>
+                <option value="google/gemma-3n-e4b-it:free">Google: Gemma 3n 4B ★</option>
+              </optgroup>
+              <optgroup label="── Free Models ──">
+                <option value="meta-llama/llama-3.3-70b-instruct:free">Meta: Llama 3.3 70B</option>
+                <option value="mistralai/mistral-small-3.1-24b-instruct:free">Mistral Small 3.1 24B</option>
+                <option value="qwen/qwen3-4b:free">Qwen: Qwen3 4B</option>
+                <option value="google/gemma-3-12b-it:free">Google: Gemma 3 12B</option>
+                <option value="nousresearch/hermes-3-llama-3.1-405b:free">Nous: Hermes 3 405B</option>
+              </optgroup>
+              <optgroup label="── Premium (key required) ──">
+                <option value="claude-opus-4-5">Claude Opus (Anthropic)</option>
+                <option value="claude-sonnet-4-5">Claude Sonnet (Anthropic)</option>
+                <option value="gpt-4o">GPT-4o (OpenAI)</option>
+                <option value="gpt-4o-mini">GPT-4o Mini (OpenAI)</option>
+                <option value="gemini-2.0-flash">Gemini 2.0 Flash (Google)</option>
+                <option value="gemini-1.5-pro">Gemini 1.5 Pro (Google)</option>
+              </optgroup>
+            </select>
+            <div class="llm-save-row" style="margin-top:8px;">
+              <button class="btn btn-outline btn-sm" onclick="saveSocialModel('instagram', this.closest('.llm-social-card').querySelector('select').value)">Save</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div><!-- /tab-view llm -->
+
 <div class="tab-view" id="view-settings">
   <div class="settings-container">
 
@@ -2637,21 +3146,14 @@ textarea { resize: vertical; line-height: 1.6; min-height: 120px; }
       </div>
     </div>
 
-    <!-- API Key -->
-    <div class="settings-section" id="apiKeyCard">
+    <!-- API Keys moved to LLM page -->
+    <div class="settings-section">
       <div class="settings-section-header">
-        <h3>OpenRouter API Key</h3>
-        <p>Override the built-in key with your own</p>
+        <h3>API Keys &amp; LLM Configuration</h3>
+        <p>Manage API keys and model defaults</p>
       </div>
       <div class="settings-section-body">
-        <div style="display:flex;gap:8px;align-items:flex-end;flex-wrap:wrap;">
-          <div style="flex:1;min-width:200px;">
-            <input type="password" id="apiKeyInput" placeholder="Using built-in key — enter to override" oninput="onApiKeyInput()" style="width:100%;box-sizing:border-box;padding:8px 10px;border:1px solid var(--border);border-radius:6px;font-family:'Montserrat',sans-serif;font-size:0.72rem;" />
-          </div>
-          <button class="btn btn-orange btn-sm" onclick="saveApiKey()" id="saveKeyBtn">Save Key</button>
-          <button class="btn btn-outline btn-sm" onclick="clearApiKey()">Reset</button>
-        </div>
-        <div id="apiKeyStatus" style="margin-top:7px;font-size:0.65rem;"></div>
+        <p style="font-size:0.75rem;color:var(--text-muted);">API key configuration has moved to the <button class="btn btn-outline btn-xs" onclick="switchTab('llm')" style="display:inline-flex;vertical-align:middle;">LLM page</button>.</p>
       </div>
     </div>
 
@@ -3174,6 +3676,7 @@ const TAB_TITLES = {
   monitoring:   'Monitoring',
   settings:     'Settings',
   prompts:      'Prompts',
+  llm:          'LLM Management',
 };
 
 function closeMobileNav() {
@@ -3192,7 +3695,7 @@ function toggleSidebar() {
 }
 
 function switchTab(tab) {
-  ['dashboard','generator','archive','comparison','reports','pipeline','distribution','calendar','monitoring','settings','prompts'].forEach(t => {
+  ['dashboard','generator','archive','comparison','reports','pipeline','distribution','calendar','monitoring','settings','prompts','llm'].forEach(t => {
     const v = document.getElementById('view-' + t);
     const b = document.getElementById('tab-' + t);
     if (v) v.classList.toggle('active', t === tab);
@@ -3202,6 +3705,7 @@ function switchTab(tab) {
   if (tab === 'reports')       renderReports();
   if (tab === 'pipeline')      loadPipeline();
   if (tab === 'settings')      loadSettings();
+  if (tab === 'llm')           loadLLMPage();
   if (tab === 'dashboard')     loadDashboard();
   if (tab === 'calendar')      loadCalendar();
   if (tab === 'monitoring')    loadMonitoring();
@@ -3214,7 +3718,7 @@ function switchTab(tab) {
 
   // Hide category header on non-content tabs
   const catHdr = document.getElementById('categoryHeader');
-  const hideCat = ['dashboard','calendar','pipeline','monitoring','distribution','reports','settings','prompts'].includes(tab);
+  const hideCat = ['dashboard','calendar','pipeline','monitoring','distribution','reports','settings','prompts','llm'].includes(tab);
   if (catHdr) catHdr.style.display = hideCat ? 'none' : '';
 }
 
@@ -3277,6 +3781,176 @@ function toggleApiKeyVisibility() {
     input.type = 'password';
     icon.innerHTML = '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>';
   }
+}
+
+// ═══════════════ LLM MANAGEMENT ═══════════════
+
+function getGodPrompt() { return localStorage.getItem('sla_llm_god_prompt') || ''; }
+function saveGodPrompt() {
+  var text = document.getElementById('godPromptTextarea').value.trim();
+  localStorage.setItem('sla_llm_god_prompt', text);
+  showToast('God-Prompt saved');
+}
+
+function getPriorityProvider() { return localStorage.getItem('sla_llm_priority') || 'openrouter'; }
+function setPriorityProvider(p) {
+  localStorage.setItem('sla_llm_priority', p);
+  ['claude','openai','gemini','meta'].forEach(function(id) {
+    var cb = document.getElementById('priority-' + id);
+    if (cb) cb.checked = (id === p);
+  });
+}
+function onPriorityChange(provider, checked) {
+  if (checked) setPriorityProvider(provider);
+  else if (getPriorityProvider() === provider) setPriorityProvider('openrouter');
+}
+
+function getPremiumKey(provider) { return localStorage.getItem('sla_llm_' + provider + '_key') || ''; }
+function savePremiumKey(provider) {
+  var input = document.getElementById(provider + 'KeyInput');
+  if (!input) return;
+  var key = input.value.trim();
+  if (key && key !== '••••••••') localStorage.setItem('sla_llm_' + provider + '_key', key);
+  else if (!key) localStorage.removeItem('sla_llm_' + provider + '_key');
+  showToast(provider.charAt(0).toUpperCase() + provider.slice(1) + ' key saved');
+}
+
+function getCategoryModel(catId) { return localStorage.getItem('sla_llm_cat_' + catId) || ''; }
+function saveCategoryModel(catId, model) {
+  if (model) localStorage.setItem('sla_llm_cat_' + catId, model);
+  else localStorage.removeItem('sla_llm_cat_' + catId);
+  showToast('Category default saved');
+}
+
+function getSocialModel(platId) { return localStorage.getItem('sla_llm_social_' + platId) || ''; }
+function saveSocialModel(platId, model) {
+  if (model) localStorage.setItem('sla_llm_social_' + platId, model);
+  else localStorage.removeItem('sla_llm_social_' + platId);
+  showToast('Social platform default saved');
+}
+
+function getGlobalModel() {
+  return (document.getElementById('modelSelect') && document.getElementById('modelSelect').value) || 'arcee-ai/trinity-large-preview:free';
+}
+
+function updateLLMStatus() {
+  var sel = document.getElementById('modelSelect');
+  var nameEl = document.getElementById('llmStatusName');
+  if (sel && nameEl) {
+    var opt = sel.options[sel.selectedIndex];
+    nameEl.textContent = opt ? opt.text.replace(' \u2605','') : 'Default';
+  }
+}
+
+// Premium API callers
+async function callPremiumClaude(prompt, apiKey, model) {
+  model = model || 'claude-opus-4-5';
+  var resp = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: { 'x-api-key': apiKey, 'anthropic-version': '2023-06-01', 'Content-Type': 'application/json' },
+    body: JSON.stringify({ model: model, max_tokens: 4000, messages: [{ role: 'user', content: prompt }] }),
+  });
+  if (!resp.ok) throw new Error('Claude API ' + resp.status);
+  var d = await resp.json();
+  return (d && d.content && d.content[0] && d.content[0].text) || '';
+}
+async function callPremiumOpenAI(prompt, apiKey, model) {
+  model = model || 'gpt-4o';
+  var resp = await fetch('https://api.openai.com/v1/chat/completions', {
+    method: 'POST',
+    headers: { 'Authorization': 'Bearer ' + apiKey, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ model: model, messages: [{ role: 'user', content: prompt }], max_tokens: 4000 }),
+  });
+  if (!resp.ok) throw new Error('OpenAI API ' + resp.status);
+  var d = await resp.json();
+  return (d && d.choices && d.choices[0] && d.choices[0].message && d.choices[0].message.content) || '';
+}
+async function callPremiumGemini(prompt, apiKey, model) {
+  model = model || 'gemini-2.0-flash';
+  var url = 'https://generativelanguage.googleapis.com/v1beta/models/' + model + ':generateContent?key=' + apiKey;
+  var resp = await fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] }),
+  });
+  if (!resp.ok) throw new Error('Gemini API ' + resp.status);
+  var d = await resp.json();
+  return (d && d.candidates && d.candidates[0] && d.candidates[0].content && d.candidates[0].content.parts && d.candidates[0].content.parts[0] && d.candidates[0].content.parts[0].text) || '';
+}
+
+// Unified LLM caller: respects God-Prompt, priority provider, category/social model defaults
+async function callLLM(prompt, opts) {
+  opts = opts || {};
+  var godPrompt = getGodPrompt().trim();
+  var fullPrompt = godPrompt
+    ? '[GLOBAL CONTEXT \u2014 always incorporate this context into your response]\n' + godPrompt + '\n\n[TASK]\n' + prompt
+    : prompt;
+
+  // Resolve model: category default \u2192 social default \u2192 global
+  var model = '';
+  if (opts.category) model = getCategoryModel(opts.category);
+  if (!model && opts.platId) model = getSocialModel(opts.platId);
+  if (!model) model = getGlobalModel();
+
+  // Priority provider routing
+  var priority = getPriorityProvider();
+  if (priority === 'claude' && getPremiumKey('claude')) {
+    return await callPremiumClaude(fullPrompt, getPremiumKey('claude'), model.startsWith('claude-') ? model : undefined);
+  }
+  if (priority === 'openai' && getPremiumKey('openai')) {
+    return await callPremiumOpenAI(fullPrompt, getPremiumKey('openai'), model.startsWith('gpt-') ? model : undefined);
+  }
+  if (priority === 'gemini' && getPremiumKey('gemini')) {
+    return await callPremiumGemini(fullPrompt, getPremiumKey('gemini'), model.startsWith('gemini-') ? model : undefined);
+  }
+  return await callOpenRouter(fullPrompt, getApiKey(), model);
+}
+
+function showToast(msg) {
+  var toast = document.getElementById('llmToast');
+  if (!toast) {
+    toast = document.createElement('div');
+    toast.id = 'llmToast';
+    toast.style.cssText = 'position:fixed;bottom:24px;right:24px;background:var(--sla-navy);color:#fff;padding:9px 16px;font-size:0.72rem;font-weight:700;z-index:9999;box-shadow:0 4px 16px rgba(0,0,0,0.2);transition:opacity 0.3s;';
+    document.body.appendChild(toast);
+  }
+  toast.textContent = '\u2713 ' + msg;
+  toast.style.opacity = '1';
+  clearTimeout(toast._t);
+  toast._t = setTimeout(function() { toast.style.opacity = '0'; }, 2200);
+}
+
+function loadLLMPage() {
+  // God prompt
+  var gpEl = document.getElementById('godPromptTextarea');
+  if (gpEl) gpEl.value = getGodPrompt();
+
+  // OpenRouter key (sync with API key card)
+  var apiKey = localStorage.getItem('sla_openrouter_key');
+  var apiEl = document.getElementById('apiKeyInput');
+  if (apiEl && !apiEl.dataset.dirty) apiEl.value = apiKey ? '\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022' : '';
+
+  // Premium keys \u2014 show masked if saved
+  ['claude','openai','gemini','meta'].forEach(function(p) {
+    var input = document.getElementById(p + 'KeyInput');
+    if (input) input.value = getPremiumKey(p) ? '\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022' : '';
+    var cb = document.getElementById('priority-' + p);
+    if (cb) cb.checked = (getPriorityProvider() === p);
+  });
+
+  // Category model defaults
+  var CATS = ['clinical-reviews','industry-news','op-eds','white-papers','infographics'];
+  CATS.forEach(function(catId) {
+    var sel = document.getElementById('llm-cat-' + catId);
+    if (sel) { var v = getCategoryModel(catId); if (v) sel.value = v; }
+  });
+
+  // Social model defaults
+  var SOCIALS = ['twitter','linkedin','facebook','substack','tiktok','instagram'];
+  SOCIALS.forEach(function(platId) {
+    var sel = document.getElementById('llm-social-' + platId);
+    if (sel) { var v = getSocialModel(platId); if (v) sel.value = v; }
+  });
 }
 
 // ═══════════════════════════════════════════════════════════
@@ -3392,7 +4066,8 @@ async function generateReview() {
   }
 
   const basePrompt = document.getElementById('promptTextarea').value.trim();
-  const fullPrompt = basePrompt + extraInstructions;
+  const godCtx = getGodPrompt().trim();
+  const fullPrompt = (godCtx ? '[GLOBAL CONTEXT]\n' + godCtx + '\n\n' : '') + basePrompt + extraInstructions;
   if (!fullPrompt) { showAlert('generateAlert', 'Please add a prompt first.', 'error'); return; }
   isGenerating = true;
   updateGenerateButton();
@@ -3406,7 +4081,7 @@ async function generateReview() {
   document.getElementById('articleContent').innerHTML =
     '<div class="empty-state" style="padding:3rem;"><p style="font-size:0.9rem;color:var(--sla-orange);" class="streaming-cursor">Generating your content</p></div>';
 
-  const selectedModel = document.getElementById('modelSelect').value;
+  const selectedModel = getCategoryModel(currentCategory) || document.getElementById('modelSelect').value;
   const systemPrompt  = fullPrompt;
   const fallbackPool  = currentCategory === 'infographics' ? INFOGRAPHIC_MODELS : FALLBACK_MODELS;
   const modelQueue    = [selectedModel, ...fallbackPool.filter(m => m !== selectedModel)];
@@ -5373,7 +6048,7 @@ async function generateSocialForArticle(articleId) {
         'Article excerpt: ' + excerpt + '\n\n' +
         'Write ONLY the post text. No preamble, no "Post X:", no explanation.';
       try {
-        var text = await callOpenRouter(prompt, getApiKey());
+        var text = await callLLM(prompt, { platId: plat.id });
         posts.push(text.trim());
         var slot = document.getElementById('social-slot-' + articleId + '-' + plat.id + '-' + i);
         if (slot) {
