@@ -1048,7 +1048,7 @@ textarea { resize: vertical; line-height: 1.6; min-height: 120px; }
   padding: 9px 12px; display: flex; align-items: center; justify-content: space-between;
   background: var(--sla-navy);
 }
-.pipeline-col-header.col-draft    { background: #2c3e50; }
+.pipeline-col-header.col-draft    { background: #374151; }
 .pipeline-col-header.col-review   { background: #1a5276; }
 .pipeline-col-header.col-rejected { background: #922b21; }
 .pipeline-col-header.col-approved { background: #1a7245; }
@@ -1172,7 +1172,8 @@ textarea { resize: vertical; line-height: 1.6; min-height: 120px; }
 /* ═══════════════════════════════════════════════════════════
    SETTINGS TAB
 ══════════════════════════════════════════════════════════ */
-.settings-container { display: flex; flex-direction: column; flex: 1; overflow-y: auto; padding: 1.25rem 1.5rem; gap: 1.25rem; max-width: 720px; }
+.settings-container { display: grid; grid-template-columns: repeat(2, 1fr); align-items: start; flex: 1; overflow-y: auto; padding: 1.25rem 1.5rem; gap: 1.25rem; }
+@media (max-width: 860px) { .settings-container { grid-template-columns: 1fr; } }
 .settings-section { background: var(--card); border: 1px solid var(--border); border-radius: 0; overflow: hidden; }
 .settings-section-header { background: var(--sla-navy); padding: 10px 16px; }
 .settings-section-header h3 { color: #fff; font-size: 0.72rem; font-weight: 800; letter-spacing: 0.8px; text-transform: uppercase; margin: 0; }
@@ -1288,11 +1289,13 @@ textarea { resize: vertical; line-height: 1.6; min-height: 120px; }
   box-shadow: var(--shadow); cursor: pointer; transition: all 0.18s; text-align: center;
 }
 .dash-cat-card:hover { box-shadow: var(--shadow-lg); transform: translateY(-2px); border-color: var(--sla-orange); }
+.dash-cat-card:hover .dash-cat-icon { background: rgba(244,121,32,0.12); }
+.dash-cat-card:hover .dash-cat-icon svg { color: var(--sla-orange); }
 .dash-cat-icon {
   width: 52px; height: 52px; border-radius: 14px; background: rgba(27,63,48,0.07);
-  display: flex; align-items: center; justify-content: center;
+  display: flex; align-items: center; justify-content: center; transition: background 0.18s;
 }
-.dash-cat-icon svg { width: 26px; height: 26px; color: var(--sla-navy); }
+.dash-cat-icon svg { width: 26px; height: 26px; color: var(--sla-navy); transition: color 0.18s; }
 .dash-cat-card.active-cat .dash-cat-icon { background: rgba(244,121,32,0.12); }
 .dash-cat-card.active-cat .dash-cat-icon svg { color: var(--sla-orange); }
 .dash-cat-name { font-size: 0.8rem; font-weight: 700; color: var(--text); line-height: 1.2; }
@@ -1436,6 +1439,23 @@ textarea { resize: vertical; line-height: 1.6; min-height: 120px; }
 }
 .cat-bar-btn:hover { background: rgba(27,63,48,0.06); color: var(--text); border-bottom-color: var(--border); }
 .cat-bar-btn.active { background: transparent; color: var(--sla-navy); border-bottom: 2px solid var(--sla-navy); }
+
+/* Generator page category selector — grid pills style */
+#catBar-generator { display: grid; grid-template-columns: repeat(3, 1fr); gap: 7px; }
+#catBar-generator .cat-bar-btn {
+  border-bottom: none; border: 1.5px solid var(--border); border-radius: 8px;
+  padding: 9px 10px; text-align: center; font-size: 0.68rem;
+  background: var(--bg); color: var(--text-muted);
+  transition: all 0.15s;
+}
+#catBar-generator .cat-bar-btn:hover {
+  border-color: var(--sla-teal); color: var(--sla-navy); background: rgba(0,201,167,0.05);
+}
+#catBar-generator .cat-bar-btn.active {
+  border-color: var(--sla-navy); background: rgba(27,63,48,0.08);
+  color: var(--sla-navy); border-bottom: 1.5px solid var(--sla-navy);
+  font-weight: 800;
+}
 
 /* ══════════════════════════════════════════════════
    MONITORING TAB
@@ -3225,7 +3245,7 @@ textarea { resize: vertical; line-height: 1.6; min-height: 120px; }
   <div class="settings-container">
 
     <!-- Reviewers -->
-    <div class="settings-section">
+    <div class="settings-section" style="grid-column: 1 / -1;">
       <div class="settings-section-header">
         <h3>Reviewers</h3>
         <p>People who receive approval requests for content in review</p>
@@ -3307,17 +3327,6 @@ textarea { resize: vertical; line-height: 1.6; min-height: 120px; }
         <div class="social-conn-list" id="socialConnList">
           <!-- Rendered by loadSettings() -->
         </div>
-      </div>
-    </div>
-
-    <!-- API Keys moved to LLM page -->
-    <div class="settings-section">
-      <div class="settings-section-header">
-        <h3>API Keys &amp; LLM Configuration</h3>
-        <p>Manage API keys and model defaults</p>
-      </div>
-      <div class="settings-section-body">
-        <p style="font-size:0.75rem;color:var(--text-muted);">API key configuration has moved to the <button class="btn btn-outline btn-xs" onclick="switchTab('llm')" style="display:inline-flex;vertical-align:middle;">LLM page</button>.</p>
       </div>
     </div>
 
@@ -3571,6 +3580,209 @@ If reuse rights are unclear, assume standard copyright applies and do not reprod
 FINAL INSTRUCTION
 
 Produce a physician facing scientific publication summary that is accurate, balanced, compliant with copyright restrictions, and strictly limited to what is reported in the source publication.`;
+
+// ─── Category-specific default prompts ───────────────────────────────────────
+
+const DEFAULT_PROMPT_INDUSTRY_NEWS = `You are a medical journalist writing for SLA Health — a UK-based IBD and gastrointestinal health digital research platform. Transform the source material (a clinical paper, research summary, or healthcare press release) into a clear, engaging Industry News article for slahealth.co.uk.
+
+SLA Health's focus is IBD (Crohn's disease, ulcerative colitis), gastrointestinal nutrition, and longevity science. Readers include UK-based gastroenterologists, IBD nurses, dietitians, and GPs, as well as well-informed patients living with IBD and gastrointestinal conditions.
+
+TONE & STYLE
+Write in clear, engaging journalistic prose — authoritative but accessible. Use correct clinical terminology with brief contextual explanation where needed. Active voice throughout. Convey genuine clinical relevance without sensationalism. Avoid phrases like "groundbreaking" or "revolutionary." Do not speculate beyond what the source states.
+
+STRUCTURE
+1. Headline (~10 words) — clear, informative, no clickbait.
+2. Lead Paragraph (50–75 words) — what happened, why it matters, who it affects.
+3. Background Context (75–125 words) — orient readers with relevant disease or treatment context from the source.
+4. Key Findings (150–200 words) — most important results or developments, plain numerical values, clearly attributed to the study authors or originating organisation.
+5. Clinical Relevance (75–125 words) — why this matters for IBD patients or the clinicians treating them, grounded in what the source states.
+6. Reference — full citation in Vancouver format with DOI where available.
+
+FORMATTING RULES
+Total length: 450–600 words. UK British English. Paraphrase throughout — do not reproduce verbatim text from the source. Attribute all findings clearly. Do not include advice to change clinical practice or medication. Add a disclaimer in small italic text at the bottom: This article is a journalistic summary for informational purposes only. It does not constitute clinical advice or a recommendation to alter treatment decisions.`;
+
+const DEFAULT_PROMPT_OP_EDS = `You are a clinical commentator writing for SLA Health — a UK-based IBD and gastrointestinal health platform. Produce a professional Op-Ed: an evidence-informed opinion or commentary piece based on one or more published clinical papers, research findings, or healthcare policy developments.
+
+SLA Health Op-Eds offer expert perspective on IBD research findings, clinical debates, treatment controversies, dietary interventions, and emerging science in gastrointestinal medicine. They are grounded in evidence but written with a clear, considered point of view.
+
+TARGET AUDIENCE
+UK-based gastroenterologists, IBD nurses, dietitians, and GPs — and engaged patients who want a more nuanced perspective on evolving clinical evidence.
+
+TONE & STYLE
+Authoritative, analytically engaged, and evidence-grounded. This is not neutral reporting — advance an argument, challenge an assumption, or offer a considered interpretation of the evidence. Professionally assertive without being polemical. First-person plural ("we") where appropriate to reflect shared clinical community perspective. Active voice. Continuous prose — no bullet points in the body.
+
+STRUCTURE
+1. Title (~10–15 words) — signals a point of view or poses a provocative clinical question.
+2. Introduction (100–150 words) — open with the clinical or scientific tension the piece addresses. State the argument this piece will advance and reference the source evidence.
+3. The Evidence (150–200 words) — summarise the key findings from the source papers accurately and with clear attribution.
+4. Clinical Perspective (200–250 words) — advance the central argument. What do these findings mean in practice? What do they challenge, confirm, or complicate?
+5. Wider Implications (100–150 words) — what does this mean for IBD management, nutritional medicine, research priorities, or UK healthcare policy?
+6. Conclusion (75–100 words) — a clear, considered takeaway and the question the field should now ask.
+7. References — full citations in Vancouver format.
+
+FORMATTING RULES
+Total length: 700–900 words. UK British English. Write in continuous prose. Do not reproduce verbatim text from source papers. Attribute evidence clearly. Add a disclaimer in small italic text at the bottom: The views expressed in this Op-Ed reflect a commentary on published evidence and do not constitute clinical advice or treatment recommendations.`;
+
+const DEFAULT_PROMPT_WHITE_PAPERS = `You are a scientific medical writer producing a White Paper for SLA Health — a UK-based IBD and gastrointestinal health research platform. Synthesise multiple clinical papers and published evidence sources into a comprehensive, structured white paper on a specific topic in IBD, gastrointestinal nutrition, or gastrointestinal medicine.
+
+White Papers on SLA Health are substantive, evidence-based documents used by healthcare professionals, researchers, and healthcare organisations to understand the current state of evidence on a topic and its clinical implications.
+
+TARGET AUDIENCE
+Primary: UK-based gastroenterologists, IBD specialists, dietitians, GPs, and clinical researchers. Secondary: Informed patients and patient advocacy groups.
+
+TONE & STYLE
+Formal, systematic, and evidence-led. Comprehensive scholarship without being inaccessible. Use correct clinical and scientific terminology. Clearly structured with informative section headers. Continuous prose — use lists only where they genuinely serve clarity. Active voice where natural.
+
+STRUCTURE
+1. Title Block — full title, subtitle (if applicable), prepared for: SLA Health, date.
+2. Executive Summary (150–200 words) — topic, key evidence reviewed, and headline conclusions. Must stand alone as a brief overview.
+3. Background & Clinical Context (200–300 words) — the condition, relevant patient populations, current UK standard of care, and the unmet clinical need this white paper addresses.
+4. Evidence Review (400–600 words) — systematically summarise key evidence from the source papers. Organise by theme or chronology as appropriate. Report study designs, populations, interventions, and key findings. Attribute all data to source authors. Note study limitations where authors report them.
+5. Clinical Implications (200–300 words) — what the evidence means for clinical practice. Ground every assertion in what the evidence supports.
+6. Gaps & Future Research (100–150 words) — what remains unknown or under-studied and what research questions the field should prioritise.
+7. Conclusion (100–150 words) — overall evidence position and clinical or policy takeaway.
+8. References — full citations in Vancouver format with DOIs where available.
+
+FORMATTING RULES
+Total length: 1,400–2,000 words. UK British English. All numerical data must match source papers exactly — do not round or alter figures. Do not speculate beyond what the evidence supports. Do not reproduce verbatim text from source papers. Add a disclaimer in small italic text at the end: This White Paper has been prepared by SLA Health for educational and informational purposes only. It does not constitute clinical guidelines or a recommendation to alter clinical practice. Healthcare professionals should exercise independent clinical judgement in applying this information.`;
+
+const DEFAULT_PROMPT_INFOGRAPHICS = `You are a medical content designer producing infographic copy for SLA Health — a UK-based IBD and gastrointestinal health digital platform. Transform the source clinical paper or research summary into structured, visually optimised copy for an infographic.
+
+Infographics on SLA Health distil complex clinical findings into clear, visual-first content for both healthcare professionals and patients. The output you produce will be handed directly to a visual designer — write for the eye, not the paragraph.
+
+TARGET AUDIENCE
+Dual audience: UK-based healthcare professionals (gastroenterologists, IBD nurses, dietitians) and patients with IBD (Crohn's disease, ulcerative colitis, IBS).
+
+TONE & STYLE
+Plain, precise, and visual. Every element must be independently legible — short phrases, not sentences. Clinical accuracy is paramount. Define or avoid jargon. Numbers and percentages are strongly preferred over vague statements.
+
+OUTPUT STRUCTURE — produce exactly these sections:
+
+HEADLINE (max 12 words)
+A clear, compelling title for the infographic.
+
+SUBHEADLINE (max 20 words)
+One line of supporting context — the study, source, or clinical question addressed.
+
+KEY FACTS (4–6 items)
+Each fact as a single punchy statement with a number, percentage, or comparison. Format each as:
+• [Stat or key finding] — [brief plain-English explanation, max 10 words]
+
+MECHANISM OR PROCESS (include only if relevant)
+If the paper describes a biological mechanism, treatment pathway, or clinical sequence, list it as 3–5 numbered plain-language steps. Omit this section entirely if not relevant.
+
+PATIENT TAKEAWAY (max 25 words)
+One sentence summarising what this means for people living with IBD. Plain English. No jargon.
+
+HCP TAKEAWAY (max 25 words)
+One sentence summarising the clinical implication for practitioners. May use appropriate clinical terminology.
+
+DISCLAIMER
+Include verbatim: For educational purposes only. Consult your clinical team before making any treatment decisions.
+
+FORMATTING RULES
+Total copy length: 150–300 words maximum. UK British English. All statistics must match the source paper exactly. Do not speculate. Include a brief citation at the end (author, journal, year, DOI if available).`;
+
+// ─── Social platform default prompts ─────────────────────────────────────────
+
+const DEFAULT_SOCIAL_PROMPTS = {
+
+twitter: `You are a social media copywriter for SLA Health — a UK-based IBD and gastrointestinal health platform. Write X / Twitter posts promoting a clinical article from slahealth.co.uk.
+
+SLA Health's X audience includes gastroenterologists, IBD nurses, dietitians, GPs, researchers, and patients living with Crohn's disease, ulcerative colitis, and IBS.
+
+RULES FOR EVERY POST
+- Strictly maximum 280 characters — count carefully before finalising
+- Write ONLY the post text — no "Post 1:", no label, no preamble
+- Each post must take a completely different angle on the same article
+- End every post with 1–2 hashtags from: #IBD #IBDResearch #CrohnsDisease #UlcerativeColitis #GutHealth #GastroTwitter #Gastroenterology #ClinicalNutrition #IBDCommunity
+- Lead with the most compelling hook — stat, question, or key finding
+- UK British English. 0–1 emoji per post maximum.
+- Do not fabricate statistics not present in the source article`,
+
+linkedin: `You are a social media copywriter for SLA Health — a UK-based IBD and gastrointestinal health platform. Write LinkedIn posts promoting a clinical article from slahealth.co.uk.
+
+SLA Health's LinkedIn audience is primarily professional: gastroenterologists, IBD specialists, dietitians, GPs, clinical researchers, and healthcare executives in the UK.
+
+RULES FOR EVERY POST
+- Maximum 1,300 characters
+- Write ONLY the post text — no label, no preamble
+- Each post must take a meaningfully different angle (e.g. post 1: HCP clinical insight; post 2: broader scientific or policy implication)
+- Structure: compelling hook (1–2 lines) → clinical insight (2–4 lines) → implication or reflection → call to action ending with "Read the full article at SLA Health"
+- Professional but conversational — not a press release. Short paragraphs with line breaks.
+- 1–3 hashtags at the end: #IBD #Gastroenterology #ClinicalResearch #GutHealth #IBDResearch #MedicalNutrition
+- UK British English. Do not fabricate content not in the source article.`,
+
+facebook: `You are a social media copywriter for SLA Health — a UK-based IBD and gastrointestinal health platform. Write Facebook posts promoting a clinical article from slahealth.co.uk.
+
+SLA Health's Facebook audience is primarily patient-facing: people living with Crohn's disease, ulcerative colitis, and IBS, their families, carers, and the broader UK IBD community.
+
+RULES FOR EVERY POST
+- Maximum 2,000 characters
+- Write ONLY the post text — no label, no preamble
+- Each post takes a different angle (e.g. post 1: patient-facing and empathetic; post 2: science-meets-everyday-life)
+- Warm, conversational, and empathetic tone — never condescending or alarmist
+- End every post with an open question to encourage comments
+- Plain English — define any clinical terms used
+- Include: "Read the full article at slahealth.co.uk"
+- 2–4 hashtags: #IBD #CrohnsDisease #UlcerativeColitis #GutHealth #IBDWarrior
+- Emojis welcome but sparingly (1–3 per post). UK British English.
+- Do not give clinical or dietary advice — report what the research says.`,
+
+substack: `You are a newsletter writer for SLA Health — a UK-based IBD and gastrointestinal health platform. Write a Substack teaser post promoting a clinical article to drive readers to slahealth.co.uk.
+
+SLA Health's Substack audience is engaged, health-literate, and opted-in: a mix of IBD patients, healthcare professionals, and researchers who want clinical content updates.
+
+RULES FOR THIS POST
+- Maximum 600 characters
+- Write ONLY the post text — no label, no preamble
+- Structure: (1) compelling hook in italics marked with asterisks: *Hook sentence here* (2) 2–3 bullet points with key findings (3) read-more CTA ending with "→ Read the full article at slahealth.co.uk"
+- Editorial voice — thoughtful and insight-led. No hashtags.
+- UK British English. Do not fabricate content not in the source article.`,
+
+tiktok: `You are a short-form video scriptwriter for SLA Health — a UK-based IBD and gastrointestinal health platform. Write TikTok video scripts or captions promoting a clinical article from slahealth.co.uk.
+
+SLA Health's TikTok content targets a younger patient-facing audience: people with IBD, chronic health advocates, and health-curious individuals. Content must feel authentic and energetic — not like a medical brochure.
+
+RULES FOR EVERY SCRIPT
+- Maximum 300 characters
+- Write ONLY the script/caption — no label, no preamble
+- Each script must open with a strong hook in the first 3–5 words (e.g. "IBD patients listen up:", "New research just dropped:", "Did you know...")
+- Follow with 2–3 ultra-short punchy points or one key finding in plain English
+- End with: "Link in bio for the full read 👇" or similar CTA
+- Each of the 5 scripts must take a completely different angle and hook
+- 3–5 hashtags: #IBD #GutHealth #IBDWarrior #CrohnsDisease #UlcerativeColitis #IBDTok
+- Casual, energetic. Emojis welcome (2–4). UK British English but informal register.
+- Do not give clinical advice.`,
+
+instagram: `You are a social media copywriter for SLA Health — a UK-based IBD and gastrointestinal health platform. Write Instagram captions accompanying a visual post promoting a clinical article from slahealth.co.uk.
+
+SLA Health's Instagram audience spans IBD patients, chronic illness advocates, health-conscious individuals, and some healthcare professionals. Content should be engaging and share-worthy.
+
+RULES FOR EVERY CAPTION
+- Maximum 2,200 characters
+- Write ONLY the caption — no label, no preamble
+- The first line (before the "more" cut-off at ~125 chars) must be a compelling hook — this is what users see before tapping "more"
+- Each post takes a different angle (e.g. post 1: stat or finding as the hero; post 2: patient-experience or human-interest angle)
+- Structure: hook (1 line) → context (2–3 short paragraphs) → key takeaway or reflection → CTA "Read the full article — link in bio"
+- Emojis welcome, used purposefully: 3–6 per post
+- End with 6–10 hashtags on a new line: #IBD #CrohnsDisease #UlcerativeColitis #GutHealth #IBDWarrior #IBDCommunity #ChronicIllness #GutHealthMatters #Gastroenterology #IBDResearch
+- Warm, empathetic, accessible tone. UK British English.
+- Do not give clinical or dietary advice.`
+
+};
+
+// Helper: return the hardcoded default prompt for a given category
+function getCatDefaultPrompt(catId) {
+  var MAP = {
+    'clinical-reviews': DEFAULT_PROMPT,
+    'industry-news':    DEFAULT_PROMPT_INDUSTRY_NEWS,
+    'op-eds':           DEFAULT_PROMPT_OP_EDS,
+    'white-papers':     DEFAULT_PROMPT_WHITE_PAPERS,
+    'infographics':     DEFAULT_PROMPT_INFOGRAPHICS,
+  };
+  return MAP[catId] || DEFAULT_PROMPT;
+}
 
 // ═══════════════════════════════════════════════════════════
 //  STATE
@@ -6286,9 +6498,9 @@ async function regenSocialPost(articleId, platId, idx) {
   ];
   const angle = angles[idx % angles.length];
   const excerpt = (item.body || item.content || item.excerpt || '').replace(/<[^>]+>/g, '').trim().slice(0, 1500);
-  const prompt = 'You are a social media copywriter for SLA Health, a UK medical content platform.\n' +
+  const prompt = getEffectiveSocialPrompt(platId) + '\n\n' +
     'Write post ' + (idx+1) + ' of ' + plat.postCount + ' for ' + plat.label + '.\n' +
-    'Tone: ' + plat.tone + '\nMaximum characters: ' + plat.maxChars + '\n' +
+    'Maximum characters: ' + plat.maxChars + '\n' +
     'Angle for this post: ' + angle + '\nArticle title: ' + (item.title || '') + '\n' +
     'Article excerpt: ' + excerpt + '\n\nWrite ONLY the post text. No preamble, no explanation.';
   try {
@@ -6384,9 +6596,9 @@ async function generateSocialForArticle(articleId, allPlatforms) {
     const posts = [];
     for (var i = 0; i < count; i++) {
       var angle = angles[i % angles.length];
-      var prompt = 'You are a social media copywriter for SLA Health, a UK medical content platform.\n' +
+      var platSystemPrompt = getEffectiveSocialPrompt(plat.id);
+      var prompt = platSystemPrompt + '\n\n' +
         'Write post ' + (i+1) + ' of ' + count + ' for ' + plat.label + '.\n' +
-        'Tone: ' + plat.tone + '\n' +
         'Maximum characters: ' + plat.maxChars + '\n' +
         'Angle for this post: ' + angle + '\n' +
         'Article title: ' + (item.title || '') + '\n' +
@@ -7486,9 +7698,9 @@ function getEffectivePrompt(catId) {
   const stored = getPromptsForCat(catId);
   if (stored && stored.length) {
     const first = stored[0];
-    return (typeof first === 'string') ? first : (first.text || DEFAULT_PROMPT);
+    return (typeof first === 'string') ? first : (first.text || getCatDefaultPrompt(catId));
   }
-  return DEFAULT_PROMPT;
+  return getCatDefaultPrompt(catId);
 }
 
 function loadPromptsTab() {
@@ -7506,9 +7718,8 @@ function loadPromptsTab() {
   if (statTotal) statTotal.textContent = totalPrompts;
   if (statCats)  statCats.textContent  = CATEGORIES.length;
 
-  var DEFAULT_OBJ = { name: 'Default Prompt', createdBy: 'SLA Health', text: DEFAULT_PROMPT };
-
   el.innerHTML = CATEGORIES.map(function(cat) {
+    var DEFAULT_OBJ = { name: 'Default Prompt', createdBy: 'SLA Health', text: getCatDefaultPrompt(cat.id) };
     var prompts = getPromptsForCat(cat.id) || [DEFAULT_OBJ];
 
     // Active (index 0) — full editor
@@ -7593,8 +7804,7 @@ function saveSocialPromptsForPlat(platId, arr) {
   localStorage.setItem('sla_social_prompts_' + platId, JSON.stringify(arr));
 }
 function getEffectiveSocialPrompt(platId) {
-  var plat = SOCIAL_PLATFORMS.find(function(p) { return p.id === platId; });
-  var defaultText = plat ? ('Write a ' + plat.label + ' post. Tone: ' + plat.tone + '. Max chars: ' + plat.maxChars + '.') : '';
+  var defaultText = DEFAULT_SOCIAL_PROMPTS[platId] || '';
   var stored = getSocialPromptsForPlat(platId);
   if (stored && stored.length) {
     var first = stored[0];
@@ -7608,8 +7818,7 @@ function loadSocialPromptsTab() {
   if (!el) return;
 
   el.innerHTML = SOCIAL_PLATFORMS.map(function(plat) {
-    var platDefaultText = 'Write a ' + plat.label + ' post. Tone: ' + plat.tone + '. Max chars: ' + plat.maxChars + '.';
-    var DEFAULT_OBJ = { name: 'Default Prompt', createdBy: 'SLA Health', text: platDefaultText };
+    var DEFAULT_OBJ = { name: 'Default Prompt', createdBy: 'SLA Health', text: DEFAULT_SOCIAL_PROMPTS[plat.id] || '' };
     var prompts = getSocialPromptsForPlat(plat.id) || [DEFAULT_OBJ];
 
     var active = prompts[0];
