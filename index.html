@@ -1486,14 +1486,12 @@ textarea { resize: vertical; line-height: 1.6; min-height: 120px; }
   position: relative;
 }
 .social-cp-chip:hover { border-color: var(--sla-teal); color: var(--sla-navy); background: rgba(0,201,167,0.04); }
-.social-cp-chip.active { background: var(--sla-navy); border-color: var(--sla-navy); color: #fff; }
-.social-cp-chip.active::after { content: '✓'; position: absolute; top: 4px; right: 6px; font-size: 0.6rem; font-weight: 900; color: rgba(255,255,255,0.85); line-height: 1; }
-.social-cp-chip.active svg path, .social-cp-chip.active svg rect, .social-cp-chip.active svg circle { fill: #fff !important; stroke: #fff; }
+.social-cp-chip.active { background: #fff; border-color: var(--sla-teal); color: var(--sla-navy); }
+.social-cp-chip.active::after { content: '✓'; position: absolute; top: 4px; right: 6px; font-size: 0.62rem; font-weight: 900; color: var(--sla-teal); line-height: 1; }
 .social-cp-chip svg { width: 26px; height: 26px; flex-shrink: 0; }
 .social-cp-chip-label { font-size: 0.62rem; font-weight: 700; line-height: 1.2; }
 .social-cp-chip-count-wrap { display: flex; align-items: center; gap: 3px; margin-top: 2px; }
 .social-cp-chip-count-lbl { font-size: 0.52rem; font-weight: 700; color: var(--text-muted); }
-.social-cp-chip.active .social-cp-chip-count-lbl { color: rgba(255,255,255,0.5); }
 .social-cp-chip-count-input {
   width: 34px; padding: 2px 4px; font-size: 0.68rem; font-family: 'Montserrat',sans-serif;
   font-weight: 800; border: 1px solid rgba(0,201,167,0.4); background: rgba(0,201,167,0.1);
