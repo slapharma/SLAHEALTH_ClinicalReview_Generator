@@ -1886,17 +1886,21 @@ textarea { resize: vertical; line-height: 1.6; min-height: 120px; }
 
 <!-- ══════════════════════════════ TAB 1: GENERATOR ══════════════════════════════ -->
 <div class="tab-view" id="view-generator">
-<div class="cat-bar" id="catBar-generator">
-  <button class="cat-bar-btn active" data-cat="clinical-reviews" onclick="switchCategory('clinical-reviews')">Clinical Reviews</button>
-  <button class="cat-bar-btn" data-cat="industry-news" onclick="switchCategory('industry-news')">Industry News</button>
-  <button class="cat-bar-btn" data-cat="op-eds" onclick="switchCategory('op-eds')">Op-Eds</button>
-  <button class="cat-bar-btn" data-cat="white-papers" onclick="switchCategory('white-papers')">White Papers</button>
-  <button class="cat-bar-btn" data-cat="infographics" onclick="switchCategory('infographics')">Infographics</button>
-</div>
 <div class="app-container">
 
   <!-- LEFT PANEL -->
   <div style="display:flex;flex-direction:column;gap:1.25rem;">
+
+    <!-- Category selector card -->
+    <div class="card" style="overflow:hidden;">
+      <div class="cat-bar" id="catBar-generator" style="border-bottom:none;padding:8px 10px;">
+        <button class="cat-bar-btn active" data-cat="clinical-reviews" onclick="switchCategory('clinical-reviews')">Clinical Reviews</button>
+        <button class="cat-bar-btn" data-cat="industry-news" onclick="switchCategory('industry-news')">Industry News</button>
+        <button class="cat-bar-btn" data-cat="op-eds" onclick="switchCategory('op-eds')">Op-Eds</button>
+        <button class="cat-bar-btn" data-cat="white-papers" onclick="switchCategory('white-papers')">White Papers</button>
+        <button class="cat-bar-btn" data-cat="infographics" onclick="switchCategory('infographics')">Infographics</button>
+      </div>
+    </div>
 
     <!-- Dynamic Category Input Panel -->
     <div class="card" id="sourceInputCard">
