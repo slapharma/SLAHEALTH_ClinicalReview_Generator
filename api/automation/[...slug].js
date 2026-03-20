@@ -16,9 +16,13 @@ import jobsIdHandler from '../../lib/automation/handlers/jobs-id.js';
 export default async function handler(req, res) {
   // In non-Next.js Vercel serverless, [...slug].js exposes matched segments as
   // req.query['...slug'] (three dots are part of the key name), not req.query.slug.
-  // Normalise to array to handle both string (1 segment) and array (2+ segments).
-  const rawSlug = req.query['...slug'] || [];
-  const slug = [].concat(rawSlug);
+  // Single-segment paths arrive as a plain string ('telegram-test').
+  // Multi-segment paths arrive as a slash-joined string ('rules/rule_abc').
+  // Split on '/' to normalise both cases into an array.
+  const rawSlug = req.query['...slug'] || '';
+  const slug = Array.isArray(rawSlug)
+    ? rawSlug
+    : String(rawSlug).split('/').filter(Boolean);
   const [first, second] = slug;
 
   if (first === 'approve') return approveHandler(req, res);
