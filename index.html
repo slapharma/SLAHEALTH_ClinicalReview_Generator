@@ -3470,7 +3470,7 @@ textarea { resize: vertical; line-height: 1.6; min-height: 120px; }
     </div>
 
     <!-- Inbox sub-view -->
-    <div id="autoSubInbox" style="display:none; flex:1; min-height:0; display:none;">
+    <div id="autoSubInbox" style="flex:1; min-height:0; display:none;">
       <div style="display:flex; gap:0; height:100%; border:1px solid var(--border); border-radius:8px; overflow:hidden;">
         <div id="autoInboxList" style="width:280px; flex-shrink:0; border-right:1px solid var(--border); overflow-y:auto; background:var(--card);">
           <p style="color:var(--text-muted); padding:16px;">No items pending review.</p>
@@ -4537,7 +4537,7 @@ async function apiFetch(path, opts) {
 
 function switchAutoSubTab(tab) {
   document.getElementById('autoSubRules').style.display = tab === 'rules' ? '' : 'none';
-  document.getElementById('autoSubInbox').style.display = tab === 'inbox' ? '' : 'none';
+  document.getElementById('autoSubInbox').style.display = tab === 'inbox' ? 'flex' : 'none';
   document.getElementById('subTabRules').classList.toggle('active', tab === 'rules');
   document.getElementById('subTabInbox').classList.toggle('active', tab === 'inbox');
   if (tab === 'inbox') loadAutoInbox();
