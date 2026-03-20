@@ -1,17 +1,17 @@
 // api/automation/[...slug].js
 // Catch-all handler that routes all /api/automation/* requests.
-// Deployed as the sole Vercel serverless function for this directory.
-// Individual handler files (approve.js, run.js, etc.) are listed in
-// .vercelignore so they are bundled as modules but not counted as functions.
+// This is the sole Vercel serverless function for the automation module.
+// Handler logic lives in lib/automation/handlers/ (outside api/) so Vercel
+// does not count each handler as a separate function.
 
-import approveHandler from './approve.js';
-import runHandler from './run.js';
-import telegramHandler from './telegram.js';
-import telegramTestHandler from './telegram-test.js';
-import rulesIndexHandler from './rules/index.js';
-import rulesIdHandler from './rules/[id].js';
-import jobsIndexHandler from './jobs/index.js';
-import jobsIdHandler from './jobs/[id].js';
+import approveHandler from '../../lib/automation/handlers/approve.js';
+import runHandler from '../../lib/automation/handlers/run.js';
+import telegramHandler from '../../lib/automation/handlers/telegram.js';
+import telegramTestHandler from '../../lib/automation/handlers/telegram-test.js';
+import rulesIndexHandler from '../../lib/automation/handlers/rules-index.js';
+import rulesIdHandler from '../../lib/automation/handlers/rules-id.js';
+import jobsIndexHandler from '../../lib/automation/handlers/jobs-index.js';
+import jobsIdHandler from '../../lib/automation/handlers/jobs-id.js';
 
 export default async function handler(req, res) {
   const slug = req.query.slug || [];
