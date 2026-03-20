@@ -1,6 +1,6 @@
 import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
-import { evaluateCron, isRuleDue } from './run.js';
+import { evaluateCron, isRuleDue } from '../../lib/automation/handlers/run.js';
 
 // ── 1-3. evaluateCron ─────────────────────────────────────────────────────────
 

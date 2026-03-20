@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { createHandler } from './telegram.js';
+import { createHandler } from '../../lib/automation/handlers/telegram.js';
 
 test('Telegram webhook handler', async (t) => {
   // Set environment variables
