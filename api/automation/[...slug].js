@@ -14,9 +14,10 @@ import jobsIndexHandler from '../../lib/automation/handlers/jobs-index.js';
 import jobsIdHandler from '../../lib/automation/handlers/jobs-id.js';
 
 export default async function handler(req, res) {
-  // req.query.slug may be a string (single segment) or array (multiple segments)
-  // in non-Next.js Vercel serverless. Normalise to array.
-  const rawSlug = req.query.slug || [];
+  // In non-Next.js Vercel serverless, [...slug].js exposes matched segments as
+  // req.query['...slug'] (three dots are part of the key name), not req.query.slug.
+  // Normalise to array to handle both string (1 segment) and array (2+ segments).
+  const rawSlug = req.query['...slug'] || [];
   const slug = [].concat(rawSlug);
   const [first, second] = slug;
 
