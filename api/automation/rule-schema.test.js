@@ -10,6 +10,7 @@ test('buildRule sets defaults', () => {
     trigger: { type: 'schedule', cron: '0 7 * * 1' },
   });
   assert.match(rule.id, /^rule_/);
+  assert.match(rule.id, /^rule_[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/);
   assert.equal(rule.enabled, true);
   assert.equal(rule.review.required, true);
   assert.equal(rule.review.timeoutHours, 48);
@@ -44,5 +45,12 @@ test('validateRule throws on invalid trigger type', () => {
   assert.throws(
     () => validateRule({ name: 'x', category: 'x', sources: [{}], trigger: { type: 'bad' } }),
     /trigger.type must be schedule, event, or volume/
+  );
+});
+
+test('validateRule throws on missing cron for schedule trigger', () => {
+  assert.throws(
+    () => validateRule({ name: 'x', category: 'x', sources: [{}], trigger: { type: 'schedule' } }),
+    { message: 'trigger.cron is required for schedule triggers' }
   );
 });

@@ -1,11 +1,12 @@
 import { randomUUID } from 'crypto';
 
 export function buildRule(data) {
+  validateRule(data);
   const now = new Date().toISOString();
   return {
     id: `rule_${randomUUID()}`,
     name: data.name,
-    enabled: data.enabled ?? true,
+    enabled: Boolean(data.enabled ?? true),
     category: data.category,
     wpCategorySlug: data.wpCategorySlug ?? null,
 
@@ -65,5 +66,8 @@ export function validateRule(data) {
   if (!data.sources || data.sources.length === 0) throw new Error('at least one source is required');
   if (!data.trigger?.type || !['schedule', 'event', 'volume'].includes(data.trigger.type)) {
     throw new Error('trigger.type must be schedule, event, or volume');
+  }
+  if (data.trigger?.type === 'schedule' && !data.trigger?.cron) {
+    throw new Error('trigger.cron is required for schedule triggers');
   }
 }
