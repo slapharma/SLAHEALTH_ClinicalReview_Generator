@@ -294,6 +294,37 @@ body.sidebar-collapsed #syncStatus { width: auto; justify-content: center; }
 ══════════════════════════════════════════════════ */
 .main-content { flex: 1; display: flex; flex-direction: column; min-height: 0; }
 
+/* ── Standard page header (used across all tab views) ── */
+.page-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+  flex-wrap: wrap;
+}
+.page-header-left { flex: 1; min-width: 0; }
+.page-header-title {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--sla-navy);
+  margin: 0 0 3px;
+  line-height: 1.2;
+}
+.page-header-subtitle {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  font-weight: 500;
+  margin: 0;
+}
+.page-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
 /* ── Dynamic Category Header ── */
 .category-header {
   background: var(--header-green);
@@ -521,6 +552,123 @@ textarea { resize: vertical; line-height: 1.6; min-height: 120px; }
 }
 .review-req-log-item .rr-ts { font-size:0.6rem; color:var(--text-muted); margin-top:4px; }
 .review-req-actions { display:flex; gap:7px; flex-wrap:wrap; margin-top:10px; }
+/* ── Categories Page (redesigned) ──────────────────────────────────────────── */
+.cats-page { max-width:1440px; margin:0 auto; padding:1.5rem; }
+
+/* Hero header */
+.cats-hero { display:flex; align-items:center; gap:1.5rem; flex-wrap:wrap; margin-bottom:1.5rem; padding:18px 20px; background:var(--card); border:1px solid var(--border); border-radius:0; box-shadow:var(--shadow); }
+.cats-hero-text { flex:1; min-width:180px; }
+.cats-hero-text h1 { font-size:1.05rem; font-weight:800; color:var(--sla-navy); margin:0 0 3px; }
+.cats-hero-text p { font-size:0.72rem; color:var(--text-muted); margin:0; }
+.cats-hero-stats { display:flex; gap:20px; flex-shrink:0; }
+.cats-hero-stat { text-align:center; }
+.cats-hero-stat span { display:block; font-size:1.35rem; font-weight:800; color:var(--sla-navy); line-height:1; }
+.cats-hero-stat label { font-size:0.58rem; font-weight:700; text-transform:uppercase; letter-spacing:0.7px; color:var(--text-muted); margin-top:3px; display:block; }
+
+/* Layout */
+.cats-layout { display:grid; grid-template-columns:300px 1fr; gap:1rem; align-items:start; }
+@media(max-width:900px){ .cats-layout { grid-template-columns:1fr; } }
+
+/* Category list cards */
+.cats-list { display:flex; flex-direction:column; gap:8px; }
+.cat-card { background:var(--card); border:1.5px solid var(--border); border-radius:0; padding:12px 14px; cursor:pointer; transition:border-color 0.14s,box-shadow 0.14s; display:flex; align-items:flex-start; gap:11px; }
+.cat-card:hover { border-color:var(--sla-orange); box-shadow:0 2px 10px rgba(244,121,32,0.1); }
+.cat-card.active { border-color:var(--sla-orange); background:rgba(244,121,32,0.04); box-shadow:0 0 0 2px rgba(244,121,32,0.15); }
+.cat-card-icon { font-size:1.2rem; flex-shrink:0; width:28px; text-align:center; padding-top:1px; }
+.cat-card-body { flex:1; min-width:0; }
+.cat-card-name { font-size:0.78rem; font-weight:800; color:var(--sla-navy); margin-bottom:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.cat-card-desc { font-size:0.66rem; color:var(--text-muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-bottom:6px; }
+.cat-card-meta { display:flex; gap:5px; flex-wrap:wrap; align-items:center; }
+.cat-card-pill { font-size:0.57rem; font-weight:700; padding:2px 7px; border-radius:20px; text-transform:uppercase; letter-spacing:0.4px; white-space:nowrap; }
+.cat-card-pill.builtin { background:rgba(26,63,48,0.08); color:var(--sla-navy); }
+.cat-card-pill.custom { background:rgba(244,121,32,0.12); color:var(--sla-orange); }
+.cat-card-pill.stat { background:rgba(0,201,167,0.1); color:#0a7a62; }
+.cat-card-pill.wp { background:rgba(33,117,155,0.1); color:#21759b; }
+.cat-card-arrow { flex-shrink:0; color:var(--text-muted); opacity:0.4; margin-top:4px; transition:opacity 0.12s; }
+.cat-card:hover .cat-card-arrow, .cat-card.active .cat-card-arrow { opacity:1; color:var(--sla-orange); }
+
+/* Editor panel */
+.cats-editor { background:var(--card); border:1px solid var(--border); border-radius:0; box-shadow:var(--shadow); overflow:hidden; position:sticky; top:0; max-height:calc(100vh - 20px); display:flex; flex-direction:column; }
+.cats-editor-header { display:flex; align-items:center; gap:0; border-bottom:1px solid var(--border); flex-shrink:0; background:var(--sla-navy); }
+.cats-editor-title { flex:1; font-size:0.75rem; font-weight:800; color:#fff; padding:10px 14px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.cats-editor-close { background:none; border:none; cursor:pointer; color:rgba(255,255,255,0.7); padding:10px 12px; font-size:0.9rem; transition:color 0.12s; flex-shrink:0; }
+.cats-editor-close:hover { color:#fff; }
+
+/* Tab bar */
+.ced-tab-bar { display:flex; border-bottom:1px solid var(--border); flex-shrink:0; background:var(--bg); }
+.ced-tab { flex:1; padding:9px 4px; font-size:0.64rem; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; border:none; background:none; cursor:pointer; color:var(--text-muted); border-bottom:2px solid transparent; transition:all 0.14s; display:flex; align-items:center; justify-content:center; gap:4px; }
+.ced-tab:hover { color:var(--sla-navy); }
+.ced-tab.active { color:var(--sla-orange); border-bottom-color:var(--sla-orange); background:var(--card); }
+.ced-tab-badge { background:var(--sla-orange); color:#fff; font-size:0.55rem; font-weight:800; padding:1px 5px; border-radius:20px; min-width:16px; text-align:center; }
+.ced-tab.active .ced-tab-badge { background:var(--sla-navy); }
+
+/* Tab panes */
+.ced-panes { flex:1; overflow-y:auto; }
+.ced-pane { display:none; }
+.ced-pane.active { display:block; }
+
+/* Pane sections */
+.ced-section { padding:14px 16px; border-bottom:1px solid var(--border); }
+.ced-section-title { font-size:0.61rem; font-weight:800; text-transform:uppercase; letter-spacing:0.8px; color:var(--sla-navy); margin-bottom:10px; display:flex; align-items:center; gap:6px; }
+.ced-label { font-size:0.69rem; font-weight:700; color:var(--text-muted); margin-bottom:4px; display:block; }
+.ced-input { width:100%; padding:7px 10px; border:1px solid var(--border); font-family:'Montserrat',sans-serif; font-size:0.76rem; box-sizing:border-box; background:var(--card); color:var(--text); outline:none; transition:border-color 0.12s; border-radius:0; }
+.ced-input:focus { border-color:var(--sla-orange); }
+.ced-input[readonly] { background:var(--bg); color:var(--text-muted); }
+.ced-actions { display:flex; gap:8px; flex-wrap:wrap; padding:12px 16px; background:var(--bg); border-top:1px solid var(--border); flex-shrink:0; }
+
+/* Sources checkboxes */
+.cat-sources-grid { display:flex; flex-direction:column; gap:8px; }
+.cat-src-label { display:flex; align-items:center; gap:8px; font-size:0.74rem; font-weight:600; color:var(--text); cursor:pointer; }
+.cat-src-label input[type="checkbox"] { width:14px; height:14px; accent-color:var(--sla-orange); flex-shrink:0; }
+.cat-src-hint { font-size:0.63rem; font-weight:400; color:var(--text-muted); }
+
+/* ── Inline prompt panel inside category editor ─── */
+.ced-prompt-panel { padding:0; }
+.ced-prompt-cat-block { border-bottom:1px solid var(--border); }
+.ced-prompt-active { padding:12px 14px; }
+.ced-prompt-active-badge { display:inline-flex; align-items:center; gap:4px; font-size:0.58rem; font-weight:800; text-transform:uppercase; letter-spacing:0.6px; color:#0a7a62; background:rgba(0,201,167,0.1); padding:2px 7px; border-radius:20px; margin-bottom:8px; }
+.ced-prompt-active-fields { display:grid; grid-template-columns:1fr 1fr; gap:7px; margin-bottom:7px; }
+.ced-prompt-active-field label { font-size:0.61rem; font-weight:700; color:var(--text-muted); display:block; margin-bottom:3px; text-transform:uppercase; letter-spacing:0.5px; }
+.ced-prompt-active-textarea { width:100%; padding:8px 10px; border:1px solid var(--border); font-family:'Montserrat',sans-serif; font-size:0.74rem; resize:vertical; line-height:1.55; box-sizing:border-box; margin-bottom:8px; background:var(--card); border-radius:0; outline:none; }
+.ced-prompt-active-textarea:focus { border-color:var(--sla-orange); }
+.ced-prompt-active-footer { display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+.ced-prompt-active-note { font-size:0.62rem; color:var(--text-muted); flex:1; }
+.ced-prompt-saved-list { border-top:1px solid var(--border); padding:8px 14px; display:flex; flex-direction:column; gap:5px; }
+.ced-prompt-saved-item { display:flex; align-items:center; gap:7px; font-size:0.72rem; padding:6px 8px; background:var(--bg); border-radius:4px; cursor:pointer; transition:background 0.12s; }
+.ced-prompt-saved-item:hover { background:rgba(244,121,32,0.06); }
+.ced-prompt-saved-item-name { flex:1; font-weight:600; color:var(--text); font-size:0.7rem; }
+.ced-prompt-saved-item-by { font-size:0.62rem; color:var(--text-muted); }
+.ced-prompt-saved-item-actions { display:flex; gap:4px; flex-shrink:0; }
+.ced-prompt-add-toggle { display:block; width:100%; text-align:left; padding:9px 14px; font-size:0.71rem; font-weight:700; color:var(--sla-orange); background:none; border:none; border-top:1px solid var(--border); cursor:pointer; transition:background 0.12s; }
+.ced-prompt-add-toggle:hover { background:rgba(244,121,32,0.04); }
+.ced-prompt-add-form { padding:10px 14px; background:rgba(0,0,0,0.02); border-top:1px solid var(--border); }
+.ced-prompt-add-fields { display:grid; grid-template-columns:1fr 1fr; gap:7px; margin-bottom:7px; }
+.ced-prompt-add-field label { font-size:0.61rem; font-weight:700; color:var(--text-muted); display:block; margin-bottom:3px; text-transform:uppercase; letter-spacing:0.5px; }
+.ced-prompt-add-textarea { width:100%; padding:8px 10px; border:1px solid var(--border); font-family:'Montserrat',sans-serif; font-size:0.74rem; resize:vertical; line-height:1.55; box-sizing:border-box; margin-bottom:8px; border-radius:0; outline:none; }
+.ced-prompt-add-textarea:focus { border-color:var(--sla-orange); }
+.ced-prompt-settings { padding:12px 14px; }
+
+/* Legacy selectors still used in Prompts page */
+.cat-list-card { background:var(--bg); border:1px solid var(--border); border-radius:10px; padding:11px 13px; cursor:pointer; transition:border-color 0.15s,box-shadow 0.15s; display:flex; align-items:flex-start; gap:10px; }
+.cat-list-card:hover { border-color:var(--sla-orange); box-shadow:0 2px 8px rgba(244,121,32,0.1); }
+.cat-list-card.active { border-color:var(--sla-orange); background:rgba(244,121,32,0.05); }
+.cat-list-icon { font-size:1.15rem; flex-shrink:0; width:26px; text-align:center; margin-top:1px; }
+.cat-list-body { flex:1; min-width:0; }
+.cat-list-name { font-size:0.77rem; font-weight:800; color:var(--sla-navy); margin-bottom:2px; }
+.cat-list-desc { font-size:0.67rem; color:var(--text-muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.cat-list-badges { display:flex; gap:4px; margin-top:5px; flex-wrap:wrap; }
+.cat-list-badge { font-size:0.58rem; font-weight:700; padding:2px 6px; border-radius:3px; text-transform:uppercase; letter-spacing:0.4px; }
+.cat-list-badge.builtin { background:rgba(26,63,48,0.09); color:var(--sla-navy); }
+.cat-list-badge.custom { background:rgba(244,121,32,0.12); color:var(--sla-orange); }
+.cat-list-actions { display:flex; flex-direction:column; gap:4px; flex-shrink:0; }
+.cat-editor-section { padding:16px 18px; border-bottom:1px solid var(--border); }
+.cat-editor-section-title { font-size:0.63rem; font-weight:800; text-transform:uppercase; letter-spacing:0.8px; color:var(--sla-navy); margin-bottom:10px; }
+.cat-editor-label { font-size:0.72rem; font-weight:700; color:var(--text-muted); margin-bottom:5px; display:block; }
+.cat-icon-picker { display:flex; flex-wrap:wrap; gap:4px; margin-bottom:12px; }
+.cat-icon-btn { width:30px; height:30px; border:1px solid var(--border); border-radius:6px; cursor:pointer; font-size:0.9rem; display:flex; align-items:center; justify-content:center; background:var(--bg); transition:border-color 0.12s; }
+.cat-icon-btn:hover { border-color:var(--sla-orange); }
+.cat-icon-btn.selected { border-color:var(--sla-orange); background:rgba(244,121,32,0.1); box-shadow:0 0 0 2px rgba(244,121,32,0.22); }
+.cat-editor-actions { display:flex; gap:8px; flex-wrap:wrap; padding:14px 18px; background:rgba(0,0,0,0.02); }
 .prompt-editor-body { padding: 14px; }
 .prompt-editor-body.collapsed { max-height: 0; overflow: hidden; padding: 0 14px; }
 .prompt-meta-row { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; flex-wrap: wrap; }
@@ -796,11 +944,12 @@ textarea { resize: vertical; line-height: 1.6; min-height: 120px; }
 /* ── Left-panel Hero Image card ── */
 .hero-mode-toggle { display: flex; gap: 3px; }
 .hero-mode-btn {
-  padding: 3px 9px; border-radius: 5px; border: 1px solid rgba(255,255,255,0.2);
-  background: rgba(255,255,255,0.07); color: rgba(255,255,255,0.6);
+  padding: 3px 9px; border-radius: 5px; border: 1px solid var(--border);
+  background: var(--bg); color: var(--text-muted);
   font-family: 'Montserrat', sans-serif; font-size: 0.62rem; font-weight: 700;
   cursor: pointer; transition: all 0.15s;
 }
+.hero-mode-btn:hover { border-color: var(--sla-orange); color: var(--sla-navy); }
 .hero-mode-btn.active { background: var(--sla-orange); border-color: var(--sla-orange); color: #fff; }
 .keyword-chips { display: flex; flex-wrap: wrap; gap: 4px; margin: 4px 0 6px; min-height: 20px; }
 .keyword-chip {
@@ -938,14 +1087,9 @@ textarea { resize: vertical; line-height: 1.6; min-height: 120px; }
 }
 
 /* ══════════════════════════════════════════════════
-   RESPONSIVE — Mobile (≤640px)
+   RESPONSIVE — Mobile (≤480px) — sidebar becomes drawer
 ══════════════════════════════════════════════════ */
-@media (max-width: 640px) {
-  /* ── Mobile slide-out drawer ── */
-  .sidebar-toggle-btn { display: flex; }
-  .topbar { padding: 0 0.75rem; gap: 8px; }
-  .topbar-title { font-size: 0.78rem; }
-
+@media (max-width: 480px) {
   /* Sidebar hides off-screen left, slides in on open */
   .sidebar {
     position: fixed;
@@ -988,6 +1132,16 @@ textarea { resize: vertical; line-height: 1.6; min-height: 120px; }
   .nav-item span { display: block; font-size: 0.72rem; }
   .nav-item.active { border-left-color: var(--sla-navy); border-top-color: transparent; }
   .sidebar-footer { display: flex; }
+}
+
+/* ══════════════════════════════════════════════════
+   RESPONSIVE — Mobile (≤640px)
+══════════════════════════════════════════════════ */
+@media (max-width: 640px) {
+  /* ── Mobile topbar compact ── */
+  .sidebar-toggle-btn { display: flex; }
+  .topbar { padding: 0 0.75rem; gap: 8px; }
+  .topbar-title { font-size: 0.78rem; }
 
   .app-main { padding-bottom: 0; }
   .status-badge { font-size: 0.6rem; padding: 3px 7px; }
@@ -1073,7 +1227,7 @@ textarea { resize: vertical; line-height: 1.6; min-height: 120px; }
    PIPELINE / KANBAN
 ══════════════════════════════════════════════════════════ */
 .pipeline-container { display: flex; flex-direction: column; flex: 1; overflow: hidden; }
-.pipeline-header-row { display: flex; align-items: center; justify-content: space-between; padding: 1.1rem 1.5rem 0.75rem; }
+.pipeline-header-row { display: flex; align-items: center; justify-content: space-between; padding: 1.5rem 1.5rem 0.75rem; }
 .pipeline-title { font-size: 1.15rem; font-weight: 800; color: var(--sla-navy); }
 .pipeline-title span { color: var(--sla-orange); }
 .pipeline-subtitle { font-size: 0.68rem; color: var(--text-muted); margin-top: 2px; }
@@ -1210,7 +1364,7 @@ textarea { resize: vertical; line-height: 1.6; min-height: 120px; }
 /* ═══════════════════════════════════════════════════════════
    SETTINGS TAB
 ══════════════════════════════════════════════════════════ */
-.settings-container { display: grid; grid-template-columns: repeat(2, 1fr); align-items: start; flex: 1; overflow-y: auto; padding: 1.25rem 1.5rem; gap: 1.25rem; }
+.settings-container { display: grid; grid-template-columns: repeat(2, 1fr); align-items: start; flex: 1; overflow-y: auto; padding: 1.5rem; gap: 1.25rem; }
 @media (max-width: 860px) { .settings-container { grid-template-columns: 1fr; } }
 .settings-section { background: var(--card); border: 1px solid var(--border); border-radius: 0; overflow: hidden; }
 .settings-section-header { background: var(--sla-navy); padding: 10px 16px; }
@@ -1301,7 +1455,7 @@ textarea { resize: vertical; line-height: 1.6; min-height: 120px; }
 /* ══════════════════════════════════════════════════
    DASHBOARD TAB
 ══════════════════════════════════════════════════ */
-.dashboard-view { padding: 2rem; max-width: 1200px; margin: 0 auto; width: 100%; }
+.dashboard-view { padding: 1.5rem; max-width: 1440px; margin: 0 auto; width: 100%; }
 .dashboard-welcome { margin-bottom: 2rem; }
 .dashboard-welcome h1 { font-size: 1.6rem; font-weight: 800; color: var(--sla-navy); margin-bottom: 4px; }
 .dashboard-welcome p { color: var(--text-muted); font-size: 0.82rem; }
@@ -1334,8 +1488,7 @@ textarea { resize: vertical; line-height: 1.6; min-height: 120px; }
   display: flex; align-items: center; justify-content: center; transition: background 0.18s;
 }
 .dash-cat-icon svg { width: 26px; height: 26px; color: var(--sla-navy); transition: color 0.18s; }
-.dash-cat-card.active-cat .dash-cat-icon { background: rgba(244,121,32,0.12); }
-.dash-cat-card.active-cat .dash-cat-icon svg { color: var(--sla-orange); }
+.dash-cat-emoji { font-size: 1.55rem; line-height: 1; }
 .dash-cat-name { font-size: 0.8rem; font-weight: 700; color: var(--text); line-height: 1.2; }
 .dash-cat-count { font-size: 0.65rem; color: var(--text-muted); font-weight: 600; }
 .dash-cat-btn {
@@ -1368,7 +1521,7 @@ textarea { resize: vertical; line-height: 1.6; min-height: 120px; }
 /* ══════════════════════════════════════════════════
    CALENDAR TAB
 ══════════════════════════════════════════════════ */
-.calendar-view { padding: 2rem; max-width: 1100px; margin: 0 auto; width: 100%; }
+.calendar-view { padding: 1.5rem; max-width: 1440px; margin: 0 auto; width: 100%; }
 .calendar-header-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; }
 .calendar-title { font-size: 1.3rem; font-weight: 800; color: var(--sla-navy); }
 .calendar-nav { display: flex; align-items: center; gap: 8px; }
@@ -1478,21 +1631,24 @@ textarea { resize: vertical; line-height: 1.6; min-height: 120px; }
 .cat-bar-btn:hover { background: rgba(27,63,48,0.06); color: var(--text); border-bottom-color: var(--border); }
 .cat-bar-btn.active { background: transparent; color: var(--sla-navy); border-bottom: 2px solid var(--sla-navy); }
 
-/* Generator page category selector — grid pills style */
-#catBar-generator { display: grid; grid-template-columns: repeat(3, 1fr); gap: 7px; }
+/* Generator page category selector — flex-wrap pills */
+#catBar-generator { display: flex; flex-wrap: wrap; gap: 7px; }
+/* Make the custom-cats span transparent so its button children join the flex layout */
+#catBar-generator > span { display: contents; }
 #catBar-generator .cat-bar-btn {
-  border-bottom: none; border: 1.5px solid var(--border); border-radius: 8px;
+  border: 1.5px solid var(--border); border-radius: 8px;
   padding: 9px 10px; text-align: center; font-size: 0.68rem;
+  font-weight: 700; /* fixed weight prevents layout shift on selection */
   background: var(--bg); color: var(--text-muted);
-  transition: all 0.15s;
+  transition: border-color 0.15s, background 0.15s, color 0.15s;
 }
 #catBar-generator .cat-bar-btn:hover {
   border-color: var(--sla-teal); color: var(--sla-navy); background: rgba(0,201,167,0.05);
 }
 #catBar-generator .cat-bar-btn.active {
   border-color: var(--sla-navy); background: rgba(27,63,48,0.08);
-  color: var(--sla-navy); border-bottom: 1.5px solid var(--sla-navy);
-  font-weight: 800;
+  color: var(--sla-navy);
+  /* No font-weight change — keeps button the same size when selected */
 }
 
 /* ══════════════════════════════════════════════════
@@ -1501,8 +1657,23 @@ textarea { resize: vertical; line-height: 1.6; min-height: 120px; }
 /* ══════════════════════════════════════════════════
    SOCIAL TAB
 ══════════════════════════════════════════════════ */
-.social-view { padding: 1.5rem; max-width: 1200px; margin: 0 auto; }
+.social-view { padding: 1.5rem; max-width: 1440px; margin: 0 auto; }
 .social-empty { padding: 48px; text-align: center; color: var(--text-muted); font-size: 0.82rem; }
+
+/* ── Social page top tab bar ── */
+.social-tabs-bar { display:flex; border-bottom:2px solid var(--border); margin-bottom:1.5rem; }
+.social-tab-btn { padding:10px 22px; font-size:0.7rem; font-weight:700; text-transform:uppercase; letter-spacing:0.7px; border:none; background:none; cursor:pointer; color:var(--text-muted); border-bottom:2px solid transparent; margin-bottom:-2px; transition:all 0.14s; display:flex; align-items:center; gap:7px; white-space:nowrap; }
+.social-tab-btn:hover { color:var(--sla-navy); }
+.social-tab-btn.active { color:var(--sla-teal); border-bottom-color:var(--sla-teal); }
+.social-pane { display:none; }
+.social-pane.active { display:block; }
+.social-prompts-header { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px; margin-bottom:1rem; }
+.social-prompts-header-text h2 { font-size:0.9rem; font-weight:800; color:var(--sla-navy); margin:0 0 2px; }
+.social-prompts-header-text p { font-size:0.7rem; color:var(--text-muted); margin:0; }
+.social-prompts-stats { display:flex; gap:16px; }
+.social-prompts-stat { text-align:center; }
+.social-prompts-stat span { display:block; font-size:1.1rem; font-weight:800; color:var(--sla-navy); }
+.social-prompts-stat label { font-size:0.58rem; font-weight:700; text-transform:uppercase; letter-spacing:0.6px; color:var(--text-muted); }
 
 /* ── Social Control Panel ── */
 .social-cp {
@@ -1632,7 +1803,7 @@ textarea { resize: vertical; line-height: 1.6; min-height: 120px; }
 /* ══════════════════════════════════════════════════
    LLM MANAGEMENT PAGE
 ══════════════════════════════════════════════════ */
-.llm-page { max-width: 1400px; margin: 0 auto; padding: 1.5rem; display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.25rem; align-items: start; }
+.llm-page { max-width: 1440px; margin: 0 auto; padding: 1.5rem; display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.25rem; align-items: start; }
 @media (max-width: 860px) { .llm-page { grid-template-columns: 1fr; } }
 .llm-section { background: var(--card); border: 1px solid var(--border); }
 .llm-section-header { padding: 14px 18px 12px; background: var(--header-green); color: #fff; display: flex; align-items: center; gap: 10px; }
@@ -1688,7 +1859,7 @@ textarea { resize: vertical; line-height: 1.6; min-height: 120px; }
 .mon-row-actions { padding: 6px 14px; white-space: nowrap; }
 
 .monitoring-view {
-  padding: 1.5rem; max-width: 1400px; margin: 0 auto;
+  padding: 1.5rem; max-width: 1440px; margin: 0 auto;
 }
 .monitoring-header {
   display: flex; align-items: center; justify-content: space-between;
@@ -1884,11 +2055,6 @@ textarea { resize: vertical; line-height: 1.6; min-height: 120px; }
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
       <span>Library</span>
     </button>
-    <button class="nav-item" onclick="switchTab('prompts')" id="tab-prompts">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
-      <span>Prompts</span>
-    </button>
-
     <div class="nav-section-label">Workflow</div>
     <button class="nav-item" onclick="switchTab('pipeline')" id="tab-pipeline">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="5" height="18" rx="1"/><rect x="10" y="3" width="5" height="13" rx="1"/><rect x="17" y="3" width="5" height="8" rx="1"/></svg>
@@ -1915,6 +2081,10 @@ textarea { resize: vertical; line-height: 1.6; min-height: 120px; }
     </button>
 
     <div class="nav-section-label">System</div>
+    <button class="nav-item" onclick="switchTab('categories')" id="tab-categories">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      <span>Categories</span>
+    </button>
     <button class="nav-item" onclick="switchTab('llm')" id="tab-llm">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><line x1="9" y1="1" x2="9" y2="4"/><line x1="15" y1="1" x2="15" y2="4"/><line x1="9" y1="20" x2="9" y2="23"/><line x1="15" y1="20" x2="15" y2="23"/><line x1="20" y1="9" x2="23" y2="9"/><line x1="20" y1="14" x2="23" y2="14"/><line x1="1" y1="9" x2="4" y2="9"/><line x1="1" y1="14" x2="4" y2="14"/></svg>
       <span>LLM</span>
@@ -1988,6 +2158,14 @@ textarea { resize: vertical; line-height: 1.6; min-height: 120px; }
 
 <!-- ══════════════════════════════ TAB 1: GENERATOR ══════════════════════════════ -->
 <div class="tab-view" id="view-generator">
+<div style="padding:1.5rem 1.5rem 0;">
+  <div class="page-header">
+    <div class="page-header-left">
+      <h1 class="page-header-title">Generate Content</h1>
+      <p class="page-header-subtitle">Upload a source document, choose your settings, and generate clinical content.</p>
+    </div>
+  </div>
+</div>
 <div class="app-container">
 
   <!-- LEFT PANEL -->
@@ -1998,13 +2176,14 @@ textarea { resize: vertical; line-height: 1.6; min-height: 120px; }
       <div class="card-header">
         <h2><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>Content Category</h2>
       </div>
-      <div class="card-body" style="padding:10px 12px;">
+      <div class="card-body">
         <div class="cat-bar" id="catBar-generator" style="border-bottom:none;padding:0;background:none;flex-wrap:wrap;">
           <button class="cat-bar-btn active" data-cat="clinical-reviews" onclick="switchCategory('clinical-reviews')">Clinical Reviews</button>
           <button class="cat-bar-btn" data-cat="industry-news" onclick="switchCategory('industry-news')">Industry News</button>
           <button class="cat-bar-btn" data-cat="op-eds" onclick="switchCategory('op-eds')">Op-Eds</button>
           <button class="cat-bar-btn" data-cat="white-papers" onclick="switchCategory('white-papers')">White Papers</button>
           <button class="cat-bar-btn" data-cat="infographics" onclick="switchCategory('infographics')">Infographics</button>
+          <span id="customCatBtns-generator"></span>
         </div>
       </div>
     </div>
@@ -2324,6 +2503,10 @@ textarea { resize: vertical; line-height: 1.6; min-height: 120px; }
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
         Add to Pipeline
       </button>
+      <button class="btn btn-outline btn-xs" id="sendForReviewBtn" onclick="sendForReviewFromToolbar()" disabled style="background:rgba(255,255,255,0.08);border-color:rgba(255,255,255,0.15);color:#fff;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:11px;height:11px;"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+        Send for Review
+      </button>
       <button class="btn btn-orange btn-xs" onclick="saveReviewToArchive()">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/></svg>
         Save to Library
@@ -2362,56 +2545,6 @@ textarea { resize: vertical; line-height: 1.6; min-height: 120px; }
       </div>
     </div>
 
-    <!-- HERO IMAGE PANEL -->
-    <div class="hero-image-panel" id="heroImagePanel" style="display:none;">
-      <div class="hero-image-header">
-        <h3>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-          Hero Image
-        </h3>
-        <div class="hero-image-tabs">
-          <button class="hero-img-tab-btn active" onclick="switchHeroTab('ai')" id="heroTabAI">AI Generate</button>
-          <button class="hero-img-tab-btn" onclick="switchHeroTab('unsplash')" id="heroTabUnsplash">Pexels</button>
-        </div>
-      </div>
-      <div class="hero-image-body">
-        <!-- AI Generate pane -->
-        <div class="hero-img-pane active" id="heroPane-ai">
-          <div id="heroAiPlaceholder" class="hero-img-placeholder">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" style="width:40px;height:40px;"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-            <span>No image generated yet</span>
-          </div>
-          <img id="heroAiImage" class="hero-img-preview" style="display:none;" alt="Hero image" />
-          <div style="display:flex;gap:6px;margin-bottom:8px;">
-            <input type="text" id="heroAiPrompt" placeholder="Describe the image (or leave blank to auto-generate from article title)" style="flex:1;padding:7px 10px;border:1px solid var(--border);border-radius:6px;font-family:'Montserrat',sans-serif;font-size:0.75rem;" />
-          </div>
-          <div class="hero-img-actions">
-            <button class="btn btn-orange btn-sm" onclick="generateHeroImage()" id="heroGenerateBtn">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-              Generate Image
-            </button>
-            <button class="btn btn-navy btn-sm" onclick="downloadHeroImage()" id="heroDownloadBtn" style="display:none;">Download</button>
-            <span id="heroAiStatus" style="font-size:0.7rem;color:var(--text-muted);"></span>
-          </div>
-          <div id="heroAiAlert" class="alert hidden" style="margin-top:8px;"></div>
-        </div>
-        <!-- Unsplash pane -->
-        <div class="hero-img-pane" id="heroPane-unsplash">
-          <div class="unsplash-search-row">
-            <input type="text" id="unsplashQuery" placeholder="Search Pexels (e.g. healthcare, clinical trial, doctor)" />
-            <button class="btn btn-navy btn-sm" onclick="searchPexels()">Search</button>
-          </div>
-          <div id="unsplashStatus" class="alert hidden" style="margin-bottom:8px;"></div>
-          <div class="unsplash-grid" id="unsplashGrid"></div>
-          <div class="unsplash-credit" id="unsplashCredit"></div>
-          <div class="hero-img-actions" style="margin-top:10px;">
-            <button class="btn btn-orange btn-sm" onclick="useSelectedUnsplashImage()" id="unsplashUseBtn" style="display:none;">Use This Image</button>
-            <button class="btn btn-navy btn-sm" onclick="downloadHeroImage()" id="unsplashDownloadBtn" style="display:none;">Download</button>
-          </div>
-          <img id="heroUnsplashSelected" class="hero-img-preview" style="display:none;margin-top:10px;" alt="Selected hero image" />
-        </div>
-      </div>
-    </div>
 
   </div>
 
@@ -2423,7 +2556,7 @@ textarea { resize: vertical; line-height: 1.6; min-height: 120px; }
 <div class="monitoring-view">
   <div class="monitoring-header">
     <div>
-      <h1 style="font-size:1.1rem;font-weight:800;color:var(--sla-navy);margin:0 0 3px;">Content Monitoring</h1>
+      <h1 class="page-header-title">Content Monitoring</h1>
       <p style="font-size:0.75rem;color:var(--text-muted);margin:0;">Live status of every article across the library</p>
     </div>
     <button class="btn btn-outline btn-sm" onclick="loadMonitoring()">
@@ -2455,8 +2588,8 @@ textarea { resize: vertical; line-height: 1.6; min-height: 120px; }
 <div class="tab-view active" id="view-dashboard">
   <div class="dashboard-view">
     <div class="dashboard-welcome">
-      <h1>Welcome to SLA Health Content Generator</h1>
-      <p>IBD content hub — create, review and publish clinical content for slahealth.co.uk</p>
+      <h1>Content Workflow and Automation System</h1>
+      <p>SLA Health Research Center</p>
     </div>
 
     <!-- Metrics -->
@@ -2480,50 +2613,9 @@ textarea { resize: vertical; line-height: 1.6; min-height: 120px; }
       </div>
     </div>
 
-    <!-- Category cards -->
+    <!-- Category cards — rendered dynamically by loadDashboard() -->
     <div class="dash-section-title">Generate Content</div>
-    <div class="dash-categories">
-      <div class="dash-cat-card active-cat" onclick="startGeneratorForCategory('clinical-reviews')">
-        <div class="dash-cat-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
-        </div>
-        <div class="dash-cat-name">Clinical Reviews</div>
-        <div class="dash-cat-count" id="dash-count-clinical-reviews">0 saved</div>
-        <button class="dash-cat-btn">Generate</button>
-      </div>
-      <div class="dash-cat-card" onclick="startGeneratorForCategory('industry-news')">
-        <div class="dash-cat-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 0-2 2zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/><path d="M18 14h-8"/><path d="M15 18h-5"/><path d="M10 6h8v4h-8V6z"/></svg>
-        </div>
-        <div class="dash-cat-name">Industry News</div>
-        <div class="dash-cat-count" id="dash-count-industry-news">0 saved</div>
-        <button class="dash-cat-btn">Generate</button>
-      </div>
-      <div class="dash-cat-card" onclick="startGeneratorForCategory('op-eds')">
-        <div class="dash-cat-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-        </div>
-        <div class="dash-cat-name">Op-Eds</div>
-        <div class="dash-cat-count" id="dash-count-op-eds">0 saved</div>
-        <button class="dash-cat-btn">Generate</button>
-      </div>
-      <div class="dash-cat-card" onclick="startGeneratorForCategory('white-papers')">
-        <div class="dash-cat-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
-        </div>
-        <div class="dash-cat-name">White Papers</div>
-        <div class="dash-cat-count" id="dash-count-white-papers">0 saved</div>
-        <button class="dash-cat-btn">Generate</button>
-      </div>
-      <div class="dash-cat-card" onclick="startGeneratorForCategory('infographics')">
-        <div class="dash-cat-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
-        </div>
-        <div class="dash-cat-name">Infographics</div>
-        <div class="dash-cat-count" id="dash-count-infographics">0 saved</div>
-        <button class="dash-cat-btn">Generate</button>
-      </div>
-    </div>
+    <div class="dash-categories" id="dashCategoryCards"><!-- populated by loadDashboard() --></div>
 
     <!-- Recent articles -->
     <div class="dash-recent">
@@ -2541,52 +2633,95 @@ textarea { resize: vertical; line-height: 1.6; min-height: 120px; }
 <!-- ══════════════════════════════ TAB: DISTRIBUTION ══════════════════════════════ -->
 <div class="tab-view" id="view-distribution">
 <div class="social-view">
-
+  <div class="page-header">
+    <div class="page-header-left">
+      <h1 class="page-header-title">Social Distribution</h1>
+      <p class="page-header-subtitle">Generate and schedule social posts, and manage your social prompt library.</p>
+    </div>
+  </div>
   <div id="socialCopyAlert" style="display:none;"></div>
 
-  <!-- ── Control Panel ── -->
-  <div class="social-cp">
-    <div class="social-cp-title">Social Post Generator</div>
-    <div class="social-cp-subtitle">Choose an article to generate platform-optimised posts across all channels</div>
-
-    <div class="social-cp-select-wrap">
-      <select class="social-cp-select" id="socialArticleSelect" onchange="selectSocialArticle(this.value)">
-        <option value="">— Choose an article —</option>
-      </select>
-      <svg class="social-cp-select-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:14px;height:14px;"><polyline points="6 9 12 15 18 9"/></svg>
-    </div>
-
-    <div class="social-cp-meta" id="socialCpMeta" style="display:none;">
-      <div class="social-cp-meta-info">
-        <div class="social-cp-meta-title" id="socialCpMetaTitle">—</div>
-        <div class="social-cp-meta-cat" id="socialCpMetaCat">—</div>
-      </div>
-      <span class="social-cp-meta-badge pending" id="socialCpMetaBadge"></span>
-    </div>
-
-    <div class="social-cp-main-row">
-      <div class="social-cp-chips-col">
-        <div class="social-cp-plat-label">Generate posts for · click to toggle · adjust count</div>
-        <div class="social-cp-chips" id="socialCpChips"></div>
-      </div>
-      <div class="social-cp-btns-col">
-        <button class="btn social-cp-gen-btn primary" id="socialCpGenBtn" onclick="generateSocialFromControl(false)" disabled>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:13px;height:13px;"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
-          Generate Selected
-        </button>
-        <button class="btn social-cp-gen-btn secondary" id="socialCpGenAllBtn" onclick="generateSocialFromControl(true)" disabled>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:13px;height:13px;"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
-          All Platforms
-        </button>
-      </div>
-    </div>
+  <!-- Top tab bar -->
+  <div class="social-tabs-bar">
+    <button class="social-tab-btn active" id="socialTabBtn-generate" onclick="switchSocialTab('generate')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px;"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+      Generate Posts
+    </button>
+    <button class="social-tab-btn" id="socialTabBtn-prompts" onclick="switchSocialTab('prompts')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px;"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>
+      Prompt Library
+      <span id="socialPromptsTotalBadge" style="background:var(--sla-teal);color:#fff;font-size:0.55rem;font-weight:800;padding:1px 6px;border-radius:20px;margin-left:2px;">—</span>
+    </button>
   </div>
 
-  <!-- ── Article Library ── -->
-  <div class="social-library-label">All Articles</div>
-  <div class="social-article-list" id="socialArticleList">
-    <div class="social-empty">Loading library…</div>
-  </div>
+  <!-- ── Pane: Generate ── -->
+  <div class="social-pane active" id="socialPane-generate">
+
+    <!-- Control Panel -->
+    <div class="social-cp">
+      <div class="social-cp-title">Social Post Generator</div>
+      <div class="social-cp-subtitle">Choose an article to generate platform-optimised posts across all channels</div>
+
+      <div class="social-cp-select-wrap">
+        <select class="social-cp-select" id="socialArticleSelect" onchange="selectSocialArticle(this.value)">
+          <option value="">— Choose an article —</option>
+        </select>
+        <svg class="social-cp-select-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:14px;height:14px;"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+
+      <div class="social-cp-meta" id="socialCpMeta" style="display:none;">
+        <div class="social-cp-meta-info">
+          <div class="social-cp-meta-title" id="socialCpMetaTitle">—</div>
+          <div class="social-cp-meta-cat" id="socialCpMetaCat">—</div>
+        </div>
+        <span class="social-cp-meta-badge pending" id="socialCpMetaBadge"></span>
+      </div>
+
+      <div class="social-cp-main-row">
+        <div class="social-cp-chips-col">
+          <div class="social-cp-plat-label">Generate posts for · click to toggle · adjust count</div>
+          <div class="social-cp-chips" id="socialCpChips"></div>
+        </div>
+        <div class="social-cp-btns-col">
+          <button class="btn social-cp-gen-btn primary" id="socialCpGenBtn" onclick="generateSocialFromControl(false)" disabled>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:13px;height:13px;"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+            Generate Selected
+          </button>
+          <button class="btn social-cp-gen-btn secondary" id="socialCpGenAllBtn" onclick="generateSocialFromControl(true)" disabled>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:13px;height:13px;"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+            All Platforms
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Article Library -->
+    <div class="social-library-label">All Articles</div>
+    <div class="social-article-list" id="socialArticleList">
+      <div class="social-empty">Loading library…</div>
+    </div>
+
+  </div><!-- /socialPane-generate -->
+
+  <!-- ── Pane: Prompt Library ── -->
+  <div class="social-pane" id="socialPane-prompts">
+
+    <div class="social-prompts-header">
+      <div class="social-prompts-header-text">
+        <h2>Social Prompt Library</h2>
+        <p>Manage the AI generation prompt for each social platform. The active prompt (index 0) is used when generating posts.</p>
+      </div>
+      <div class="social-prompts-stats">
+        <div class="social-prompts-stat"><span id="socialPromptsStatTotal">—</span><label>Prompts</label></div>
+        <div class="social-prompts-stat"><span id="socialPromptsStatPlats">—</span><label>Platforms</label></div>
+      </div>
+    </div>
+
+    <div id="socialPromptBlocks">
+      <div style="color:var(--text-muted);font-size:0.82rem;padding:2rem;">Loading prompts…</div>
+    </div>
+
+  </div><!-- /socialPane-prompts -->
 
 </div>
 </div><!-- /tab-view distribution -->
@@ -2595,7 +2730,7 @@ textarea { resize: vertical; line-height: 1.6; min-height: 120px; }
 <div class="tab-view" id="view-calendar">
   <div class="calendar-view">
     <div class="calendar-header-row">
-      <div class="calendar-title" id="calMonthTitle">March 2026</div>
+      <h1 class="calendar-title" id="calMonthTitle">March 2026</h1>
       <div class="calendar-nav">
         <button onclick="calNav(-1)" title="Previous month">&#8249;</button>
         <span class="calendar-month-label" id="calNavLabel"></span>
@@ -2630,6 +2765,7 @@ textarea { resize: vertical; line-height: 1.6; min-height: 120px; }
   <button class="cat-bar-btn" data-cat="op-eds" onclick="switchCategory('op-eds')">Op-Eds</button>
   <button class="cat-bar-btn" data-cat="white-papers" onclick="switchCategory('white-papers')">White Papers</button>
   <button class="cat-bar-btn" data-cat="infographics" onclick="switchCategory('infographics')">Infographics</button>
+  <span id="customCatBtns-archive"></span>
 </div>
   <div class="archive-container">
     <div class="archive-header-row">
@@ -2687,14 +2823,18 @@ textarea { resize: vertical; line-height: 1.6; min-height: 120px; }
 <div class="tab-view" id="view-comparison">
   <div class="comparison-container">
     <div class="comparison-header">
-      <div style="display:flex;align-items:center;gap:12px;margin-bottom:6px;">
-        <button class="btn btn-outline btn-sm" onclick="switchTab('archive')">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
-          Back to Library
-        </button>
-        <h1>AI Comparison Report</h1>
+      <div class="page-header">
+        <div class="page-header-left">
+          <h1 class="page-header-title">AI Comparison Report</h1>
+          <p id="comparisonSubtitle" class="page-header-subtitle">Select items from the Library tab and click Compare.</p>
+        </div>
+        <div class="page-header-actions">
+          <button class="btn btn-outline btn-sm" onclick="switchTab('archive')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+            Back to Library
+          </button>
+        </div>
       </div>
-      <p id="comparisonSubtitle" style="font-size:0.8rem;color:var(--text-muted);">Select items from the Library tab and click Compare.</p>
     </div>
     <div class="comparison-reviews" id="comparisonReviews"></div>
     <div class="analysis-panel">
@@ -2769,7 +2909,7 @@ textarea { resize: vertical; line-height: 1.6; min-height: 120px; }
   <div class="pipeline-container">
     <div class="pipeline-header-row">
       <div>
-        <div class="pipeline-title">Content <span>Pipeline</span></div>
+        <h1 class="pipeline-title">Content <span>Pipeline</span></h1>
         <div class="pipeline-subtitle" id="pipelineSubtitle">Loading…</div>
       </div>
       <div style="display:flex;gap:8px;align-items:center;">
@@ -2792,17 +2932,13 @@ textarea { resize: vertical; line-height: 1.6; min-height: 120px; }
         <button class="btn btn-outline btn-sm" onclick="loadPipeline()" title="Refresh">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:11px;height:11px;"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
         </button>
-        <!-- New Article dropdown -->
-        <div class="pipeline-new-wrap" id="pipelineNewWrap">
-          <button class="btn btn-orange btn-sm" onclick="togglePipelineNewMenu(event)">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:11px;height:11px;"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-            New Article
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:9px;height:9px;margin-left:2px;"><polyline points="6 9 12 15 18 9"/></svg>
-          </button>
-          <div class="pipeline-new-menu" id="pipelineNewMenu">
-            <!-- Rendered by renderPipelineNewMenu() -->
-          </div>
-        </div>
+        <!-- View Archive button -->
+        <button class="btn btn-orange btn-sm" onclick="switchTab('archive')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:11px;height:11px;"><path d="M21 8v13H3V8"/><path d="M1 3h22v5H1z"/><line x1="10" y1="12" x2="14" y2="12"/></svg>
+          View Archive
+        </button>
+        <!-- Hidden wrapper kept so outside-click handler doesn't error -->
+        <div id="pipelineNewWrap" style="display:none;"><div id="pipelineNewMenu"></div></div>
       </div>
     </div>
     <div class="pipeline-board" id="pipelineBoard">
@@ -2811,60 +2947,17 @@ textarea { resize: vertical; line-height: 1.6; min-height: 120px; }
   </div>
 </div><!-- /tab-view pipeline -->
 
-<!-- ═══════════════ SETTINGS TAB ═══════════════ -->
-<!-- PROMPTS TAB -->
-<div class="tab-view" id="view-prompts">
-  <!-- Prompts page header — same visual language as Generate's category header -->
-  <div class="category-header" style="flex-shrink:0;">
-    <div class="category-header-icon">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
-    </div>
-    <div class="category-header-text">
-      <div class="category-header-label">Prompt Library</div>
-      <div class="category-header-title">Generation <span>Prompts</span></div>
-      <div class="category-header-desc">Name, author and manage prompts per content category · the default prompt drives AI generation</div>
-    </div>
-    <div class="category-header-stats">
-      <div class="cat-stat">
-        <div class="cat-stat-num" id="promptsStatTotal">—</div>
-        <div class="cat-stat-label">Total Prompts</div>
-      </div>
-      <div class="cat-stat">
-        <div class="cat-stat-num" id="promptsStatCats">—</div>
-        <div class="cat-stat-label">Categories</div>
-      </div>
-    </div>
-  </div>
-  <div class="prompts-view">
-    <!-- Article Prompts -->
-    <div class="prompt-section-actions">
-      <div class="prompt-section-label">Article Prompts</div>
-      <button class="btn btn-outline btn-sm" onclick="exportPrompts()" title="Export all prompts as JSON">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-        Export
-      </button>
-      <label class="btn btn-outline btn-sm" style="cursor:pointer;" title="Import prompts from JSON">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-        Import
-        <input type="file" accept=".json" style="display:none;" onchange="importPrompts(this)">
-      </label>
-    </div>
-    <div id="promptCatBlocks">
-      <div style="color:var(--text-muted);font-size:0.82rem;padding:2rem;">Loading prompts…</div>
-    </div>
-    <!-- Social Prompts -->
-    <div class="prompt-section-actions" style="margin-top:1.5rem;">
-      <div class="prompt-section-label">Social Prompts</div>
-    </div>
-    <div id="socialPromptBlocks">
-      <div style="color:var(--text-muted);font-size:0.82rem;padding:2rem;">Loading social prompts…</div>
-    </div>
-  </div>
-</div><!-- /tab-view prompts -->
+<!-- PROMPTS TAB: redirects to Social → Prompt Library (kept for hash deep-link compat) -->
 
 <!-- ══════════════════════════════ LLM MANAGEMENT ══════════════════════════════ -->
 <div class="tab-view" id="view-llm">
   <div class="llm-page">
+  <div class="page-header" style="grid-column:1/-1;">
+    <div class="page-header-left">
+      <h1 class="page-header-title">AI Configuration</h1>
+      <p class="page-header-subtitle">Manage your API keys, default models, and LLM settings.</p>
+    </div>
+  </div>
 
     <!-- Section A: God-Prompt (structured) -->
     <div class="llm-section">
@@ -3359,6 +3452,12 @@ textarea { resize: vertical; line-height: 1.6; min-height: 120px; }
 
 <div class="tab-view" id="view-settings">
   <div class="settings-container">
+  <div class="page-header" style="grid-column:1/-1;">
+    <div class="page-header-left">
+      <h1 class="page-header-title">Settings</h1>
+      <p class="page-header-subtitle">Configure WordPress publishing, GitHub sync, and application preferences.</p>
+    </div>
+  </div>
 
     <!-- Reviewers -->
     <div class="settings-section" style="grid-column: 1 / -1;">
@@ -3489,6 +3588,139 @@ textarea { resize: vertical; line-height: 1.6; min-height: 120px; }
     </div>
   </div>
 </div><!-- /tab-view automation -->
+<!-- ══════════════════════════════ TAB: CATEGORIES ══════════════════════════════ -->
+<div class="tab-view" id="view-categories">
+  <div class="cats-page">
+
+    <!-- Hero header with stats -->
+    <div class="cats-hero">
+      <div class="cats-hero-text">
+        <h1>Content Categories</h1>
+        <p>Configure content types, prompts, and WordPress sync. Click any category to edit — including prompt library management.</p>
+      </div>
+      <div class="cats-hero-stats">
+        <div class="cats-hero-stat"><span id="catsStatTotal">—</span><label>Categories</label></div>
+        <div class="cats-hero-stat"><span id="catsStatPrompts">—</span><label>Prompts</label></div>
+        <div class="cats-hero-stat"><span id="catsStatArticles">—</span><label>Articles</label></div>
+      </div>
+      <button class="btn btn-orange" onclick="openCategoryEditor(null)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:12px;height:12px;"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        New Category
+      </button>
+    </div>
+
+    <div class="cats-layout">
+
+      <!-- Left: category card list -->
+      <div class="cats-list" id="categoriesList">
+        <!-- rendered by renderCategoriesPage() -->
+      </div>
+
+      <!-- Right: tabbed editor panel -->
+      <div class="cats-editor" id="categoryEditorCol" style="display:none;">
+
+        <!-- Editor header bar -->
+        <div class="cats-editor-header">
+          <div class="cats-editor-title" id="catEditorHeading">New Category</div>
+          <button class="cats-editor-close" onclick="closeCategoryEditor()" title="Close editor">✕</button>
+        </div>
+
+        <!-- Tab bar -->
+        <div class="ced-tab-bar">
+          <button class="ced-tab active" id="cedTab-info" onclick="switchCatEditorTab('info')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:11px;height:11px;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            Info &amp; Sources
+          </button>
+          <button class="ced-tab" id="cedTab-prompts" onclick="switchCatEditorTab('prompts')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:11px;height:11px;"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>
+            Prompts
+            <span class="ced-tab-badge" id="cedPromptsBadge">—</span>
+          </button>
+          <button class="ced-tab" id="cedTab-settings" onclick="switchCatEditorTab('settings')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:11px;height:11px;"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+            Settings
+          </button>
+        </div>
+
+        <!-- Scrollable pane area -->
+        <div class="ced-panes">
+
+          <!-- TAB: Info & Sources -->
+          <div class="ced-pane active" id="cedPane-info">
+            <div class="ced-section">
+              <div class="ced-section-title">Basic Information</div>
+              <label class="ced-label">Category Name <span style="color:var(--sla-orange);">*</span></label>
+              <input type="text" id="catEditorName" class="ced-input" placeholder="e.g. Patient Stories" style="margin-bottom:10px;" />
+              <label class="ced-label">Description</label>
+              <input type="text" id="catEditorDesc" class="ced-input" placeholder="Brief description of this content type" />
+            </div>
+
+            <!-- Sources: shown only for custom categories -->
+            <div class="ced-section" id="catSourcesSection">
+              <div class="ced-section-title">Available Sources</div>
+              <p style="font-size:0.69rem;color:var(--text-muted);margin:0 0 10px;">Choose what source types users can provide when generating content in this category.</p>
+              <div class="cat-sources-grid">
+                <label class="cat-src-label"><input type="checkbox" id="csrc-single" value="single" /> Upload Single Document <span class="cat-src-hint">PDF, TXT</span></label>
+                <label class="cat-src-label"><input type="checkbox" id="csrc-multiple" value="multiple" /> Upload Multiple Documents <span class="cat-src-hint">Up to 10 files</span></label>
+                <label class="cat-src-label"><input type="checkbox" id="csrc-links" value="links" /> Add URLs <span class="cat-src-hint">Up to 5 links</span></label>
+                <label class="cat-src-label"><input type="checkbox" id="csrc-paste" value="paste" /> Paste Text <span class="cat-src-hint">Free text input</span></label>
+              </div>
+            </div>
+          </div><!-- /cedPane-info -->
+
+          <!-- TAB: Prompt Library -->
+          <div class="ced-pane" id="cedPane-prompts">
+            <div class="ced-section" style="border-bottom:none;padding:10px 14px 6px;">
+              <p style="font-size:0.69rem;color:var(--text-muted);margin:0;">The active prompt (index 0) is used for AI generation. Add alternates to build a library and click <strong>Use</strong> to switch defaults.</p>
+            </div>
+            <div id="catEditorPromptPanel" class="ced-prompt-panel">
+              <div style="padding:1.5rem;text-align:center;color:var(--text-muted);font-size:0.75rem;">Select a category to manage its prompts.</div>
+            </div>
+          </div><!-- /cedPane-prompts -->
+
+          <!-- TAB: Settings -->
+          <div class="ced-pane" id="cedPane-settings">
+            <div class="ced-section">
+              <div class="ced-section-title">WordPress Integration</div>
+              <p style="font-size:0.69rem;color:var(--text-muted);margin:0 0 10px;">Enter the WordPress post category slug. Published articles will be assigned to that category.</p>
+              <label class="ced-label">WP Category Slug</label>
+              <div style="display:flex;gap:8px;align-items:center;margin-bottom:5px;">
+                <input type="text" id="catEditorWpSlug" class="ced-input" placeholder="e.g. content-patient-stories" style="flex:1;" />
+                <button class="btn btn-outline btn-sm" onclick="testWpCategorySlug()">Verify</button>
+              </div>
+              <div id="catEditorWpStatus" style="font-size:0.7rem;min-height:18px;"></div>
+            </div>
+
+            <div class="ced-section">
+              <div class="ced-section-title">Default AI Model</div>
+              <p style="font-size:0.69rem;color:var(--text-muted);margin:0 0 10px;">AI model used by default for this category. Can also be set on the LLM Management page.</p>
+              <select id="catEditorLlm" class="ced-input" style="appearance:none;-webkit-appearance:none;background:var(--bg);cursor:pointer;"></select>
+            </div>
+
+            <!-- Hidden inputs used by saveCategoryConfig -->
+            <textarea id="catEditorPrompt" style="display:none;"></textarea>
+          </div><!-- /cedPane-settings -->
+
+        </div><!-- /ced-panes -->
+
+        <!-- Sticky actions footer -->
+        <div class="ced-actions">
+          <button class="btn btn-orange btn-sm" onclick="saveCategoryConfig()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:11px;height:11px;"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/></svg>
+            Save
+          </button>
+          <button id="catDeleteBtn" class="btn btn-danger-outline btn-sm" onclick="deleteCategoryConfirm()" style="display:none;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:11px;height:11px;"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6M9 6V4h6v2"/></svg>
+            Delete
+          </button>
+          <div id="catEditorPromptStatus" style="font-size:0.68rem;color:var(--text-muted);flex:1;text-align:right;self-align:center;padding-right:4px;"></div>
+        </div>
+
+      </div><!-- /cats-editor -->
+
+    </div><!-- /cats-layout -->
+  </div><!-- /cats-page -->
+</div><!-- /tab-view categories -->
 
 <!-- SCHEDULE MODAL -->
 <!-- CALENDAR EVENT POPUP -->
@@ -4129,7 +4361,6 @@ function switchCategory(catId) {
     renderMultiDocList(catId);
   }
   document.getElementById('articleOutput').classList.remove('visible');
-  document.getElementById('heroImagePanel').style.display = 'none';
   document.getElementById('emptyState').style.display = '';
   // Only reset uploadZone/fileInfo for clinical-reviews (other categories have their own panels)
   if (catId === 'clinical-reviews') {
@@ -4198,7 +4429,17 @@ const CATEGORY_META = {
 };
 
 function updateCategoryHeader(catId) {
-  const meta = CATEGORY_META[catId] || { desc: '', icon: '', titleParts: [catId, ''] };
+  let meta = CATEGORY_META[catId];
+  if (!meta) {
+    // Custom category — build from config
+    const cfg = getCatConfig ? getCatConfig(catId) : null;
+    const label = CATEGORIES.find(c => c.id === catId)?.label || catId;
+    meta = {
+      desc: cfg?.description || '',
+      icon: `<span style="font-size:1.1rem;">${cfg?.icon || '📄'}</span>`,
+      titleParts: [label, '']
+    };
+  }
   document.getElementById('categoryHeaderIcon').innerHTML = meta.icon;
   document.getElementById('categoryHeaderTitle').innerHTML = meta.titleParts[0] + '<span>' + meta.titleParts[1] + '</span>';
   document.getElementById('categoryHeaderDesc').textContent = meta.desc;
@@ -4238,9 +4479,9 @@ const TAB_TITLES = {
   calendar:     'Content Calendar',
   monitoring:   'Monitoring',
   settings:     'Settings',
-  prompts:      'Prompts',
   llm:          'LLM Management',
   automation:   'Automation',
+  categories:   'Content Categories',
 };
 
 function closeMobileNav() {
@@ -4248,18 +4489,54 @@ function closeMobileNav() {
 }
 
 function toggleSidebar() {
-  if (window.innerWidth <= 640) {
-    // Mobile: toggle slide-out drawer
+  if (window.innerWidth <= 480) {
+    // Tiny mobile: toggle slide-out drawer
     document.body.classList.toggle('mobile-nav-open');
   } else {
-    // Desktop/tablet: toggle icon-only collapsed strip
+    // Desktop/tablet/mobile: toggle icon-only collapsed strip
     const collapsed = document.body.classList.toggle('sidebar-collapsed');
     localStorage.setItem('sla_sidebar_collapsed', collapsed ? '1' : '0');
   }
 }
 
+// ── Social page sub-tab switching ────────────────────────────────────────────
+function switchSocialTab(tab) {
+  ['generate', 'prompts'].forEach(function(t) {
+    var btn  = document.getElementById('socialTabBtn-' + t);
+    var pane = document.getElementById('socialPane-' + t);
+    if (btn)  btn.classList.toggle('active', t === tab);
+    if (pane) { pane.style.display = (t === tab) ? 'block' : 'none'; pane.classList.toggle('active', t === tab); }
+  });
+  if (tab === 'prompts') {
+    loadSocialPromptsTab();
+    updateSocialPromptsStats();
+  }
+}
+
+function updateSocialPromptsStats() {
+  var totalPrompts = 0;
+  if (typeof SOCIAL_PLATFORMS !== 'undefined') {
+    SOCIAL_PLATFORMS.forEach(function(plat) {
+      var p = getSocialPromptsForPlat(plat.id);
+      totalPrompts += p ? p.length : 1;
+    });
+    var statTotal = document.getElementById('socialPromptsStatTotal');
+    var statPlats = document.getElementById('socialPromptsStatPlats');
+    var badge     = document.getElementById('socialPromptsTotalBadge');
+    if (statTotal) statTotal.textContent = totalPrompts;
+    if (statPlats) statPlats.textContent = SOCIAL_PLATFORMS.length;
+    if (badge)     badge.textContent     = totalPrompts;
+  }
+}
+
 function switchTab(tab) {
-  ['dashboard','generator','archive','comparison','reports','pipeline','distribution','calendar','monitoring','settings','prompts','llm','automation'].forEach(t => {
+  // 'prompts' is a legacy route — redirect to Social → Prompt Library
+  if (tab === 'prompts') {
+    switchTab('distribution');
+    setTimeout(function() { switchSocialTab('prompts'); }, 80);
+    return;
+  }
+  ['dashboard','generator','archive','comparison','reports','pipeline','distribution','calendar','monitoring','settings','llm','automation','categories'].forEach(t => {
     const v = document.getElementById('view-' + t);
     const b = document.getElementById('tab-' + t);
     if (v) v.classList.toggle('active', t === tab);
@@ -4274,8 +4551,8 @@ function switchTab(tab) {
   if (tab === 'calendar')      loadCalendar();
   if (tab === 'monitoring')    loadMonitoring();
   if (tab === 'distribution')  loadDistribution && loadDistribution();
-  if (tab === 'prompts')       loadPromptsTab();
   if (tab === 'automation')    loadAutomation();
+  if (tab === 'categories')    renderCategoriesPage();
 
   // Update topbar title
   const tt = document.getElementById('topbarTitle');
@@ -4283,7 +4560,7 @@ function switchTab(tab) {
 
   // Hide category header on non-content tabs
   const catHdr = document.getElementById('categoryHeader');
-  const hideCat = ['dashboard','calendar','pipeline','monitoring','distribution','reports','settings','prompts','llm','automation'].includes(tab);
+  const hideCat = ['dashboard','calendar','pipeline','monitoring','distribution','reports','settings','prompts','llm','automation','categories'].includes(tab);
   if (catHdr) catHdr.style.display = hideCat ? 'none' : '';
 }
 
@@ -5192,8 +5469,6 @@ async function generateReview() {
       if (qpBtn) qpBtn.disabled = false;
       const editBtn = document.getElementById('editArticleBtn');
       if (editBtn) editBtn.disabled = false;
-      // Show hero image panel (right-side panel)
-      document.getElementById('heroImagePanel').style.display = 'block';
       // Auto-populate Pexels search from article title
       const firstLine = rawArticleText.split('\n').find(l => l.trim());
       if (firstLine) {
@@ -5461,7 +5736,8 @@ async function saveReviewToArchive() {
     text: rawArticleText,
     model,
     createdAt: new Date().toISOString(),
-    wordCount: rawArticleText.split(/\s+/).filter(w=>w).length
+    wordCount: rawArticleText.split(/\s+/).filter(w=>w).length,
+    ...(heroImageUrl ? { heroImageUrl, heroImageType } : {}),
   };
   ghData[currentCategory].reviews.unshift(entry);
   if (ghData[currentCategory].reviews.length > 100) ghData[currentCategory].reviews = ghData[currentCategory].reviews.slice(0, 100);
@@ -5581,6 +5857,14 @@ function loadArchiveItem(id) {
   const badge = document.getElementById('modelUsedBadge');
   badge.textContent = '✓ ' + (r.model||'').replace(':free','');
   badge.style.display = 'inline-flex';
+
+  // Cross-reference with pipeline to restore currentContentId and show Review Requests card
+  const pipelineMatch = (publishingQueue || []).find(function(q) {
+    return q.sourceId === r.id || q.title === r.title;
+  });
+  currentContentId = pipelineMatch ? pipelineMatch.id : null;
+  loadReviewRequestCard();
+
   switchTab('generator');
 }
 
@@ -5611,6 +5895,11 @@ async function viewArticleFromPipeline(itemId) {
   if (badge) { badge.textContent = '✓ ' + (item.model || 'Pipeline article').replace(':free',''); badge.style.display = 'inline-flex'; }
   const queueBtn = document.getElementById('queueForPublishBtn');
   if (queueBtn) queueBtn.disabled = false;
+
+  // Link the pipeline record so the Review Requests card can load
+  currentContentId = item.id;
+  loadReviewRequestCard();
+
   switchTab('generator');
 }
 
@@ -5971,14 +6260,38 @@ async function downloadWord() {
   a.click();
 }
 
-function downloadPDF() {
+async function downloadPDF() {
   if (!rawArticleText) return;
   const tmp = document.createElement('div');
   tmp.style.cssText = 'font-family:Georgia,serif;font-size:11pt;line-height:1.75;color:#1a2332;padding:0;';
-  tmp.innerHTML = formatArticleHTML(rawArticleText);
-  tmp.querySelectorAll('h1').forEach(h => { h.style.cssText = 'font-size:14pt;font-weight:800;color:#1b3f30;margin-bottom:6px;line-height:1.3;font-family:Arial,sans-serif;'; });
-  tmp.querySelectorAll('h2').forEach(h => { h.style.cssText = 'font-size:9.5pt;font-weight:800;color:#1b3f30;text-transform:uppercase;letter-spacing:0.8px;margin-top:18px;margin-bottom:6px;font-family:Arial,sans-serif;padding-left:8px;border-left:3px solid #F47920;'; });
-  tmp.querySelectorAll('p').forEach(p => { p.style.cssText = 'font-size:11pt;line-height:1.75;margin-bottom:10px;text-align:justify;'; });
+
+  // Prepend hero image if one is selected
+  if (heroImageUrl) {
+    try {
+      const proxyUrl = `/api/proxy-image?url=${encodeURIComponent(heroImageUrl)}`;
+      const resp = await fetch(proxyUrl);
+      if (resp.ok) {
+        const blob = await resp.blob();
+        const dataUrl = await new Promise(resolve => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(reader.result);
+          reader.readAsDataURL(blob);
+        });
+        const imgEl = document.createElement('img');
+        imgEl.src = dataUrl;
+        imgEl.style.cssText = 'width:100%;max-height:200px;object-fit:cover;border-radius:4px;margin-bottom:16px;display:block;';
+        tmp.appendChild(imgEl);
+      }
+    } catch (_) { /* image fetch failed — skip silently */ }
+  }
+
+  const contentDiv = document.createElement('div');
+  contentDiv.innerHTML = formatArticleHTML(rawArticleText);
+  contentDiv.querySelectorAll('h1').forEach(h => { h.style.cssText = 'font-size:14pt;font-weight:800;color:#1b3f30;margin-bottom:6px;line-height:1.3;font-family:Arial,sans-serif;'; });
+  contentDiv.querySelectorAll('h2').forEach(h => { h.style.cssText = 'font-size:9.5pt;font-weight:800;color:#1b3f30;text-transform:uppercase;letter-spacing:0.8px;margin-top:18px;margin-bottom:6px;font-family:Arial,sans-serif;padding-left:8px;border-left:3px solid #F47920;'; });
+  contentDiv.querySelectorAll('p').forEach(p => { p.style.cssText = 'font-size:11pt;line-height:1.75;margin-bottom:10px;text-align:justify;'; });
+  tmp.appendChild(contentDiv);
+
   html2pdf().set({ margin:[15,15,15,15], filename: `sla-${currentCategory}-${Date.now()}.pdf`, html2canvas:{scale:2}, jsPDF:{unit:'mm',format:'a4',orientation:'portrait'} }).from(tmp).save();
 }
 
@@ -6188,11 +6501,15 @@ async function queueCurrentForPublishing() {
     : 'Untitled Article';
   const model = document.getElementById('modelUsedBadge').textContent.replace('\u2713 ','');
   const wordCount = rawArticleText.split(/\s+/).filter(w=>w).length;
+  const catCfg = getCatConfig(currentCategory);
+  const wpSlug = catCfg?.wpCategorySlug || catCfg?.wpSlug || null;
   const created = await contentApi.create({
     title,
     body: rawArticleText,
     excerpt: rawArticleText.split(/\s+/).slice(0, 30).join(' ') + '…',
     category: currentCategory,
+    ...(heroImageUrl ? { heroImageUrl, heroImageType } : {}),
+    ...(wpSlug ? { wpCategorySlug: wpSlug } : {}),
   });
   if (created) {
     currentContentId = created.id;
@@ -6447,10 +6764,6 @@ function updateModelSelectForCategory(catId) {
 // ═══════════════════════════════════════════════════════════
 //  HERO IMAGE
 // ═══════════════════════════════════════════════════════════
-function toggleHeroImagePanel() {
-  const panel = document.getElementById('heroImagePanel');
-  panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
-}
 
 function switchHeroTab(tab) {
   document.querySelectorAll('.hero-img-tab-btn').forEach(b => b.classList.remove('active'));
@@ -6575,6 +6888,729 @@ function downloadHeroImage() {
 }
 
 // ═══════════════════════════════════════════════════════════
+//  CUSTOM CATEGORIES
+// ═══════════════════════════════════════════════════════════
+
+const BUILTIN_CATEGORY_META = {
+  'clinical-reviews': { description: 'Structured, objective summaries of published clinical trials for physician audiences', sources: ['single'], wpCategorySlug: 'content-clinical-reviews', icon: '🔬' },
+  'industry-news':    { description: 'Latest healthcare industry news, trends and developments', sources: ['links', 'paste'], wpCategorySlug: 'content-healthcare-news', icon: '📰' },
+  'op-eds':           { description: 'Expert opinions and editorials on healthcare topics', sources: ['multiple'], wpCategorySlug: 'content-expert-opinions', icon: '💡' },
+  'white-papers':     { description: 'Comprehensive research and position papers', sources: ['multiple'], wpCategorySlug: 'content-white-papers', icon: '📄' },
+  'infographics':     { description: 'Visual content and data summaries', sources: ['single'], wpCategorySlug: 'content-infographic', icon: '📊' },
+};
+const CATEGORY_ICONS = ['📄','📰','💡','📊','📋','🔬','💊','🏥','👨‍⚕️','📝','🎯','🩺','💉','🌡️','🔍','📈','🧬','🫀','🧪','💬','🔖','📌','🎓','🏋️','🧠'];
+
+let customCategories = [];
+let editingCategoryId = null;  // null=new, string=custom id, 'builtin:id'=built-in
+let selectedCatIcon = '📄';
+
+// Persist custom category WP slug overrides for built-ins too
+function getBuiltinOverrides() {
+  try { return JSON.parse(localStorage.getItem('sla_builtin_cat_overrides') || '{}'); } catch(_) { return {}; }
+}
+function saveBuiltinOverrides(obj) { localStorage.setItem('sla_builtin_cat_overrides', JSON.stringify(obj)); }
+
+// ── Path in the GitHub repo where custom categories are persisted ──
+const GH_CUSTOM_CATS_PATH = 'data/config/custom-categories.json';
+let customCategoriesSHA = null; // tracks remote SHA to avoid write conflicts
+
+function loadCustomCategories() {
+  // Sync load from localStorage (used on startup for immediate display)
+  try { customCategories = JSON.parse(localStorage.getItem('sla_custom_categories') || '[]'); } catch(_) { customCategories = []; }
+}
+
+async function ghLoadCustomCategories() {
+  // Load custom categories from GitHub — the cross-browser source of truth.
+  // Falls back to the localStorage cache if GitHub is unavailable.
+  try {
+    const result = await ghGetFile(GH_CUSTOM_CATS_PATH);
+    if (Array.isArray(result.content)) {
+      customCategoriesSHA = result.sha;
+      customCategories = result.content;
+      localStorage.setItem('sla_custom_categories', JSON.stringify(customCategories));
+      // Re-activate now that we have the authoritative list
+      activateCustomCategories();
+      renderCategoriesPage();
+    }
+  } catch(e) {
+    // File doesn't exist yet or network failure — localStorage cache is already loaded
+    console.log('[CustomCats] Using localStorage cache:', e.message);
+  }
+}
+
+async function ghSaveCustomCategories() {
+  // Persist to GitHub so all browsers pick up the change on next load.
+  // Also keep localStorage in sync as an offline cache.
+  localStorage.setItem('sla_custom_categories', JSON.stringify(customCategories));
+  try {
+    // Refresh SHA to avoid "422 Conflict" on concurrent edits
+    try {
+      const current = await ghGetFile(GH_CUSTOM_CATS_PATH);
+      customCategoriesSHA = current.sha;
+    } catch(_) { /* file may not exist yet — first save */ }
+    customCategoriesSHA = await ghPutFile(
+      GH_CUSTOM_CATS_PATH, customCategories, customCategoriesSHA, 'Update custom categories'
+    );
+  } catch(e) {
+    console.warn('[CustomCats] GitHub save failed (localStorage still updated):', e.message);
+  }
+}
+
+function saveCustomCategories() {
+  // Immediate localStorage save + async GitHub sync (fire-and-forget)
+  localStorage.setItem('sla_custom_categories', JSON.stringify(customCategories));
+  ghSaveCustomCategories();
+}
+
+function getCatConfig(catId) {
+  const builtin = BUILTIN_CATEGORY_META[catId];
+  if (builtin) {
+    const overrides = getBuiltinOverrides();
+    return { ...builtin, id: catId, builtIn: true, ...(overrides[catId] || {}) };
+  }
+  return customCategories.find(c => c.id === catId) || null;
+}
+
+function activateCustomCategories() {
+  customCategories.forEach(cat => {
+    // Add to CATEGORIES if not already present
+    if (!CATEGORIES.find(c => c.id === cat.id)) CATEGORIES.push({ id: cat.id, label: cat.name });
+    // Init ghData entry
+    if (!ghData[cat.id]) ghData[cat.id] = { reviews: [], prompts: [], comparisons: [], revSHA: null, promSHA: null, compSHA: null };
+    // Load cached data
+    try { ghData[cat.id].reviews     = JSON.parse(localStorage.getItem('sla_gh_reviews_' + cat.id)     || '[]'); } catch(_) {}
+    try { ghData[cat.id].prompts     = JSON.parse(localStorage.getItem('sla_gh_prompts_' + cat.id)     || '[]'); } catch(_) {}
+    try { ghData[cat.id].comparisons = JSON.parse(localStorage.getItem('sla_gh_comparisons_' + cat.id) || '[]'); } catch(_) {}
+  });
+  // Inject custom buttons into all cat-bar elements
+  ['generator', 'archive'].forEach(barId => {
+    const placeholder = document.getElementById('customCatBtns-' + barId);
+    if (!placeholder) return;
+    // Clear old buttons from the placeholder's parent
+    placeholder.querySelectorAll('.cat-bar-btn').forEach(b => b.remove());
+    customCategories.forEach(cat => {
+      const btn = document.createElement('button');
+      btn.className = 'cat-bar-btn';
+      btn.dataset.cat = cat.id;
+      btn.textContent = (cat.icon || '📄') + ' ' + cat.name;
+      btn.onclick = () => switchCategory(cat.id);
+      placeholder.appendChild(btn);
+    });
+  });
+  // Inject input panels for custom categories
+  const panelContainer = document.getElementById('panel-clinical-reviews')?.parentElement;
+  if (panelContainer) {
+    customCategories.forEach(cat => {
+      if (!document.getElementById('panel-' + cat.id)) {
+        const tmp = document.createElement('div');
+        tmp.innerHTML = createCustomCategoryPanel(cat);
+        panelContainer.appendChild(tmp.firstElementChild);
+      }
+    });
+  }
+}
+
+function createCustomCategoryPanel(cat) {
+  const sources = (cat.sources && cat.sources.length) ? cat.sources : ['paste'];
+  const SRC_LABELS = { single: '📎 Upload PDF', multiple: '📚 Multi-Doc', links: '🔗 Add URLs', paste: '📋 Paste Text' };
+  const tabs = sources.length > 1
+    ? '<div class="source-tabs">' + sources.map((s, i) =>
+        `<button class="source-tab-btn ${i===0?'active':''}" id="ctab-${cat.id}-${s}" onclick="switchCustomSourceTab('${cat.id}','${s}')">${SRC_LABELS[s]||s}</button>`
+      ).join('') + '</div>'
+    : '';
+  const panes = sources.map((s, i) => {
+    let inner = '';
+    if (s === 'single') {
+      inner = `<div class="upload-zone" id="cuz-${cat.id}" style="padding:20px;cursor:pointer;" onclick="document.getElementById('cfi-${cat.id}').click()">
+        <input type="file" id="cfi-${cat.id}" accept=".pdf,.txt" style="display:none;" onchange="handleCustomSingleFile(event,'${cat.id}')" />
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="width:28px;height:28px;color:var(--text-muted);"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        <p style="font-size:0.75rem;font-weight:700;margin:4px 0 2px;">Drop PDF or TXT here</p>
+        <p style="font-size:0.65rem;color:var(--text-muted);">or click to browse</p>
+      </div>
+      <div id="cfi-info-${cat.id}" style="display:none;background:rgba(244,121,32,0.07);border:1px solid rgba(244,121,32,0.2);border-radius:6px;padding:8px 12px;font-size:0.72rem;margin-top:8px;"></div>`;
+    } else if (s === 'multiple') {
+      inner = `<div class="upload-zone" style="padding:20px;cursor:pointer;" onclick="document.getElementById('cmfi-${cat.id}').click()">
+        <input type="file" id="cmfi-${cat.id}" accept=".pdf,.txt" multiple style="display:none;" onchange="handleCustomMultiFile(event,'${cat.id}')" />
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="width:28px;height:28px;color:var(--text-muted);"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        <p style="font-size:0.75rem;font-weight:700;margin:4px 0 2px;">Drop multiple PDFs or TXTs</p>
+        <p style="font-size:0.65rem;color:var(--text-muted);">or click to browse</p>
+      </div>
+      <div id="cmfi-list-${cat.id}" style="margin-top:8px;display:flex;flex-direction:column;gap:4px;"></div>`;
+    } else if (s === 'links') {
+      inner = Array.from({length: 5}, (_, k) =>
+        `<div style="display:flex;gap:6px;margin-bottom:6px;">
+          <input type="text" id="clink-${cat.id}-${k}" placeholder="https://…" style="flex:1;padding:6px 9px;border:1px solid var(--border);border-radius:6px;font-size:0.72rem;" />
+          <button class="btn btn-outline btn-xs" onclick="fetchCustomLink('${cat.id}',${k})">Fetch</button>
+        </div>`
+      ).join('') + `<div id="clink-status-${cat.id}" style="font-size:0.7rem;color:var(--text-muted);"></div>`;
+    } else {
+      inner = `<textarea id="cpaste-${cat.id}" rows="6" placeholder="Paste your source content here…" style="width:100%;padding:10px;border:1px solid var(--border);border-radius:6px;font-size:0.75rem;resize:vertical;" oninput="updateCustomPasteExtract('${cat.id}')" onpaste="setTimeout(()=>updateCustomPasteExtract('${cat.id}'),10)"></textarea>
+      <div style="display:flex;justify-content:space-between;margin-top:5px;">
+        <span id="cpaste-wc-${cat.id}" style="font-size:0.65rem;color:var(--text-muted);"></span>
+      </div>`;
+    }
+    return `<div class="source-pane ${i===0?'active':''}" id="cpane-${cat.id}-${s}">${inner}</div>`;
+  }).join('');
+  return `<div class="cat-input-panel" id="panel-${cat.id}">${tabs}${panes}</div>`;
+}
+
+function switchCustomSourceTab(catId, tab) {
+  const cat = customCategories.find(c => c.id === catId);
+  if (!cat) return;
+  (cat.sources || ['paste']).forEach(s => {
+    const btn  = document.getElementById('ctab-' + catId + '-' + s);
+    const pane = document.getElementById('cpane-' + catId + '-' + s);
+    if (btn)  btn.classList.toggle('active', s === tab);
+    if (pane) pane.classList.toggle('active', s === tab);
+  });
+  if (tab !== 'paste') { extractedText = ''; updateGenerateButton(); }
+  else updateCustomPasteExtract(catId);
+}
+
+async function handleCustomSingleFile(event, catId) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const infoEl = document.getElementById('cfi-info-' + catId);
+  if (infoEl) { infoEl.style.display = ''; infoEl.textContent = 'Reading ' + file.name + '…'; }
+  try {
+    extractedText = await extractTextFromFile(file);
+    if (infoEl) infoEl.textContent = '✓ ' + file.name + ' — ' + extractedText.split(/\s+/).filter(w=>w).length.toLocaleString() + ' words';
+    updateGenerateButton();
+  } catch(e) {
+    if (infoEl) infoEl.textContent = 'Error: ' + e.message;
+  }
+}
+
+function handleCustomMultiFile(event, catId) {
+  const files = Array.from(event.target.files);
+  if (!files.length) return;
+  if (!multiDocs[catId]) multiDocs[catId] = [];
+  files.forEach(f => multiDocs[catId].push({ file: f, name: f.name }));
+  renderCustomMultiDocList(catId);
+}
+
+function renderCustomMultiDocList(catId) {
+  const listEl = document.getElementById('cmfi-list-' + catId);
+  if (!listEl) return;
+  const docs = multiDocs[catId] || [];
+  listEl.innerHTML = docs.map((d, i) =>
+    `<div style="display:flex;align-items:center;gap:6px;padding:6px 10px;background:var(--bg);border:1px solid var(--border);border-radius:6px;font-size:0.72rem;">
+      <span style="flex:1;">${escapeHtml(d.name)}</span>
+      <button class="btn btn-danger-outline btn-xs" onclick="removeCustomDoc('${catId}',${i})">✕</button>
+    </div>`
+  ).join('');
+  Promise.all(docs.map(d => extractTextFromFile(d.file))).then(texts => {
+    extractedText = texts.join('\n\n---\n\n');
+    updateGenerateButton();
+  });
+}
+
+function removeCustomDoc(catId, idx) {
+  if (multiDocs[catId]) { multiDocs[catId].splice(idx, 1); renderCustomMultiDocList(catId); }
+}
+
+async function fetchCustomLink(catId, idx) {
+  const input = document.getElementById('clink-' + catId + '-' + idx);
+  const statusEl = document.getElementById('clink-status-' + catId);
+  if (!input || !input.value.trim()) return;
+  if (statusEl) statusEl.textContent = 'Fetching link ' + (idx + 1) + '…';
+  try {
+    const resp = await fetch('/api/fetch-url?url=' + encodeURIComponent(input.value.trim()));
+    if (!resp.ok) throw new Error((await resp.json()).error || resp.statusText);
+    const data = await resp.json();
+    input.dataset.fetchedText = data.contents.replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').trim().slice(0, 3000);
+    let allTexts = [];
+    for (let k = 0; k < 5; k++) {
+      const inp = document.getElementById('clink-' + catId + '-' + k);
+      if (inp && inp.dataset.fetchedText) allTexts.push(inp.dataset.fetchedText);
+    }
+    extractedText = allTexts.join('\n\n---\n\n');
+    updateGenerateButton();
+    if (statusEl) statusEl.textContent = '✓ ' + allTexts.length + ' link' + (allTexts.length !== 1 ? 's' : '') + ' fetched';
+  } catch(e) {
+    if (statusEl) statusEl.textContent = 'Fetch failed: ' + e.message;
+  }
+}
+
+function updateCustomPasteExtract(catId) {
+  const ta = document.getElementById('cpaste-' + catId);
+  if (!ta) return;
+  extractedText = ta.value.trim();
+  const wc = extractedText ? extractedText.split(/\s+/).filter(Boolean).length : 0;
+  const wcEl = document.getElementById('cpaste-wc-' + catId);
+  if (wcEl) wcEl.textContent = wc > 0 ? wc.toLocaleString() + ' words ready' : '';
+  updateGenerateButton();
+}
+
+// ── Categories page rendering ────────────────────────────────────────────────
+
+function renderCategoriesPage() {
+  const list = document.getElementById('categoriesList');
+  if (!list) return;
+  const overrides = getBuiltinOverrides();
+  const allCats = [
+    ...Object.entries(BUILTIN_CATEGORY_META).map(([id, meta]) => ({
+      id, name: CATEGORIES.find(c => c.id === id)?.label || id,
+      description: (overrides[id] || {}).description || meta.description,
+      sources: meta.sources, icon: meta.icon, builtIn: true,
+      wpCategorySlug: (overrides[id] || {}).wpCategorySlug || meta.wpCategorySlug
+    })),
+    ...customCategories
+  ];
+
+  // Update hero stats
+  let totalPrompts = 0, totalArticles = 0;
+  allCats.forEach(function(cat) {
+    const p = getPromptsForCat(cat.id);
+    totalPrompts += p ? p.length : 1;
+    totalArticles += (ghData[cat.id] && ghData[cat.id].reviews ? ghData[cat.id].reviews.length : 0);
+  });
+  const statTotal = document.getElementById('catsStatTotal');
+  const statPrompts = document.getElementById('catsStatPrompts');
+  const statArticles = document.getElementById('catsStatArticles');
+  if (statTotal)   statTotal.textContent   = allCats.length;
+  if (statPrompts) statPrompts.textContent = totalPrompts;
+  if (statArticles)statArticles.textContent= totalArticles;
+
+  list.innerHTML = allCats.map(cat => {
+    const promptCount  = (getPromptsForCat(cat.id) || []).length || 1;
+    const articleCount = (ghData[cat.id] && ghData[cat.id].reviews ? ghData[cat.id].reviews.length : 0);
+    const hasWp        = !!(cat.wpCategorySlug);
+    const editorId     = cat.builtIn ? 'builtin:' + cat.id : cat.id;
+    return `<div class="cat-card" id="catcard-${cat.id}" onclick="openCategoryEditor('${editorId}')">
+      <div class="cat-card-icon">${cat.icon || '📄'}</div>
+      <div class="cat-card-body">
+        <div class="cat-card-name">${escapeHtml(cat.name)}</div>
+        <div class="cat-card-desc">${escapeHtml(cat.description || 'No description')}</div>
+        <div class="cat-card-meta">
+          <span class="cat-card-pill ${cat.builtIn ? 'builtin' : 'custom'}">${cat.builtIn ? 'Built-in' : 'Custom'}</span>
+          <span class="cat-card-pill stat">${promptCount} prompt${promptCount !== 1 ? 's' : ''}</span>
+          ${articleCount > 0 ? `<span class="cat-card-pill stat">${articleCount} article${articleCount !== 1 ? 's' : ''}</span>` : ''}
+          ${hasWp ? `<span class="cat-card-pill wp">WP ✓</span>` : ''}
+        </div>
+      </div>
+      <div class="cat-card-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px;"><polyline points="9 18 15 12 9 6"/></svg></div>
+    </div>`;
+  }).join('');
+}
+
+function populateCatEditorLlm(selectedValue) {
+  const sel = document.getElementById('catEditorLlm');
+  if (!sel) return;
+  // Clone options from the main model select
+  const srcSel = document.getElementById('modelSelect');
+  if (srcSel) {
+    sel.innerHTML = '<option value="">— Same as global default —</option>' + srcSel.innerHTML;
+    sel.value = selectedValue || '';
+  }
+}
+
+function populateCatIconPicker(selectedIcon) {
+  const picker = document.getElementById('catIconPicker');
+  if (!picker) return;
+  picker.innerHTML = CATEGORY_ICONS.map(ic =>
+    `<button type="button" class="cat-icon-btn${ic === selectedIcon ? ' selected' : ''}" onclick="selectCatIcon('${ic}')">${ic}</button>`
+  ).join('');
+  selectedCatIcon = selectedIcon || CATEGORY_ICONS[0];
+}
+
+function selectCatIcon(icon) {
+  selectedCatIcon = icon;
+  document.querySelectorAll('.cat-icon-btn').forEach(b => b.classList.toggle('selected', b.textContent === icon));
+}
+
+function openCategoryEditor(id) {
+  editingCategoryId = id;
+  const editorCol    = document.getElementById('categoryEditorCol');
+  const editorTitle  = document.getElementById('catEditorHeading');
+  const deleteBtn    = document.getElementById('catDeleteBtn');
+  const sourcesSection = document.getElementById('catSourcesSection');
+  const nameInput    = document.getElementById('catEditorName');
+
+  // Always reset readOnly first (fix: prevent state leak from builtin → new)
+  if (nameInput) nameInput.readOnly = false;
+
+  editorCol.style.display = '';
+
+  // Highlight active card in new class names
+  document.querySelectorAll('.cat-card').forEach(c => c.classList.remove('active'));
+  const activeCard = id ? document.getElementById('catcard-' + id.replace('builtin:', '')) : null;
+  if (activeCard) activeCard.classList.add('active');
+
+  // Reset status messages
+  const wpStatus     = document.getElementById('catEditorWpStatus');
+  const promptStatus = document.getElementById('catEditorPromptStatus');
+  if (wpStatus)     wpStatus.textContent = '';
+  if (promptStatus) promptStatus.textContent = '';
+
+  // Always start on Info tab for a clean UX
+  switchCatEditorTab('info');
+
+  if (!id) {
+    // ── New custom category ──
+    if (editorTitle) editorTitle.textContent = 'New Category';
+    if (deleteBtn) deleteBtn.style.display = 'none';
+    if (sourcesSection) sourcesSection.style.display = '';
+    if (nameInput) nameInput.value = '';
+    document.getElementById('catEditorDesc').value    = '';
+    document.getElementById('catEditorWpSlug').value  = '';
+    const promptTA = document.getElementById('catEditorPrompt');
+    if (promptTA) promptTA.value = '';
+    ['csrc-single','csrc-multiple','csrc-links','csrc-paste'].forEach(function(eid) {
+      const el = document.getElementById(eid);
+      if (el) { el.checked = eid === 'csrc-paste'; el.disabled = false; }
+    });
+    populateCatEditorLlm('');
+
+  } else if (id.startsWith('builtin:')) {
+    // ── Edit built-in category ──
+    const catId  = id.replace('builtin:', '');
+    const config = getCatConfig(catId);
+    const label  = CATEGORIES.find(c => c.id === catId)?.label || catId;
+    if (editorTitle) editorTitle.textContent = label;
+    if (deleteBtn) deleteBtn.style.display = 'none';
+    // Sources are fixed for built-ins
+    if (sourcesSection) sourcesSection.style.display = 'none';
+    if (nameInput) { nameInput.value = label; nameInput.readOnly = true; }
+    document.getElementById('catEditorDesc').value    = config.description || '';
+    document.getElementById('catEditorWpSlug').value  = config.wpCategorySlug || '';
+    const promptTA = document.getElementById('catEditorPrompt');
+    if (promptTA) promptTA.value = config.prompt || '';
+    populateCatEditorLlm(config.llm || getCategoryModel(catId) || '');
+    // Load prompt panel for this category
+    renderCatPromptPanel(catId);
+
+  } else {
+    // ── Edit existing custom category ──
+    const cat = customCategories.find(c => c.id === id);
+    if (!cat) return;
+    if (editorTitle) editorTitle.textContent = cat.name;
+    if (deleteBtn) deleteBtn.style.display = '';
+    if (sourcesSection) sourcesSection.style.display = '';
+    if (nameInput) { nameInput.value = cat.name; nameInput.readOnly = false; }
+    document.getElementById('catEditorDesc').value    = cat.description || '';
+    document.getElementById('catEditorWpSlug').value  = cat.wpCategorySlug || '';
+    const promptTA = document.getElementById('catEditorPrompt');
+    if (promptTA) promptTA.value = cat.prompt || '';
+    const srcIds = { single:'csrc-single', multiple:'csrc-multiple', links:'csrc-links', paste:'csrc-paste' };
+    Object.entries(srcIds).forEach(function([val, elId]) {
+      const el = document.getElementById(elId);
+      if (el) { el.checked = (cat.sources || []).includes(val); el.disabled = false; }
+    });
+    populateCatEditorLlm(cat.llm || '');
+    // Load prompt panel for this category
+    renderCatPromptPanel(id);
+  }
+
+  // Scroll editor into view on mobile
+  editorCol.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function closeCategoryEditor() {
+  document.getElementById('categoryEditorCol').style.display = 'none';
+  const ni = document.getElementById('catEditorName');
+  if (ni) ni.readOnly = false;
+  document.querySelectorAll('.cat-card').forEach(c => c.classList.remove('active'));
+  editingCategoryId = null;
+}
+
+function saveCategoryConfig() {
+  const name    = document.getElementById('catEditorName').value.trim();
+  const desc    = document.getElementById('catEditorDesc').value.trim();
+  const wpSlug  = document.getElementById('catEditorWpSlug').value.trim();
+  const prompt  = document.getElementById('catEditorPrompt').value.trim();
+  const llm     = document.getElementById('catEditorLlm').value;
+
+  if (!editingCategoryId && !name) { alert('Please enter a category name.'); document.getElementById('catEditorName').focus(); return; }
+
+  if (!editingCategoryId) {
+    // New custom category
+    const sources = ['single','multiple','links','paste'].filter(s => document.getElementById('csrc-' + s)?.checked);
+    if (!sources.length) { alert('Please select at least one source type.'); return; }
+    const newCat = {
+      id: 'cat_' + Date.now(),
+      name, description: desc, sources,
+      wpCategorySlug: wpSlug, prompt, llm,
+      icon: selectedCatIcon,
+      createdAt: new Date().toISOString()
+    };
+    customCategories.push(newCat);
+    saveCustomCategories();
+    activateCustomCategories();
+    // Load the default prompt into the generator when this category is active
+    renderCategoriesPage();
+    loadDashboard();
+    closeCategoryEditor();
+    showAlert('generateAlert', '✓ Category "' + name + '" created', 'success');
+    setTimeout(() => hideAlert('generateAlert'), 3000);
+
+  } else if (editingCategoryId.startsWith('builtin:')) {
+    // Save built-in overrides
+    const catId = editingCategoryId.replace('builtin:', '');
+    const overrides = getBuiltinOverrides();
+    overrides[catId] = { ...overrides[catId], description: desc, wpCategorySlug: wpSlug, prompt, llm, icon: selectedCatIcon };
+    saveBuiltinOverrides(overrides);
+    // Update per-category LLM if set
+    if (llm) { const cm = JSON.parse(localStorage.getItem('sla_cat_models') || '{}'); cm[catId] = llm; localStorage.setItem('sla_cat_models', JSON.stringify(cm)); }
+    renderCategoriesPage();
+    closeCategoryEditor();
+    showAlert('generateAlert', '✓ Category updated', 'success');
+    setTimeout(() => hideAlert('generateAlert'), 3000);
+
+  } else {
+    // Update existing custom category
+    const idx = customCategories.findIndex(c => c.id === editingCategoryId);
+    if (idx === -1) return;
+    const sources = ['single','multiple','links','paste'].filter(s => document.getElementById('csrc-' + s)?.checked);
+    customCategories[idx] = { ...customCategories[idx], name, description: desc, sources, wpCategorySlug: wpSlug, prompt, llm, icon: selectedCatIcon };
+    // Update CATEGORIES label
+    const catEntry = CATEGORIES.find(c => c.id === editingCategoryId);
+    if (catEntry) catEntry.label = name;
+    saveCustomCategories();
+    activateCustomCategories();
+    renderCategoriesPage();
+    closeCategoryEditor();
+    showAlert('generateAlert', '✓ Category updated', 'success');
+    setTimeout(() => hideAlert('generateAlert'), 3000);
+  }
+}
+
+function deleteCategoryConfirm() {
+  if (!editingCategoryId || editingCategoryId.startsWith('builtin:')) return;
+  const cat = customCategories.find(c => c.id === editingCategoryId);
+  if (!cat || !confirm(`Delete category "${cat.name}"? This will not delete saved articles.`)) return;
+  customCategories = customCategories.filter(c => c.id !== editingCategoryId);
+  // Remove from CATEGORIES array
+  const i = CATEGORIES.findIndex(c => c.id === editingCategoryId);
+  if (i > -1) CATEGORIES.splice(i, 1);
+  saveCustomCategories();
+  // Remove injected buttons
+  ['generator','archive'].forEach(barId => {
+    const placeholder = document.getElementById('customCatBtns-' + barId);
+    if (placeholder) placeholder.querySelectorAll('.cat-bar-btn').forEach(b => b.remove());
+  });
+  activateCustomCategories();
+  renderCategoriesPage();
+  loadDashboard();
+  closeCategoryEditor();
+}
+
+async function testWpCategorySlug() {
+  const slug = document.getElementById('catEditorWpSlug').value.trim();
+  const statusEl = document.getElementById('catEditorWpStatus');
+  if (!slug) { statusEl.textContent = 'Enter a slug first.'; statusEl.style.color = 'var(--text-muted)'; return; }
+  statusEl.textContent = 'Verifying…'; statusEl.style.color = 'var(--text-muted)';
+  try {
+    const resp = await fetch('https://slahealth.co.uk/wp-json/wp/v2/categories?slug=' + encodeURIComponent(slug) + '&per_page=1');
+    if (!resp.ok) throw new Error('WP API error ' + resp.status);
+    const data = await resp.json();
+    if (data.length > 0) {
+      statusEl.textContent = '✓ Found: "' + data[0].name + '" (ID ' + data[0].id + ')';
+      statusEl.style.color = '#1a7245';
+    } else {
+      statusEl.textContent = '✗ No WordPress category found with this slug.';
+      statusEl.style.color = '#c0392b';
+    }
+  } catch(e) {
+    statusEl.textContent = 'Verification failed: ' + e.message;
+    statusEl.style.color = '#c0392b';
+  }
+}
+
+async function generateCategoryPrompt() {
+  const name = document.getElementById('catEditorName').value.trim();
+  const desc = document.getElementById('catEditorDesc').value.trim();
+  const statusEl = document.getElementById('catEditorPromptStatus');
+  if (!name) { statusEl.textContent = 'Enter a category name first.'; return; }
+  statusEl.textContent = 'Generating prompt…';
+  const metaPrompt = `You are a medical content strategist. Write a detailed AI content generation prompt for a healthcare content category.
+
+Category name: ${name}
+Description: ${desc || 'A healthcare content category'}
+
+The prompt should instruct an AI writer to produce high-quality, accurate, UK-English healthcare content for this category. Include guidance on: tone, structure, length, required sections, and any important disclaimers. Write only the prompt text — no preamble.`;
+  try {
+    const result = await callLLM(metaPrompt, {});
+    document.getElementById('catEditorPrompt').value = result.trim();
+    statusEl.textContent = '✓ Prompt generated';
+    setTimeout(() => { statusEl.textContent = ''; }, 3000);
+  } catch(e) {
+    statusEl.textContent = 'Generation failed: ' + e.message;
+  }
+}
+
+// ── Category editor tab switching ────────────────────────────────────────────
+function switchCatEditorTab(tab) {
+  ['info', 'prompts', 'settings'].forEach(function(t) {
+    const btn  = document.getElementById('cedTab-' + t);
+    const pane = document.getElementById('cedPane-' + t);
+    if (btn)  btn.classList.toggle('active', t === tab);
+    if (pane) { pane.classList.toggle('active', t === tab); pane.style.display = (t === tab) ? 'block' : 'none'; }
+  });
+  // Render prompt panel when switching to prompts tab
+  if (tab === 'prompts' && editingCategoryId) {
+    var catId = editingCategoryId.startsWith('builtin:') ? editingCategoryId.replace('builtin:', '') : editingCategoryId;
+    renderCatPromptPanel(catId);
+  }
+}
+
+// ── Inline prompt panel for category editor ──────────────────────────────────
+function renderCatPromptPanel(catId) {
+  var el = document.getElementById('catEditorPromptPanel');
+  if (!el || !catId) return;
+
+  var DEFAULT_OBJ = { name: 'Default Prompt', createdBy: 'SLA Health', text: getCatDefaultPrompt(catId) };
+  var prompts = getPromptsForCat(catId) || [DEFAULT_OBJ];
+
+  // Update tab badge count
+  var badge = document.getElementById('cedPromptsBadge');
+  if (badge) badge.textContent = prompts.length;
+
+  var active = prompts[0];
+  var aText  = typeof active === 'string' ? active : (active.text || '');
+  var aName  = typeof active === 'string' ? 'Default Prompt' : (active.name || 'Default Prompt');
+  var aBy    = typeof active === 'string' ? 'SLA Health' : (active.createdBy || '');
+
+  var activeEditor =
+    '<div class="ced-prompt-active">' +
+      '<div class="ced-prompt-active-badge">✓ Active — used for AI generation</div>' +
+      '<div class="ced-prompt-active-fields">' +
+        '<div class="ced-prompt-active-field"><label>Prompt Name</label><input type="text" id="cedp-name-' + catId + '-0" class="ced-input" value="' + escapeHtml(aName) + '" placeholder="e.g. Formal Clinical" /></div>' +
+        '<div class="ced-prompt-active-field"><label>Created By</label><input type="text" id="cedp-by-' + catId + '-0" class="ced-input" value="' + escapeHtml(aBy) + '" placeholder="Author name" /></div>' +
+      '</div>' +
+      '<textarea class="ced-prompt-active-textarea" id="cedp-text-' + catId + '-0" rows="8">' + escapeHtml(aText) + '</textarea>' +
+      '<div class="ced-prompt-active-footer">' +
+        '<button class="btn btn-orange btn-sm" onclick="cedSavePromptItem(\'' + catId + '\',0)">Save Active Prompt</button>' +
+        '<button class="btn btn-outline btn-sm" onclick="cedGenerateCategoryPrompt(\'' + catId + '\')">' +
+          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:11px;height:11px;"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>' +
+          ' Auto-Generate' +
+        '</button>' +
+      '</div>' +
+    '</div>';
+
+  var savedItems = '';
+  if (prompts.length > 1) {
+    savedItems =
+      '<div class="ced-prompt-saved-list">' +
+        '<div style="font-size:0.6rem;font-weight:800;text-transform:uppercase;letter-spacing:0.6px;color:var(--text-muted);margin-bottom:5px;padding:0 2px;">Saved Alternates · click to make active</div>' +
+        prompts.slice(1).map(function(p, j) {
+          var i     = j + 1;
+          var pName = typeof p === 'string' ? 'Prompt ' + i : (p.name || 'Prompt ' + i);
+          var pBy   = typeof p === 'string' ? '' : (p.createdBy || '');
+          return '<div class="ced-prompt-saved-item" onclick="cedSetDefaultPrompt(\'' + catId + '\',' + i + ')" title="Click to make active">' +
+            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:10px;height:10px;flex-shrink:0;color:var(--text-muted)"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>' +
+            '<span class="ced-prompt-saved-item-name">' + escapeHtml(pName) + '</span>' +
+            (pBy ? '<span class="ced-prompt-saved-item-by">' + escapeHtml(pBy) + '</span>' : '') +
+            '<div class="ced-prompt-saved-item-actions" onclick="event.stopPropagation()">' +
+              '<button class="btn btn-outline btn-xs" onclick="cedSetDefaultPrompt(\'' + catId + '\',' + i + ')" title="Make active">Use</button>' +
+              '<button class="btn btn-outline btn-xs" style="color:var(--error);" onclick="cedDeletePromptItem(\'' + catId + '\',' + i + ')" title="Remove">✕</button>' +
+            '</div>' +
+          '</div>';
+        }).join('') +
+      '</div>';
+  }
+
+  var addForm =
+    '<button class="ced-prompt-add-toggle" onclick="var f=document.getElementById(\'cedp-add-form-' + catId + '\');var shown=f.style.display!==\'none\';f.style.display=shown?\'none\':\'block\';this.textContent=shown?\'+ Add Alternate Prompt\':\'✕ Cancel\'">+ Add Alternate Prompt</button>' +
+    '<div class="ced-prompt-add-form" id="cedp-add-form-' + catId + '" style="display:none;">' +
+      '<div class="ced-prompt-add-fields">' +
+        '<div class="ced-prompt-add-field"><label>Name</label><input type="text" id="cedp-new-name-' + catId + '" class="ced-input" placeholder="e.g. Concise Style" /></div>' +
+        '<div class="ced-prompt-add-field"><label>Author</label><input type="text" id="cedp-new-by-' + catId + '" class="ced-input" placeholder="Author name" /></div>' +
+      '</div>' +
+      '<textarea class="ced-prompt-add-textarea" placeholder="Enter prompt text…" id="cedp-new-' + catId + '" rows="4"></textarea>' +
+      '<div style="display:flex;gap:6px;">' +
+        '<button class="btn btn-orange btn-sm" onclick="cedAddPromptToCat(\'' + catId + '\')">Add Prompt</button>' +
+      '</div>' +
+    '</div>';
+
+  el.innerHTML = activeEditor + savedItems + addForm;
+}
+
+function cedSavePromptItem(catId, idx) {
+  var nameEl = document.getElementById('cedp-name-' + catId + '-' + idx);
+  var byEl   = document.getElementById('cedp-by-'   + catId + '-' + idx);
+  var textEl = document.getElementById('cedp-text-' + catId + '-' + idx);
+  if (!textEl) return;
+  var DEFAULT_OBJ = { name: 'Default Prompt', createdBy: 'SLA Health', text: getCatDefaultPrompt(catId) };
+  var prompts = getPromptsForCat(catId) || [DEFAULT_OBJ];
+  prompts[idx] = {
+    name:      nameEl ? nameEl.value.trim() : (prompts[idx] && prompts[idx].name ? prompts[idx].name : ''),
+    createdBy: byEl   ? byEl.value.trim()   : (prompts[idx] && prompts[idx].createdBy ? prompts[idx].createdBy : ''),
+    text:      textEl.value.trim(),
+  };
+  savePromptsForCat(catId, prompts);
+  if (idx === 0 && currentCategory === catId) {
+    var genTA = document.getElementById('promptTextarea');
+    if (genTA) genTA.value = prompts[0].text;
+  }
+  renderCatPromptPanel(catId);
+  renderCategoriesPage();
+  showToast('✓ Prompt saved');
+}
+
+function cedSetDefaultPrompt(catId, idx) {
+  var prompts = getPromptsForCat(catId);
+  if (!prompts || idx === 0) return;
+  var selected = prompts.splice(idx, 1)[0];
+  prompts.unshift(selected);
+  savePromptsForCat(catId, prompts);
+  if (currentCategory === catId) {
+    var genTA = document.getElementById('promptTextarea');
+    if (genTA) genTA.value = (typeof selected === 'string') ? selected : (selected.text || '');
+  }
+  renderCatPromptPanel(catId);
+  renderCategoriesPage();
+  showToast('✓ Prompt set as active');
+}
+
+function cedDeletePromptItem(catId, idx) {
+  var prompts = getPromptsForCat(catId) || [];
+  if (prompts.length <= 1) { alert('Each category must keep at least one prompt.'); return; }
+  prompts.splice(idx, 1);
+  savePromptsForCat(catId, prompts);
+  renderCatPromptPanel(catId);
+  renderCategoriesPage();
+}
+
+function cedAddPromptToCat(catId) {
+  var textEl = document.getElementById('cedp-new-' + catId);
+  var nameEl = document.getElementById('cedp-new-name-' + catId);
+  var byEl   = document.getElementById('cedp-new-by-' + catId);
+  if (!textEl || !textEl.value.trim()) { alert('Please enter prompt text.'); return; }
+  var DEFAULT_OBJ = { name: 'Default Prompt', createdBy: 'SLA Health', text: getCatDefaultPrompt(catId) };
+  var prompts = getPromptsForCat(catId) || [DEFAULT_OBJ];
+  prompts.push({
+    name:      nameEl ? nameEl.value.trim() || 'Alternate Prompt' : 'Alternate Prompt',
+    createdBy: byEl   ? byEl.value.trim()   : '',
+    text:      textEl.value.trim(),
+  });
+  savePromptsForCat(catId, prompts);
+  renderCatPromptPanel(catId);
+  renderCategoriesPage();
+  showToast('✓ Prompt added');
+}
+
+async function cedGenerateCategoryPrompt(catId) {
+  var catCfg  = getCatConfig(catId);
+  var catName = (catCfg && catCfg.name) || catId;
+  var catDesc = (catCfg && catCfg.description) || 'A healthcare content category';
+  var statusEl = document.getElementById('catEditorPromptStatus');
+  if (statusEl) statusEl.textContent = 'Generating…';
+  var metaPrompt = 'You are a medical content strategist. Write a detailed AI content generation prompt for a healthcare content category.\n\nCategory name: ' + catName + '\nDescription: ' + catDesc + '\n\nThe prompt should instruct an AI writer to produce high-quality, accurate, UK-English healthcare content for this category. Include guidance on: tone, structure, length, required sections, and any important disclaimers. Write only the prompt text — no preamble.';
+  try {
+    var result = await callLLM(metaPrompt, {});
+    var textEl = document.getElementById('cedp-text-' + catId + '-0');
+    if (textEl) textEl.value = result.trim();
+    if (statusEl) { statusEl.textContent = '✓ Generated'; setTimeout(function() { if (statusEl) statusEl.textContent = ''; }, 2500); }
+  } catch(e) {
+    if (statusEl) statusEl.textContent = 'Failed: ' + e.message;
+  }
+}
+
+// ── Category WP slug lookup at publish time ──────────────────────────────────
+// Also expose getCatConfig so queueCurrentForPublishing can read wpCategorySlug
+
+// ═══════════════════════════════════════════════════════════
 //  INIT
 // ═══════════════════════════════════════════════════════════
 window.addEventListener('DOMContentLoaded', () => {
@@ -6587,10 +7623,12 @@ window.addEventListener('DOMContentLoaded', () => {
   }
   document.getElementById('promptTextarea').value = DEFAULT_PROMPT;
   loadApiKeyUI();
+  loadCustomCategories();
+  activateCustomCategories();
   updateCategoryHeader('clinical-reviews');
   // Hash deep-link: /#pipeline, /#generator, etc. (used by review confirmation pages)
   var hashTab = window.location.hash.replace('#', '');
-  var validTabs = ['dashboard','generator','archive','pipeline','distribution','calendar','monitoring','settings','prompts','llm','automation'];
+  var validTabs = ['dashboard','generator','archive','pipeline','distribution','calendar','monitoring','settings','prompts','llm','automation','categories']; // 'prompts' auto-redirects to distribution
   if (hashTab && validTabs.includes(hashTab)) {
     switchTab(hashTab);
     history.replaceState(null, '', window.location.pathname); // clean URL
@@ -6622,12 +7660,18 @@ window.addEventListener('DOMContentLoaded', () => {
     if (file) processFile(file);
   });
 
-  ghLoadAll().then(() => {
+  // Load custom categories from GitHub first (cross-browser sync),
+  // then load all category data — order matters because ghLoadAll() iterates CATEGORIES,
+  // which only includes custom cats after activateCustomCategories() has been called.
+  ghLoadCustomCategories().then(function() {
+    return ghLoadAll();
+  }).then(function() {
     updateCategoryHeader(currentCategory);
-    loadDashboard(); // refresh metrics once GitHub data is loaded
+    loadDashboard();
   });
   // Load publishing queue from API (falls back to empty if API not available)
   contentApi.getAll().then(items => {
+    window._publishedCount = items.filter(i => i.status === 'published').length;
     publishingQueue = items.filter(i => i.status !== 'published');
     renderQueuePanel();
     updateQueueHeaderBtn();
@@ -7560,18 +8604,39 @@ function showHeroLeftStatus(type, msg) {
 //  DASHBOARD
 // ═══════════════════════════════════════════════════════════
 function loadDashboard() {
-  // Count metrics
-  let written = 0, saved = 0, approved = 0, published = 0;
-  CATEGORIES.forEach(cat => {
-    const reviews = (ghData[cat.id] && ghData[cat.id].reviews) ? ghData[cat.id].reviews : [];
-    written += reviews.length;
-    saved   += reviews.length;
-    approved += reviews.filter(r => r.approved).length;
-    // Update per-category count badge on card
-    const el = document.getElementById('dash-count-' + cat.id);
-    if (el) el.textContent = reviews.length + ' saved';
+  // Build unified category list — CATEGORIES already contains both built-ins and custom
+  // (activateCustomCategories() pushes custom cats into CATEGORIES), so iterate once.
+  var allDashCats = CATEGORIES.map(function(c) {
+    var meta   = BUILTIN_CATEGORY_META[c.id] || {};
+    var custom = customCategories.find(function(x) { return x.id === c.id; });
+    var icon   = (meta.icon) || (custom && custom.icon) || '📄';
+    return { id: c.id, name: c.label, icon: icon };
   });
-  published = publishingQueue.filter(i => i.status === 'published').length;
+
+  // Render category cards dynamically (includes any custom categories)
+  var cardsContainer = document.getElementById('dashCategoryCards');
+  if (cardsContainer) {
+    cardsContainer.innerHTML = allDashCats.map(function(cat) {
+      var reviews = (ghData[cat.id] && ghData[cat.id].reviews) ? ghData[cat.id].reviews : [];
+      return '<div class="dash-cat-card" onclick="startGeneratorForCategory(\'' + cat.id + '\')">' +
+        '<div class="dash-cat-icon"><span class="dash-cat-emoji">' + cat.icon + '</span></div>' +
+        '<div class="dash-cat-name">' + escapeHtml(cat.name) + '</div>' +
+        '<div class="dash-cat-count" id="dash-count-' + cat.id + '">' + reviews.length + ' saved</div>' +
+        '<button class="dash-cat-btn">Generate</button>' +
+        '</div>';
+    }).join('');
+  }
+
+  // Count metrics
+  let written = 0, saved = 0, approved = 0;
+  allDashCats.forEach(function(cat) {
+    var reviews = (ghData[cat.id] && ghData[cat.id].reviews) ? ghData[cat.id].reviews : [];
+    written  += reviews.length;
+    saved    += reviews.length;
+    approved += reviews.filter(function(r) { return r.approved; }).length;
+  });
+  // Published count captured when pipeline data loads (published items are removed from queue)
+  var published = window._publishedCount || 0;
 
   document.getElementById('metricWritten').textContent   = written;
   document.getElementById('metricSaved').textContent     = saved;
@@ -7580,9 +8645,9 @@ function loadDashboard() {
 
   // Recent articles (last 8 across all categories sorted by date)
   let allItems = [];
-  CATEGORIES.forEach(cat => {
+  allDashCats.forEach(function(cat) {
     const reviews = (ghData[cat.id] && ghData[cat.id].reviews) ? ghData[cat.id].reviews : [];
-    reviews.forEach(r => allItems.push({ ...r, _cat: cat.id, _catLabel: cat.label }));
+    reviews.forEach(r => allItems.push({ ...r, _cat: cat.id, _catLabel: cat.name || cat.label || cat.id }));
   });
   allItems.sort((a,b) => new Date(b.savedAt || 0) - new Date(a.savedAt || 0));
   const recent = allItems.slice(0, 8);
@@ -7967,9 +9032,13 @@ function renderKanbanCard(item) {
     extra = item.wpPostUrl
       ? `<div class="kcard-service-row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg> WordPress — ${pubDate}</div>`
       : '';
-    actions = item.wpPostUrl
-      ? `<button class="btn btn-outline btn-sm" onclick="window.open('${item.wpPostUrl}','_blank')">View on WordPress ↗</button>`
-      : '';
+    actions = (item.wpPostUrl
+      ? `<button class="btn btn-outline btn-sm" onclick="window.open('${item.wpPostUrl}','_blank')">View on WordPress ↗</button> `
+      : '') +
+      `<button class="btn btn-outline btn-sm" onclick="switchTab('archive')" title="View in Library">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:11px;height:11px;"><path d="M21 8v13H3V8"/><path d="M1 3h22v5H1z"/><line x1="10" y1="12" x2="14" y2="12"/></svg>
+        Archive
+      </button>`;
   } else if (item.status === 'rejected') {
     badge = `<div class="kbadge" style="background:rgba(231,76,60,0.12);color:#c0392b;border:1px solid rgba(231,76,60,0.3);">↩ Changes Requested</div>`;
     const comments = (item.rejectionComments || []);
@@ -8139,12 +9208,13 @@ async function loadReviewRequestCard() {
     var closeBtn = st !== 'draft'
       ? '<button class="btn btn-outline btn-sm" onclick="closeReviewRequest()">Close &amp; Reset to Draft</button>'
       : '';
+    var sendLabel = (st === 'draft') ? 'Send for Review' : 'Resend for Review';
     body.innerHTML = ts +
       (logHtml ? '<div class="review-req-log">' + logHtml + '</div>' : '') +
       '<div class="review-req-actions">' +
         '<button class="btn btn-orange btn-sm" onclick="resendReview()">' +
           '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:11px;height:11px;"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>' +
-          ' Resend for Review' +
+          ' ' + sendLabel +
         '</button>' + closeBtn +
       '</div>';
   } catch(e) {
@@ -8175,6 +9245,28 @@ async function resendReview() {
   if (!currentContentId) return;
   await sendForReview(currentContentId);
   setTimeout(loadReviewRequestCard, 1200);
+}
+
+// Toolbar "Send for Review" — queues first if not already in pipeline, then sends
+async function sendForReviewFromToolbar() {
+  if (!rawArticleText) return;
+  const btn = document.getElementById('sendForReviewBtn');
+  if (btn) { btn.disabled = true; btn.textContent = 'Sending…'; }
+  try {
+    if (!currentContentId) {
+      await queueCurrentForPublishing();
+      // Small delay to let the pipeline item be committed
+      await new Promise(resolve => setTimeout(resolve, 400));
+    }
+    if (currentContentId) {
+      await sendForReview(currentContentId);
+    }
+  } finally {
+    if (btn) {
+      btn.disabled = false;
+      btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:11px;height:11px;"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg> Send for Review';
+    }
+  }
 }
 
 async function publishNow(contentId) {
@@ -8519,19 +9611,16 @@ function getEffectivePrompt(catId) {
 }
 
 function loadPromptsTab() {
-  const el = document.getElementById('promptCatBlocks');
-  if (!el) return;
+  // Social prompts now live in the Social page's Prompt Library tab.
+  // This function is kept for backward compatibility — called by social prompt action handlers.
+  loadSocialPromptsTab();
+  updateSocialPromptsStats();
+}
 
-  // Update header stats
-  var totalPrompts = 0;
-  CATEGORIES.forEach(function(cat) {
-    var p = getPromptsForCat(cat.id);
-    totalPrompts += p ? p.length : 1;
-  });
-  var statTotal = document.getElementById('promptsStatTotal');
-  var statCats  = document.getElementById('promptsStatCats');
-  if (statTotal) statTotal.textContent = totalPrompts;
-  if (statCats)  statCats.textContent  = CATEGORIES.length;
+function loadPromptsTab_articleOnly() {
+  // kept for import/export compatibility — article prompts now live in Categories tab
+  var el = document.getElementById('promptCatBlocks');
+  if (!el) return;
 
   el.innerHTML = CATEGORIES.map(function(cat) {
     var DEFAULT_OBJ = { name: 'Default Prompt', createdBy: 'SLA Health', text: getCatDefaultPrompt(cat.id) };

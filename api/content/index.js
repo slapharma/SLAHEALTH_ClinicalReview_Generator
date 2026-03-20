@@ -13,7 +13,10 @@ export function buildContentItem(data) {
     category: data.category ?? 'uncategorised',
     template: data.template ?? 'standard',
     status: 'draft',
-    sourceId: data.sourceId ?? null,   // links back to archive item id
+    sourceId: data.sourceId ?? null,      // links back to archive item id
+    heroImageUrl: data.heroImageUrl ?? null,   // stored for WP featured image upload
+    heroImageType: data.heroImageType ?? null, // 'pexels' | 'ai'
+    wpCategorySlug: data.wpCategorySlug ?? null, // per-category WP slug override
     createdAt: now,
     updatedAt: now,
     reviewers: [],

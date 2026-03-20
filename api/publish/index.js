@@ -25,13 +25,68 @@ async function resolveWpCategoryId(slug, siteUrl, authHeader) {
   }
 }
 
-export function buildWpPayload(item, categoryIds) {
+/**
+ * Download an external image URL and upload it to the WordPress media library.
+ * Returns the WP media object ID, or null on failure.
+ */
+async function uploadHeroImageToWp(imageUrl, postTitle, siteUrl, authHeader) {
+  try {
+    // Fetch the image binary from the external URL
+    const imgResp = await fetch(imageUrl, {
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (compatible; SLAHealthBot/1.0; +https://slahealth.co.uk)',
+        'Accept': 'image/*',
+      },
+      redirect: 'follow',
+    });
+    if (!imgResp.ok) {
+      console.warn(`[publish] Hero image fetch failed ${imgResp.status}: ${imageUrl}`);
+      return null;
+    }
+
+    const contentType = imgResp.headers.get('content-type') || 'image/jpeg';
+    if (!contentType.startsWith('image/')) {
+      console.warn(`[publish] Hero image URL returned non-image content-type: ${contentType}`);
+      return null;
+    }
+
+    const buffer = Buffer.from(await imgResp.arrayBuffer());
+    const ext    = contentType.includes('png') ? 'png' : contentType.includes('webp') ? 'webp' : 'jpg';
+    const slug   = (postTitle || 'hero').toLowerCase().replace(/[^a-z0-9]+/g, '-').slice(0, 40);
+    const filename = `${slug}-hero.${ext}`;
+
+    const mediaResp = await fetch(`${siteUrl}/wp-json/wp/v2/media`, {
+      method: 'POST',
+      headers: {
+        'Authorization':        authHeader,
+        'Content-Type':         contentType,
+        'Content-Disposition':  `attachment; filename="${filename}"`,
+      },
+      body: buffer,
+    });
+
+    if (!mediaResp.ok) {
+      const err = await mediaResp.text();
+      console.warn(`[publish] WP media upload failed ${mediaResp.status}: ${err}`);
+      return null;
+    }
+
+    const media = await mediaResp.json();
+    return media.id ?? null;
+  } catch (err) {
+    console.warn(`[publish] Hero image upload error: ${err.message}`);
+    return null;
+  }
+}
+
+export function buildWpPayload(item, categoryIds, featuredMediaId = null) {
   return {
     title:      item.title,
     content:    item.body,
     excerpt:    item.excerpt ?? '',
     status:     'publish',
     categories: Array.isArray(categoryIds) && categoryIds.length > 0 ? categoryIds : [],
+    ...(featuredMediaId ? { featured_media: featuredMediaId } : {}),
   };
 }
 
@@ -40,15 +95,25 @@ async function publishToWordPress(item) {
     `${process.env.WP_USERNAME}:${process.env.WP_APP_PASSWORD}`
   ).toString('base64');
   const authHeader = `Basic ${credentials}`;
-  const siteUrl    = process.env.WP_SITE_URL;
+  const siteUrl    = (process.env.WP_SITE_URL ?? '').trim().replace(/\/$/, '');
 
   // Resolve category slug → numeric ID
-  const slug       = CATEGORY_SLUG_MAP[item.category] ?? null;
+  // item.wpCategorySlug takes precedence (set per-item from category config)
+  const slug       = item.wpCategorySlug || CATEGORY_SLUG_MAP[item.category] || null;
   const categoryId = slug ? await resolveWpCategoryId(slug, siteUrl, authHeader) : null;
   const categoryIds = categoryId ? [categoryId] : [];
 
   if (slug && !categoryId) {
     console.warn(`[publish] WP category slug "${slug}" not found — posting without category`);
+  }
+
+  // Upload hero image and get media ID (non-fatal if it fails)
+  let featuredMediaId = null;
+  if (item.heroImageUrl) {
+    featuredMediaId = await uploadHeroImageToWp(item.heroImageUrl, item.title, siteUrl, authHeader);
+    if (featuredMediaId) {
+      console.log(`[publish] Hero image uploaded as WP media ID ${featuredMediaId}`);
+    }
   }
 
   const response = await fetch(`${siteUrl}/wp-json/wp/v2/posts`, {
@@ -57,7 +122,7 @@ async function publishToWordPress(item) {
       'Content-Type':  'application/json',
       'Authorization': authHeader,
     },
-    body: JSON.stringify(buildWpPayload(item, categoryIds)),
+    body: JSON.stringify(buildWpPayload(item, categoryIds, featuredMediaId)),
   });
 
   if (!response.ok) {
