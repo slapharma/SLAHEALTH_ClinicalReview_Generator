@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { test, beforeEach } from 'node:test';
+import { test } from 'node:test';
 
 test('GET returns rule by id (200)', async () => {
   const testRule = {
@@ -100,6 +100,10 @@ test('DELETE removes rule (200, { deleted: id })', async () => {
   let removedFromIndex = null;
 
   const mockKV = {
+    get: async (key) => {
+      if (key === 'automation:rule:rule_789') return { id: 'rule_789', name: 'Test' };
+      return null;
+    },
     del: async (key) => {
       deletedKey = key;
     },
@@ -111,6 +115,10 @@ test('DELETE removes rule (200, { deleted: id })', async () => {
   };
 
   const deleteLogic = async (id, kv) => {
+    const existing = await kv.get(`automation:rule:${id}`);
+    if (!existing) {
+      return { status: 404, body: { error: 'Rule not found' } };
+    }
     await kv.del(`automation:rule:${id}`);
     await kv.lrem('automation:rules:index', 0, id);
     return { status: 200, body: { deleted: id } };
@@ -122,4 +130,27 @@ test('DELETE removes rule (200, { deleted: id })', async () => {
   assert.equal(result.body.deleted, 'rule_789');
   assert.equal(deletedKey, 'automation:rule:rule_789');
   assert.equal(removedFromIndex, 'rule_789');
+});
+
+test('DELETE returns 404 for unknown id', async () => {
+  const mockKV = {
+    get: async () => null,
+    del: async () => {},
+    lrem: async () => {},
+  };
+
+  const deleteLogic = async (id, kv) => {
+    const existing = await kv.get(`automation:rule:${id}`);
+    if (!existing) {
+      return { status: 404, body: { error: 'Rule not found' } };
+    }
+    await kv.del(`automation:rule:${id}`);
+    await kv.lrem('automation:rules:index', 0, id);
+    return { status: 200, body: { deleted: id } };
+  };
+
+  const result = await deleteLogic('rule_nonexistent', mockKV);
+
+  assert.equal(result.status, 404);
+  assert.equal(result.body.error, 'Rule not found');
 });

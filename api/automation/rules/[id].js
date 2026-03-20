@@ -18,6 +18,8 @@ export default async function handler(req, res) {
   }
 
   if (req.method === 'DELETE') {
+    const existing = await kv.get(`automation:rule:${id}`);
+    if (!existing) return res.status(404).json({ error: 'Rule not found' });
     await kv.del(`automation:rule:${id}`);
     await kv.lrem('automation:rules:index', 0, id);
     return res.status(200).json({ deleted: id });
