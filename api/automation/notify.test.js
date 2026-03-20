@@ -8,6 +8,7 @@ describe('buildTelegramPayload', () => {
   it('returns object with correct chat_id', () => {
     const payload = buildTelegramPayload({ chatId: '12345', jobId: 'job-1', title: 'Test Title', category: 'Cardiology' });
     assert.equal(payload.chat_id, '12345');
+    assert.equal(payload.parse_mode, 'Markdown');
   });
 
   it('includes title and category in text', () => {

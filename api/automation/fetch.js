@@ -57,6 +57,7 @@ async function fetchGitHub(source, fetchFn = fetch) {
   const results = [];
   for (const file of mdFiles.slice(0, 5)) {
     const fileRes = await fetchFn(file.download_url);
+    if (!fileRes.ok) throw new Error(`GitHub file fetch failed: ${fileRes.status} ${file.download_url}`);
     const rawText = await fileRes.text();
     results.push({
       title: file.name.replace('.md', ''),

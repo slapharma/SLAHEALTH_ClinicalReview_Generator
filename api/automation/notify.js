@@ -95,6 +95,7 @@ export async function sendNotifications({ rule, job, content, fetchFn = fetch, r
       const approveToken = await buildApprovalToken(job.id, 'approve', expiryHours);
       const rejectToken  = await buildApprovalToken(job.id, 'reject',  expiryHours);
       const approveUrl = `${APP_URL}/api/automation/approve?token=${approveToken}`;
+      // Both links use the same endpoint; the JWT action claim ('reject') drives the behaviour
       const rejectUrl  = `${APP_URL}/api/automation/approve?token=${rejectToken}`;
       const html = buildApprovalEmailHtml({ title: content.title, category: content.category, approveUrl, rejectUrl });
 
