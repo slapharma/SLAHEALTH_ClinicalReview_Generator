@@ -14,7 +14,10 @@ import jobsIndexHandler from '../../lib/automation/handlers/jobs-index.js';
 import jobsIdHandler from '../../lib/automation/handlers/jobs-id.js';
 
 export default async function handler(req, res) {
-  const slug = req.query.slug || [];
+  // req.query.slug may be a string (single segment) or array (multiple segments)
+  // in non-Next.js Vercel serverless. Normalise to array.
+  const rawSlug = req.query.slug || [];
+  const slug = [].concat(rawSlug);
   const [first, second] = slug;
 
   if (first === 'approve') return approveHandler(req, res);
